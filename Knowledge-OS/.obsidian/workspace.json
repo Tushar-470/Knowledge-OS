@@ -8,35 +8,18 @@
         "type": "tabs",
         "children": [
           {
-            "id": "e7a7b303c61786dc",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Areas/MPharm/Cosmetics and Cosmeceuticals/1.4 Misbranded and Spurious Cosmetics.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "1.4 Misbranded and Spurious Cosmetics"
-            }
-          },
-          {
             "id": "ae2f49c93a69c766",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "image",
               "state": {
-                "file": "Areas/MPharm/Cosmetics and Cosmeceuticals/1.5 Manufacture of Cosmetics License Offences and Penalties.md",
-                "mode": "source",
-                "source": false
+                "file": "Areas/Research/Thesis/Screenshot (1).png"
               },
-              "icon": "lucide-file",
-              "title": "1.5 Manufacture of Cosmetics License Offences and Penalties"
+              "icon": "lucide-image",
+              "title": "Screenshot (1)"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -208,41 +191,41 @@
   },
   "active": "ae2f49c93a69c766",
   "lastOpenFiles": [
-    "Areas/MPharm/Cosmetics and Cosmeceuticals/1.6 Conditions for Obtaining a Cosmetic Manufacturing License.md",
-    "Areas/MPharm/Cosmetics and Cosmeceuticals/1.5 Manufacture of Cosmetics License Offences and Penalties.md",
-    "Areas/MPharm/Cosmetics and Cosmeceuticals/1.4 Misbranded and Spurious Cosmetics.md",
-    "Areas/MPharm/Cosmetics and Cosmeceuticals/1.5 Manufacture of Cosmetics License Offences and Penaltie.md",
-    "Projects/Exam Preparation/Dashboard.md",
+    "THESIS_DASHBOARD.md",
+    "Areas/Research/Thesis/Screenshot (1).png",
     "Areas/MPharm/PYQs/Dashboard.md",
-    "Home.md",
-    "Areas/MPharm/Computer Aided Drug Development/3.8 Microemulsion  drug carriers.md",
-    "Areas/MPharm/Computer Aided Drug Development/3.7  Development of pharmaceutical emulsions.md",
-    "Areas/MPharm/Computer Aided Drug Development/3.6 Computers in  Pharmaceutical Formulation.md",
-    "Areas/MPharm/Computer Aided Drug Development/3.5 Optimization technology & Screening design.md",
-    "Areas/MPharm/Computer Aided Drug Development/3.4 Factorial design.md",
-    "Areas/MPharm/Computer Aided Drug Development/3.3 Optimization  parameters.md",
-    "Areas/MPharm/Computer Aided Drug Development/3.2 Concept of optimization.md",
-    "Areas/MPharm/Computer Aided Drug Development/3.1 Computer-aided formulation development.md",
-    "Areas/MPharm/Computer Aided Drug Development/2.16 BBB Choline Transporter..md",
-    "Areas/MPharm/Computer Aided Drug Development/2.15 OATP.md",
+    "Areas/MPharm/PYQs",
+    "Areas/MPharm/Molecular Pharmaceutics/NOVEL DRUG DELIVERY SYSTEMS (NDDS).md",
+    "Areas/MPharm/Molecular Pharmaceutics/Dashboard.md",
+    "Areas/MPharm/Molecular Pharmaceutics/9.MONOCLONAL ANTIBODIES (mAbs).md",
+    "Areas/MPharm/Molecular Pharmaceutics/8.MICROSPHERES.md",
+    "Areas/MPharm/Molecular Pharmaceutics/5.NANOPARTICLES.md",
+    "Areas/MPharm/Molecular Pharmaceutics/7.MICROCAPSULES.md",
+    "Areas/MPharm/Molecular Pharmaceutics/6.LIPOSOMES.md",
+    "Areas/MPharm/Molecular Pharmaceutics/2.TUMOR TARGETING.md",
+    "Areas/MPharm/Molecular Pharmaceutics/4.TARGETING METHODS.md",
+    "Areas/MPharm/Molecular Pharmaceutics/3.BRAIN SPECIFIC DRUG DELIVERY.md",
+    "Areas/MPharm/Molecular Pharmaceutics/13.ELECTROSOMES.md",
+    "Areas/MPharm/Molecular Pharmaceutics/12.PHYTOSOMES.md",
+    "Areas/MPharm/Molecular Pharmaceutics/11.AQUASOMES.md",
+    "Areas/MPharm/Molecular Pharmaceutics/10.NIOSOMES.md",
+    "Areas/MPharm/Molecular Pharmaceutics",
+    "Areas/MPharm/Mini Project/Dashboard.md",
+    "Areas/MPharm/Mini Project",
+    "Areas/MPharm/Important Topics/Dashboard.md",
+    "Areas/MPharm/Important Topics",
+    "Resources/Templates/Paper Summary Template.md",
+    "Resources/Templates/Literature Note Template.md",
     "Resources/Templates/Dashboard.md",
-    "Resources/Books/Dashboard.md",
-    "Resources/Papers/Dashboard.md",
-    "Projects/Knowledge OS Setup/Dashboard.md",
-    "Projects/Mini Project/Dashboard.md",
-    "CHANGELOG.md",
-    "DUPLICATE_REVIEW.md",
-    "LONG_FILENAME_REPORT.md",
-    "NAMING_STANDARDS.md",
-    "Areas/MPharm/Cosmetics and Cosmeceuticals/Dashboard",
-    "Areas/MPharm/Computer Aided Drug Development/Dashboard",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/Dashboard",
-    "Areas/MPharm/Untitled",
     "Resources/Templates",
+    "Resources/Papers/Dashboard.md",
     "Resources/Papers",
-    "Resources/Images",
-    "Resources/Documents",
+    "Resources/Documents.md",
+    "Resources/Books/Dashboard.md",
     "Resources/Books",
-    "Areas/MPharm/PYQs"
+    "Projects/Mini Project/Dashboard.md",
+    "Projects/Mini Project",
+    "Projects/Knowledge OS Setup",
+    "Projects/Exam Preparation"
   ]
 }
