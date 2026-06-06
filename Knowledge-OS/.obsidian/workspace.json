@@ -11,12 +11,14 @@
             "id": "ae2f49c93a69c766",
             "type": "leaf",
             "state": {
-              "type": "image",
+              "type": "markdown",
               "state": {
-                "file": "Areas/Research/Thesis/Screenshot (1).png"
+                "file": "THESIS_DASHBOARD.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-image",
-              "title": "Screenshot (1)"
+              "icon": "lucide-file",
+              "title": "THESIS_DASHBOARD"
             }
           }
         ]
@@ -191,8 +193,8 @@
   },
   "active": "ae2f49c93a69c766",
   "lastOpenFiles": [
-    "THESIS_DASHBOARD.md",
     "Areas/Research/Thesis/Screenshot (1).png",
+    "THESIS_DASHBOARD.md",
     "Areas/MPharm/PYQs/Dashboard.md",
     "Areas/MPharm/PYQs",
     "Areas/MPharm/Molecular Pharmaceutics/NOVEL DRUG DELIVERY SYSTEMS (NDDS).md",
