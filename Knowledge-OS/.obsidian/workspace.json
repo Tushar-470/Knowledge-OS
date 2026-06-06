@@ -1,0 +1,248 @@
+{
+  "main": {
+    "id": "5324373015726ba8",
+    "type": "split",
+    "children": [
+      {
+        "id": "4509724f8bf84da7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e7a7b303c61786dc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Areas/MPharm/Cosmetics and Cosmeceuticals/1.4 Misbranded and Spurious Cosmetics.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "1.4 Misbranded and Spurious Cosmetics"
+            }
+          },
+          {
+            "id": "ae2f49c93a69c766",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Areas/MPharm/Cosmetics and Cosmeceuticals/1.5 Manufacture of Cosmetics License Offences and Penalties.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "1.5 Manufacture of Cosmetics License Offences and Penalties"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "d720f914af49adc3",
+    "type": "split",
+    "children": [
+      {
+        "id": "f875d9dbbf07fc92",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "48999942660a1509",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "21db54101e829dba",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "7afb120508321e1e",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 447.5
+  },
+  "right": {
+    "id": "4eddfa58c37bc1d1",
+    "type": "split",
+    "children": [
+      {
+        "id": "5b7d9e624ad77be7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "900c178fcc56a721",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "d218c7764e13ea32",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "d679977edd4c2277",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "d72585481b3edcc2",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "44750f4190ea944a",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          },
+          {
+            "id": "7e8192d46eaac264",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {},
+              "icon": "calendar-with-checkmark",
+              "title": "Calendar"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "homepage:Open homepage": false
+    }
+  },
+  "active": "ae2f49c93a69c766",
+  "lastOpenFiles": [
+    "Areas/MPharm/Cosmetics and Cosmeceuticals/1.6 Conditions for Obtaining a Cosmetic Manufacturing License.md",
+    "Areas/MPharm/Cosmetics and Cosmeceuticals/1.5 Manufacture of Cosmetics License Offences and Penalties.md",
+    "Areas/MPharm/Cosmetics and Cosmeceuticals/1.4 Misbranded and Spurious Cosmetics.md",
+    "Areas/MPharm/Cosmetics and Cosmeceuticals/1.5 Manufacture of Cosmetics License Offences and Penaltie.md",
+    "Projects/Exam Preparation/Dashboard.md",
+    "Areas/MPharm/PYQs/Dashboard.md",
+    "Home.md",
+    "Areas/MPharm/Computer Aided Drug Development/3.8 Microemulsion  drug carriers.md",
+    "Areas/MPharm/Computer Aided Drug Development/3.7  Development of pharmaceutical emulsions.md",
+    "Areas/MPharm/Computer Aided Drug Development/3.6 Computers in  Pharmaceutical Formulation.md",
+    "Areas/MPharm/Computer Aided Drug Development/3.5 Optimization technology & Screening design.md",
+    "Areas/MPharm/Computer Aided Drug Development/3.4 Factorial design.md",
+    "Areas/MPharm/Computer Aided Drug Development/3.3 Optimization  parameters.md",
+    "Areas/MPharm/Computer Aided Drug Development/3.2 Concept of optimization.md",
+    "Areas/MPharm/Computer Aided Drug Development/3.1 Computer-aided formulation development.md",
+    "Areas/MPharm/Computer Aided Drug Development/2.16 BBB Choline Transporter..md",
+    "Areas/MPharm/Computer Aided Drug Development/2.15 OATP.md",
+    "Resources/Templates/Dashboard.md",
+    "Resources/Books/Dashboard.md",
+    "Resources/Papers/Dashboard.md",
+    "Projects/Knowledge OS Setup/Dashboard.md",
+    "Projects/Mini Project/Dashboard.md",
+    "CHANGELOG.md",
+    "DUPLICATE_REVIEW.md",
+    "LONG_FILENAME_REPORT.md",
+    "NAMING_STANDARDS.md",
+    "Areas/MPharm/Cosmetics and Cosmeceuticals/Dashboard",
+    "Areas/MPharm/Computer Aided Drug Development/Dashboard",
+    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/Dashboard",
+    "Areas/MPharm/Untitled",
+    "Resources/Templates",
+    "Resources/Papers",
+    "Resources/Images",
+    "Resources/Documents",
+    "Resources/Books",
+    "Areas/MPharm/PYQs"
+  ]
+}
