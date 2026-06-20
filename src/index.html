@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Inter:wght@300..800&family=Outfit:wght@300..900&family=Space+Grotesk:wght@300..700&family=Syne:wght@400..800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles.css?v=2.0">
   </head>
   <body>
     <canvas id="field" aria-hidden="true"></canvas>
@@ -18,15 +18,23 @@
           <p class="eyebrow">ChronoVault</p>
           <h1 id="title">Knowledge OS</h1>
           <p class="owner">Tushar Mathapati</p>
+          <div class="hud-stats">
+            <div class="hud-stat"><span class="hud-label">SESSION:</span> <span id="hud-session">CV-000000</span></div>
+            <div class="hud-stat"><span class="hud-label">ENCRYPT:</span> <span>AES-GCM-256</span></div>
+            <div class="hud-stat"><span class="hud-label">STRETCH:</span> <span>600K PBKDF2</span></div>
+            <div class="hud-stat"><span class="hud-label">HUD SYSTEM:</span> <span id="hud-system-name">NEON_NET</span></div>
+            <div class="hud-stat"><span class="hud-label">LOCK LAYER:</span> <span>5-LETTER LOCK</span></div>
+            <div class="hud-stat"><span class="hud-label">SECURE ENVT:</span> <span>ACTIVE</span></div>
+          </div>
         </div>
         <form id="unlock-form" class="lock-panel">
-          <label for="password">Daily access code</label>
+          <label for="password">Secure Key Authorization</label>
           <div class="code-row">
-            <input id="password" name="password" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="0000" aria-describedby="hint">
+            <input id="password" name="password" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="••••" aria-describedby="hint">
             <button type="submit">Unlock</button>
           </div>
           <button type="button" id="guest-btn" class="guest-btn">Explore Public Notes</button>
-          <p id="hint" class="hint">Use today's DD + MM + 11 formula.</p>
+          <p id="hint" class="hint">Authorized Access Only. Decryption key required.</p>
           <p id="status" class="status" role="status"></p>
         </form>
       </section>
@@ -72,6 +80,6 @@
       </div>
     </div>
     <div id="glitch-overlay" class="glitch-overlay hidden" aria-hidden="true"></div>
-    <script type="module" src="./main.js"></script>
+    <script type="module" src="./main.js?v=2.0"></script>
   </body>
 </html>

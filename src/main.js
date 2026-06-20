@@ -60,6 +60,11 @@ document.documentElement.style.setProperty("--accent", session.accent);
 document.body.classList.add(`theme-${session.style}`);
 document.body.classList.add(`layout-${session.style}`);
 
+// Initialize HUD diagnostic stats
+document.querySelector("#hud-session").textContent = `CV-${session.visitSeed.toString().padStart(6, "0")}`;
+const systems = ["NEON_NET", "MATRIX_RAIN", "COSMIC_NEBULA", "SOLAR_FLARE"];
+document.querySelector("#hud-system-name").textContent = systems[session.style];
+
 function base64ToBytes(base64) {
   const binary = atob(base64);
   return Uint8Array.from(binary, char => char.charCodeAt(0));
@@ -322,11 +327,15 @@ el.form.addEventListener("submit", async event => {
   event.preventDefault();
   const entered = el.password.value.trim();
   const numeric = Number.parseInt(entered, 10);
-  const secret = numeric - new Date().getDate() - (new Date().getMonth() + 1);
   
-  if (entered !== session.password) {
+  const now = new Date();
+  const dd = now.getDate();
+  const mm = now.getMonth() + 1;
+  const correctNumeric = dd + mm + SECRET_NUMBER;
+  
+  if (isNaN(numeric) || numeric !== correctNumeric) {
     wrongAttempts += 1;
-    el.status.textContent = wrongAttempts >= 4 ? "Access denied. Temporary lockout active." : "Incorrect passcode.";
+    el.status.textContent = wrongAttempts >= 4 ? "Access denied. Temporary lockout active." : "Access Denied.";
     el.form.classList.remove("shake");
     requestAnimationFrame(() => el.form.classList.add("shake"));
     return;
@@ -334,7 +343,7 @@ el.form.addEventListener("submit", async event => {
   
   el.status.textContent = "Deriving key...";
   try {
-    const decrypted = await decryptVault(secret);
+    const decrypted = await decryptVault(SECRET_NUMBER);
     el.status.textContent = "";
     state.vault = decrypted;
     state.isGuest = false;
