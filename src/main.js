@@ -1,9 +1,10 @@
 const SECRET_NUMBER = 11;
 const state = {
   vault: null,
-  activeFolder: null,
+  activeFolder: "", // empty string is Root level
   isGuest: false,
-  urls: new Map()
+  urls: new Map(),
+  unlockedFolders: new Set()
 };
 
 const el = {
@@ -12,11 +13,11 @@ const el = {
   status: document.querySelector("#status"),
   lock: document.querySelector("#lock"),
   vault: document.querySelector("#vault"),
+  breadcrumbs: document.querySelector("#breadcrumbs"),
   folderGrid: document.querySelector("#folder-grid"),
   fileSection: document.querySelector("#file-section"),
   fileGrid: document.querySelector("#file-grid"),
   folderTitle: document.querySelector("#folder-title"),
-  closeFolder: document.querySelector("#close-folder"),
   search: document.querySelector("#search"),
   preview: document.querySelector("#preview"),
   previewTitle: document.querySelector("#preview-title"),
@@ -160,102 +161,201 @@ function formatSize(size) {
   return `${(size / 1024 / 1024).toFixed(1)} MB`;
 }
 
-function renderFolders() {
-  const query = el.search.value.trim().toLowerCase();
-  const matchingFiles = query
-    ? state.vault.files.filter(file => `${file.name} ${file.path}`.toLowerCase().includes(query))
-    : state.vault.files;
-  const folders = state.vault.folders
-    .map(folder => ({ ...folder, count: matchingFiles.filter(file => file.folder === folder.name).length }))
-    .filter(folder => folder.count > 0);
-
-  el.folderGrid.innerHTML = "";
+function getFolderContents(currentPath) {
+  const subfolders = new Set();
+  const files = [];
   
-  if (folders.length === 0) {
-    el.folderGrid.innerHTML = `<p class="meta" style="grid-column: 1/-1; text-align: center; padding: 2rem;">No matching folders found.</p>`;
-    return;
+  if (!state.vault || !state.vault.files) {
+    return { subfolders: [], files: [] };
   }
-
-  for (const [index, folder] of folders.entries()) {
-    const card = document.createElement("article");
-    card.className = "folder-card";
-    card.style.animationDelay = `${Math.min(index * 35, 420)}ms`;
+  
+  for (const file of state.vault.files) {
+    const filePath = file.path;
     
     if (state.isGuest) {
-      // Guest Mode: direct click opens folder, no letter lock
-      card.style.cursor = "pointer";
-      card.innerHTML = `
-        <div class="folder-icon" aria-hidden="true"></div>
-        <h3>${escapeHtml(folder.name)}</h3>
-        <p class="meta">${folder.count} file${folder.count === 1 ? "" : "s"}</p>
-        <p class="meta" style="font-size: 0.8rem; border: 1px dashed var(--panel-border); padding: 0.35rem; text-align: center; border-radius: 6px; color: var(--muted); margin-top: 1rem;">Click to Open</p>
-      `;
-      card.addEventListener("click", () => openFolder(folder.name));
-    } else {
-      // Private Mode: requires letter lock
-      const lock = folderLetters(folder.name);
-      card.innerHTML = `
-        <div class="folder-icon" aria-hidden="true"></div>
-        <h3>${escapeHtml(folder.name)}</h3>
-        <p class="meta">${folder.count} file${folder.count === 1 ? "" : "s"}</p>
-        <div class="letter-row" aria-label="Folder letter lock"></div>
-      `;
-      
-      const row = card.querySelector(".letter-row");
-      for (const letter of lock.display) {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.textContent = letter;
-        button.addEventListener("click", (event) => {
-          event.stopPropagation();
-          if (letter === lock.correct) {
-            button.classList.add("correct");
-            // Disable row immediately so they can't double tap
-            row.querySelectorAll("button").forEach(btn => btn.disabled = true);
-            setTimeout(() => openFolder(folder.name), 250);
-          } else {
-            button.classList.add("wrong");
-            card.classList.remove("shake");
-            requestAnimationFrame(() => card.classList.add("shake"));
-            row.querySelectorAll("button").forEach(btn => btn.disabled = true);
-            
-            // Show lockout glitch overlay
-            const glitchOverlay = document.querySelector("#glitch-overlay");
-            glitchOverlay.classList.remove("hidden");
-            
-            setTimeout(() => {
-              glitchOverlay.classList.add("hidden");
-              lockVault("Intrusion detected. Vault locked.");
-            }, 1000);
-          }
-        });
-        row.append(button);
+      if (!filePath.startsWith("Public/") && filePath !== "Public") {
+        continue;
       }
     }
     
-    el.folderGrid.append(card);
+    if (currentPath === "") {
+      if (filePath.includes("/")) {
+        const firstSegment = filePath.split("/")[0];
+        subfolders.add(firstSegment);
+      } else {
+        files.push(file);
+      }
+    } else {
+      const prefix = currentPath + "/";
+      if (filePath.startsWith(prefix)) {
+        const remaining = filePath.substring(prefix.length);
+        if (remaining.includes("/")) {
+          const nextSegment = remaining.split("/")[0];
+          subfolders.add(currentPath + "/" + nextSegment);
+        } else {
+          files.push(file);
+        }
+      }
+    }
+  }
+  
+  return {
+    subfolders: Array.from(subfolders).sort(),
+    files: files.sort((a, b) => a.name.localeCompare(b.name))
+  };
+}
+
+function renderBreadcrumbs() {
+  el.breadcrumbs.innerHTML = "";
+  
+  const pathParts = state.activeFolder ? state.activeFolder.split("/") : [];
+  
+  const homeCrumb = document.createElement("span");
+  homeCrumb.className = state.activeFolder === "" || (state.isGuest && state.activeFolder === "Public") ? "crumb active" : "crumb";
+  homeCrumb.textContent = state.isGuest ? "Public (Home)" : "Home";
+  if (state.activeFolder !== "" && !(state.isGuest && state.activeFolder === "Public")) {
+    homeCrumb.addEventListener("click", () => {
+      state.activeFolder = state.isGuest ? "Public" : "";
+      renderVaultView();
+    });
+  }
+  el.breadcrumbs.appendChild(homeCrumb);
+  
+  let currentAccumulated = "";
+  const startIdx = state.isGuest ? 1 : 0;
+  
+  for (let i = startIdx; i < pathParts.length; i++) {
+    const separator = document.createElement("span");
+    separator.className = "separator";
+    separator.textContent = " / ";
+    el.breadcrumbs.appendChild(separator);
+    
+    const part = pathParts[i];
+    currentAccumulated = pathParts.slice(0, i + 1).join("/");
+    
+    const crumb = document.createElement("span");
+    const isActive = i === pathParts.length - 1;
+    crumb.className = isActive ? "crumb active" : "crumb";
+    crumb.textContent = part;
+    
+    if (!isActive) {
+      const targetPath = currentAccumulated;
+      crumb.addEventListener("click", () => {
+        state.activeFolder = targetPath;
+        renderVaultView();
+      });
+    }
+    el.breadcrumbs.appendChild(crumb);
   }
 }
 
-function openFolder(folderName) {
-  state.activeFolder = folderName;
-  el.folderTitle.textContent = folderName;
-  el.fileSection.classList.remove("hidden");
-  renderFiles();
-  el.fileSection.scrollIntoView({ behavior: "smooth", block: "start" });
+function renderVaultView() {
+  const query = el.search.value.trim().toLowerCase();
+  
+  if (query) {
+    el.breadcrumbs.classList.add("hidden");
+    el.folderGrid.classList.add("hidden");
+    el.fileSection.classList.remove("hidden");
+    el.folderTitle.textContent = `Search Results for "${query}"`;
+    
+    const matchingFiles = state.vault.files.filter(file => {
+      if (state.isGuest && !file.path.startsWith("Public/")) return false;
+      return `${file.name} ${file.path}`.toLowerCase().includes(query);
+    });
+    
+    renderFilesList(matchingFiles);
+    return;
+  }
+  
+  el.breadcrumbs.classList.remove("hidden");
+  renderBreadcrumbs();
+  
+  const { subfolders, files } = getFolderContents(state.activeFolder);
+  
+  el.folderGrid.innerHTML = "";
+  if (subfolders.length === 0) {
+    el.folderGrid.classList.add("hidden");
+  } else {
+    el.folderGrid.classList.remove("hidden");
+    
+    for (const [index, folderPath] of subfolders.entries()) {
+      const card = document.createElement("article");
+      card.className = "folder-card";
+      card.style.animationDelay = `${Math.min(index * 35, 420)}ms`;
+      
+      const folderBaseName = folderPath.split("/").pop();
+      const isUnlocked = state.isGuest || state.unlockedFolders.has(folderPath);
+      
+      if (isUnlocked) {
+        card.style.cursor = "pointer";
+        card.innerHTML = `
+          <div class="folder-icon" aria-hidden="true"></div>
+          <h3>${escapeHtml(folderBaseName)}</h3>
+          <p class="meta" style="font-size: 0.8rem; border: 1px dashed var(--panel-border); padding: 0.35rem; text-align: center; border-radius: 6px; color: var(--muted); margin-top: 1rem;">Click to Open</p>
+        `;
+        card.addEventListener("click", () => openFolder(folderPath));
+      } else {
+        const lock = folderLetters(folderPath);
+        card.innerHTML = `
+          <div class="folder-icon" aria-hidden="true"></div>
+          <h3>${escapeHtml(folderBaseName)}</h3>
+          <div class="letter-row" aria-label="Folder letter lock"></div>
+        `;
+        
+        const row = card.querySelector(".letter-row");
+        for (const letter of lock.display) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = letter;
+          button.addEventListener("click", (event) => {
+            event.stopPropagation();
+            if (letter === lock.correct) {
+              button.classList.add("correct");
+              row.querySelectorAll("button").forEach(btn => btn.disabled = true);
+              state.unlockedFolders.add(folderPath);
+              setTimeout(() => openFolder(folderPath), 250);
+            } else {
+              button.classList.add("wrong");
+              card.classList.remove("shake");
+              requestAnimationFrame(() => card.classList.add("shake"));
+              row.querySelectorAll("button").forEach(btn => btn.disabled = true);
+              
+              const glitchOverlay = document.querySelector("#glitch-overlay");
+              glitchOverlay.classList.remove("hidden");
+              
+              setTimeout(() => {
+                glitchOverlay.classList.add("hidden");
+                lockVault("Intrusion detected. Vault locked.");
+              }, 1000);
+            }
+          });
+          row.append(button);
+        }
+      }
+      el.folderGrid.append(card);
+    }
+  }
+  
+  if (files.length === 0) {
+    el.fileSection.classList.add("hidden");
+  } else {
+    el.fileSection.classList.remove("hidden");
+    el.folderTitle.textContent = "Files";
+    renderFilesList(files);
+  }
 }
 
-function renderFiles() {
-  const query = el.search.value.trim().toLowerCase();
-  const files = state.vault.files.filter(file => {
-    if (file.folder !== state.activeFolder) return false;
-    return !query || `${file.name} ${file.path}`.toLowerCase().includes(query);
-  });
-  
+function openFolder(folderPath) {
+  state.activeFolder = folderPath;
+  renderVaultView();
+  el.vault.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function renderFilesList(files) {
   el.fileGrid.innerHTML = "";
   
   if (files.length === 0) {
-    el.fileGrid.innerHTML = `<p class="meta" style="grid-column: 1/-1; text-align: center; padding: 2rem;">No matching files found.</p>`;
+    el.fileGrid.innerHTML = `<p class="meta" style="grid-column: 1/-1; text-align: center; padding: 2rem;">No files found.</p>`;
     return;
   }
   
@@ -285,7 +385,6 @@ function fileUrl(file) {
   return url;
 }
 
-// Global lookup handler for wiki links in previews
 window.previewByName = (name) => {
   const searchName = name.toLowerCase().trim();
   const file = state.vault.files.find(f => 
@@ -300,12 +399,9 @@ window.previewByName = (name) => {
   }
 };
 
-// Rich Markdown Parser
 function renderMarkdown(md) {
-  // 1. Safe HTML escape first
   let html = escapeHtml(md);
   
-  // 2. Parse image embeds: ![[Image.png]]
   html = html.replace(/!\[\[(.*?)\]\]/g, (match, filename) => {
     const searchName = filename.toLowerCase().trim();
     const file = state.vault.files.find(f => f.name.toLowerCase() === searchName);
@@ -316,7 +412,6 @@ function renderMarkdown(md) {
     return `<span class="meta">[Attachment: ${escapeHtml(filename)} not found]</span>`;
   });
   
-  // 3. Parse wiki links: [[Other Note]] or [[Other Note|Alias]]
   html = html.replace(/\[\[(.*?)\]\]/g, (match, inner) => {
     let filename = inner;
     let alias = inner;
@@ -328,27 +423,22 @@ function renderMarkdown(md) {
     return `<a href="#" class="wiki-link" onclick="event.preventDefault(); window.previewByName('${escapeHtml(filename.replace(/'/g, "\\'"))}')">${escapeHtml(alias)}</a>`;
   });
   
-  // 4. Parse Headers: # Title
   html = html.replace(/^# (.*?)$/gm, '<h1>$1</h1>');
   html = html.replace(/^## (.*?)$/gm, '<h2>$1</h2>');
   html = html.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
   
-  // 5. Parse Bold & Italics
   html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
   
-  // 6. Parse Lists
   html = html.replace(/^- (.*?)$/gm, '<li>$1</li>');
   html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul>$&</ul>');
   
-  // 7. Parse Paragraphs and Breaks
   html = html.replace(/\n\n/g, '</p><p>');
   html = html.replace(/\n/g, '<br>');
   
   return `<div class="markdown-body"><p>${html}</p></div>`;
 }
 
-// Preview File Routine
 function previewFile(file) {
   const url = fileUrl(file);
   el.previewTitle.textContent = file.name;
@@ -359,28 +449,23 @@ function previewFile(file) {
   const textExtensions = [".json", ".js", ".css", ".html", ".xml", ".csv", ".yaml", ".yml", ".py", ".sh", ".ini", ".conf"];
   
   if (file.ext === ".md") {
-    // Rich Markdown preview
     const rawText = bytesToText(base64ToBytes(file.content));
     el.previewBody.innerHTML = renderMarkdown(rawText);
   } else if (file.mime.startsWith("text/") || textExtensions.includes(file.ext)) {
-    // Common text code files
     const pre = document.createElement("pre");
     pre.textContent = bytesToText(base64ToBytes(file.content));
     el.previewBody.append(pre);
   } else if (file.mime.startsWith("image/")) {
-    // Images
     const img = document.createElement("img");
     img.src = url;
     img.alt = file.name;
     el.previewBody.append(img);
   } else if (file.ext === ".pdf") {
-    // PDFs
     const frame = document.createElement("iframe");
     frame.src = url;
     frame.title = file.name;
     el.previewBody.append(frame);
   } else {
-    // Non-previewable
     const p = document.createElement("p");
     p.textContent = "Preview is not available for this file type. Use Download.";
     el.previewBody.append(p);
@@ -400,8 +485,9 @@ function escapeHtml(value) {
 
 function lockVault(message = "") {
   state.vault = null;
-  state.activeFolder = null;
+  state.activeFolder = "";
   state.isGuest = false;
+  state.unlockedFolders.clear();
   el.password.value = "";
   el.status.textContent = message;
   el.lock.classList.remove("hidden");
@@ -415,7 +501,6 @@ function lockVault(message = "") {
   state.urls.clear();
 }
 
-// Progressive lockout cooldown variables
 let wrongAttempts = 0;
 let cooldownTime = 0;
 
@@ -438,7 +523,6 @@ function startCooldown(seconds) {
   }, 1000);
 }
 
-// Private Decrypt Submit
 el.form.addEventListener("submit", async event => {
   event.preventDefault();
   if (cooldownTime > 0) return;
@@ -465,9 +549,10 @@ el.form.addEventListener("submit", async event => {
     el.status.textContent = "";
     state.vault = decrypted;
     state.isGuest = false;
+    state.activeFolder = "";
+    state.unlockedFolders.clear();
     el.vaultMode.textContent = "Private Portal (Unlocked)";
     
-    // Play Decrypt HUD overlay
     const scannerOverlay = document.querySelector("#scanner-overlay");
     const progressEl = scannerOverlay.querySelector(".scanner-progress");
     scannerOverlay.classList.remove("hidden");
@@ -482,7 +567,7 @@ el.form.addEventListener("submit", async event => {
           scannerOverlay.classList.add("hidden");
           el.lock.classList.add("hidden");
           el.vault.classList.remove("hidden");
-          renderFolders();
+          renderVaultView();
         }, 400);
       }
       progressEl.textContent = `${progress}%`;
@@ -494,7 +579,6 @@ el.form.addEventListener("submit", async event => {
   }
 });
 
-// Guest Mode Toggle
 el.guestBtn.addEventListener("click", async () => {
   el.status.textContent = "Loading public records...";
   try {
@@ -502,31 +586,23 @@ el.guestBtn.addEventListener("click", async () => {
     el.status.textContent = "";
     state.vault = data;
     state.isGuest = true;
+    state.activeFolder = "Public";
     el.vaultMode.textContent = "Guest Access (Public Notes)";
     el.lock.classList.add("hidden");
     el.vault.classList.remove("hidden");
-    renderFolders();
+    renderVaultView();
   } catch (error) {
     console.error(error);
     el.status.textContent = "Failed to load public data.";
   }
 });
 
-// Lock Button Click
 el.lockVaultBtn.addEventListener("click", () => {
   lockVault("System locked securely.");
 });
 
 el.search.addEventListener("input", () => {
-  renderFolders();
-  if (state.activeFolder) renderFiles();
-});
-
-// Close folder: hides folder and scrolls back to folder list smoothly
-el.closeFolder.addEventListener("click", () => {
-  state.activeFolder = null;
-  el.fileSection.classList.add("hidden");
-  el.folderGrid.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  renderVaultView();
 });
 
 el.closePreview.addEventListener("click", () => el.preview.close());
@@ -544,6 +620,7 @@ function startCanvas() {
     height = canvas.height = window.innerHeight * devicePixelRatio;
     canvas.style.width = `${window.innerWidth}px`;
     canvas.style.height = `${window.innerHeight}px`;
+    initMatrix();
   }
 
   window.addEventListener("resize", resize);
@@ -553,45 +630,170 @@ function startCanvas() {
     pointer.active = true;
   });
   window.addEventListener("pointerleave", () => { pointer.active = false; });
-  
-  resize();
 
-  const style = session.style; // 0 to 3
+  let currentStyle = session.style;
   
-  if (style === 0) {
-    // Style 0: Cyber Neon network
-    const particles = [];
-    const count = session.count;
-    for (let i = 0; i < count; i++) {
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 1.5,
-        vy: (Math.random() - 0.5) * 1.5,
-        r: 1.5 + Math.random() * 2
+  // Neon Configuration
+  let neonConfig = {
+    count: 80,
+    speedCoeff: 3.5,
+    maxDist: 150,
+    dotRadius: 2.5
+  };
+  let neonParticles = [];
+  function initNeon() {
+    neonParticles = [];
+    for (let i = 0; i < neonConfig.count; i++) {
+      neonParticles.push({
+        x: Math.random() * window.innerWidth * devicePixelRatio,
+        y: Math.random() * window.innerHeight * devicePixelRatio,
+        vx: (Math.random() - 0.5) * neonConfig.speedCoeff,
+        vy: (Math.random() - 0.5) * neonConfig.speedCoeff,
+        r: neonConfig.dotRadius * (0.5 + Math.random())
       });
     }
+  }
 
-    function frame() {
+  // Matrix Configuration
+  let matrixConfig = {
+    fontSize: 16,
+    speedCoeff: 1.8,
+    chars: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$#@%&*+-/<>".split(""),
+    density: 0.985
+  };
+  let matrixDrops = [];
+  function initMatrix() {
+    if (width === 0) return;
+    const cols = Math.floor(width / (matrixConfig.fontSize * devicePixelRatio)) + 1;
+    matrixDrops = Array(cols).fill(1).map(() => Math.floor(Math.random() * -50));
+  }
+
+  // Nebula Configuration
+  let nebulaConfig = {
+    count: 5,
+    speedCoeff: 2.5,
+    baseRadius: 220
+  };
+  let nebulaBlobs = [];
+  function initNebula() {
+    nebulaBlobs = [];
+    for (let i = 0; i < nebulaConfig.count; i++) {
+      nebulaBlobs.push({
+        x: Math.random() * window.innerWidth * devicePixelRatio,
+        y: Math.random() * window.innerHeight * devicePixelRatio,
+        vx: (Math.random() - 0.5) * nebulaConfig.speedCoeff * 2,
+        vy: (Math.random() - 0.5) * nebulaConfig.speedCoeff * 2,
+        r: nebulaConfig.baseRadius * (0.6 + Math.random() * 0.8),
+        hueShift: Math.random() * 60 - 30
+      });
+    }
+  }
+
+  // Solar Sparks Configuration
+  let solarConfig = {
+    count: 100,
+    speedCoeff: 2.8,
+    maxRadius: 3.5
+  };
+  let solarSparks = [];
+  function createSolarSpark(atBottom = false) {
+    return {
+      x: Math.random() * width,
+      y: atBottom ? height + Math.random() * 20 : Math.random() * height,
+      vx: (Math.random() - 0.5) * solarConfig.speedCoeff,
+      vy: (-1 - Math.random() * 2) * solarConfig.speedCoeff,
+      r: (1 + Math.random() * solarConfig.maxRadius),
+      alpha: 0.15 + Math.random() * 0.85,
+      decay: 0.004 + Math.random() * 0.008
+    };
+  }
+  function initSolar() {
+    solarSparks = [];
+    for (let i = 0; i < solarConfig.count; i++) {
+      solarSparks.push(createSolarSpark());
+    }
+  }
+
+  resize();
+  initNeon();
+  initNebula();
+  initSolar();
+
+  function randomizeParams() {
+    const baseHue = Math.floor(Math.random() * 360);
+    const accentHue = (baseHue + 120 + Math.floor(Math.random() * 120)) % 360;
+    
+    document.documentElement.style.setProperty("--hue", baseHue);
+    document.documentElement.style.setProperty("--accent", accentHue);
+    
+    document.body.className = document.body.className
+      .replace(/theme-\d/, `theme-${currentStyle}`)
+      .replace(/layout-\d/, `layout-${currentStyle}`);
+
+    if (currentStyle === 0) {
+      neonConfig.count = 60 + Math.floor(Math.random() * 60);
+      neonConfig.speedCoeff = 3.0 + Math.random() * 4.0; 
+      neonConfig.maxDist = 120 + Math.floor(Math.random() * 80);
+      neonConfig.dotRadius = 1.5 + Math.random() * 2;
+      initNeon();
+    } else if (currentStyle === 1) {
+      matrixConfig.fontSize = 12 + Math.floor(Math.random() * 8);
+      matrixConfig.speedCoeff = 1.5 + Math.random() * 2.0; 
+      const charSets = [
+        "01".split(""),
+        "0123456789ABCDEF".split(""),
+        "アカサタナハマヤラワガザダバパイウエオ".split(""),
+        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$#@%&*+-/<>".split(""),
+        "☀☁☂☃☄★☆☇☈☉☊☋☌☍☎☏☐☑☒☓☕☖☗☘".split("")
+      ];
+      matrixConfig.chars = charSets[Math.floor(Math.random() * charSets.length)];
+      matrixConfig.density = 0.97 + Math.random() * 0.02;
+      initMatrix();
+    } else if (currentStyle === 2) {
+      nebulaConfig.count = 4 + Math.floor(Math.random() * 4);
+      nebulaConfig.speedCoeff = 2.0 + Math.random() * 3.0; 
+      nebulaConfig.baseRadius = 120 + Math.floor(Math.random() * 150);
+      initNebula();
+    } else {
+      solarConfig.count = 80 + Math.floor(Math.random() * 60);
+      solarConfig.speedCoeff = 2.5 + Math.random() * 3.0; 
+      solarConfig.maxRadius = 2.0 + Math.random() * 3;
+      initSolar();
+    }
+  }
+
+  setInterval(() => {
+    currentStyle = (currentStyle + 1) % 4;
+    randomizeParams();
+  }, 5000);
+
+  randomizeParams();
+
+  let lastMatrixTime = 0;
+  function animate(nowTime) {
+    if (currentStyle === 0) {
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = `hsla(${session.hue}, 90%, 70%, 0.6)`;
-      ctx.strokeStyle = `hsla(${session.accent}, 90%, 60%, 0.15)`;
+      const currentHue = getComputedStyle(document.documentElement).getPropertyValue("--hue").trim();
+      const currentAccent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
       
-      for (const p of particles) {
+      ctx.fillStyle = `hsla(${currentHue}, 90%, 70%, 0.65)`;
+      ctx.strokeStyle = `hsla(${currentAccent}, 90%, 60%, 0.2)`;
+      
+      for (const p of neonParticles) {
         if (pointer.active) {
           const dx = p.x - pointer.x;
           const dy = p.y - pointer.y;
           const d = Math.hypot(dx, dy);
-          if (d < 150 * devicePixelRatio) {
-            p.vx += (dx / Math.max(d, 1)) * 0.05;
-            p.vy += (dy / Math.max(d, 1)) * 0.05;
+          if (d < 180 * devicePixelRatio) {
+            p.vx += (dx / Math.max(d, 1)) * 0.15;
+            p.vy += (dy / Math.max(d, 1)) * 0.15;
           }
         }
         
-        p.vx *= 0.98;
-        p.vy *= 0.98;
-        p.vx += (Math.random() - 0.5) * 0.1;
-        p.vy += (Math.random() - 0.5) * 0.1;
+        p.vx *= 0.97;
+        p.vy *= 0.97;
+        p.vx += (Math.random() - 0.5) * 0.22;
+        p.vy += (Math.random() - 0.5) * 0.22;
         
         p.x += p.vx;
         p.y += p.vy;
@@ -604,13 +806,13 @@ function startCanvas() {
         ctx.fill();
       }
       
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const a = particles[i];
-          const b = particles[j];
+      for (let i = 0; i < neonParticles.length; i++) {
+        for (let j = i + 1; j < neonParticles.length; j++) {
+          const a = neonParticles[i];
+          const b = neonParticles[j];
           const d = Math.hypot(a.x - b.x, a.y - b.y);
-          if (d < 130 * devicePixelRatio) {
-            ctx.globalAlpha = 1 - d / (130 * devicePixelRatio);
+          if (d < neonConfig.maxDist * devicePixelRatio) {
+            ctx.globalAlpha = 1 - d / (neonConfig.maxDist * devicePixelRatio);
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
@@ -619,70 +821,58 @@ function startCanvas() {
         }
       }
       ctx.globalAlpha = 1;
-      requestAnimationFrame(frame);
-    }
-    frame();
-    
-  } else if (style === 1) {
-    // Style 1: Matrix Digital Rain
-    const fontSize = 14 * devicePixelRatio;
-    ctx.font = `bold ${fontSize}px monospace`;
-    const columns = Math.floor(width / fontSize) + 1;
-    const drops = Array(columns).fill(1);
-    const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$#@%&*+-/<>".split("");
-
-    function frame() {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
-      ctx.fillRect(0, 0, width, height);
       
-      for (let i = 0; i < drops.length; i++) {
-        const text = chars[Math.floor(Math.random() * chars.length)];
-        const x = i * fontSize;
-        const y = drops[i] * fontSize;
+    } else if (currentStyle === 1) {
+      const interval = 40 / matrixConfig.speedCoeff;
+      if (nowTime - lastMatrixTime > interval) {
+        lastMatrixTime = nowTime;
         
-        if (Math.random() > 0.985) {
-          ctx.fillStyle = "#ffffff";
-        } else {
-          ctx.fillStyle = "#00ff41";
+        ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+        ctx.fillRect(0, 0, width, height);
+        
+        const fontSizePx = matrixConfig.fontSize * devicePixelRatio;
+        ctx.font = `bold ${fontSizePx}px monospace`;
+        const currentHue = getComputedStyle(document.documentElement).getPropertyValue("--hue").trim();
+        
+        for (let i = 0; i < matrixDrops.length; i++) {
+          const text = matrixConfig.chars[Math.floor(Math.random() * matrixConfig.chars.length)];
+          const x = i * fontSizePx;
+          const y = matrixDrops[i] * fontSizePx;
+          
+          if (Math.random() > 0.982) {
+            ctx.fillStyle = "#ffffff";
+          } else {
+            ctx.fillStyle = `hsla(${currentHue}, 100%, 50%, 1)`;
+          }
+          
+          if (y > 0) {
+            ctx.fillText(text, x, y);
+          }
+          
+          if (y > height && Math.random() > matrixConfig.density) {
+            matrixDrops[i] = 0;
+          }
+          matrixDrops[i]++;
         }
         
-        ctx.fillText(text, x, y);
-        
-        if (y > height && Math.random() > 0.975) {
-          drops[i] = 0;
+        if (pointer.active) {
+          ctx.fillStyle = `hsla(${currentHue}, 100%, 50%, 0.25)`;
+          ctx.fillRect(
+            Math.floor(pointer.x / fontSizePx) * fontSizePx,
+            Math.floor(pointer.y / fontSizePx) * fontSizePx,
+            fontSizePx,
+            fontSizePx
+          );
         }
-        drops[i]++;
       }
       
-      if (pointer.active) {
-        ctx.fillStyle = "rgba(0, 255, 65, 0.15)";
-        ctx.fillRect(Math.floor(pointer.x / fontSize) * fontSize, Math.floor(pointer.y / fontSize) * fontSize, fontSize, fontSize);
-      }
-      
-      setTimeout(() => requestAnimationFrame(frame), 33);
-    }
-    frame();
-    
-  } else if (style === 2) {
-    // Style 2: Cosmic Nebula blobs
-    const blobs = [];
-    const blobCount = 4;
-    for (let i = 0; i < blobCount; i++) {
-      blobs.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.8,
-        vy: (Math.random() - 0.5) * 0.8,
-        r: 150 + Math.random() * 150,
-        hue: (session.hue + i * 30) % 360
-      });
-    }
-
-    function frame() {
-      ctx.fillStyle = "rgba(6, 2, 18, 0.15)";
+    } else if (currentStyle === 2) {
+      ctx.fillStyle = "rgba(6, 2, 18, 0.12)";
       ctx.fillRect(0, 0, width, height);
       
-      for (const b of blobs) {
+      const currentHue = Number(getComputedStyle(document.documentElement).getPropertyValue("--hue").trim() || 250);
+      
+      for (const b of nebulaBlobs) {
         b.x += b.vx;
         b.y += b.vy;
         
@@ -690,8 +880,9 @@ function startCanvas() {
         if (b.y - b.r < 0 || b.y + b.r > height) b.vy *= -1;
         
         const grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
-        grad.addColorStop(0, `hsla(${b.hue}, 80%, 50%, 0.18)`);
-        grad.addColorStop(0.5, `hsla(${b.hue}, 80%, 40%, 0.05)`);
+        const targetHue = (currentHue + b.hueShift + 360) % 360;
+        grad.addColorStop(0, `hsla(${targetHue}, 80%, 50%, 0.22)`);
+        grad.addColorStop(0.5, `hsla(${targetHue}, 80%, 40%, 0.06)`);
         grad.addColorStop(1, "transparent");
         
         ctx.fillStyle = grad;
@@ -701,54 +892,32 @@ function startCanvas() {
       }
       
       if (pointer.active) {
-        const grad = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 100 * devicePixelRatio);
-        grad.addColorStop(0, "rgba(255, 0, 255, 0.12)");
+        const currentAccent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
+        const grad = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 120 * devicePixelRatio);
+        grad.addColorStop(0, `hsla(${currentAccent}, 100%, 50%, 0.16)`);
         grad.addColorStop(1, "transparent");
         ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.arc(pointer.x, pointer.y, 100 * devicePixelRatio, 0, Math.PI * 2);
+        ctx.arc(pointer.x, pointer.y, 120 * devicePixelRatio, 0, Math.PI * 2);
         ctx.fill();
       }
       
-      requestAnimationFrame(frame);
-    }
-    frame();
-    
-  } else {
-    // Style 3: Solar Flare Sparks rising
-    const sparks = [];
-    const count = 60;
-    
-    function createSpark(atBottom = false) {
-      return {
-        x: Math.random() * width,
-        y: atBottom ? height + Math.random() * 20 : Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.8,
-        vy: -0.5 - Math.random() * 1.2,
-        r: 1 + Math.random() * 2.5,
-        alpha: 0.1 + Math.random() * 0.8,
-        decay: 0.002 + Math.random() * 0.005
-      };
-    }
-    
-    for (let i = 0; i < count; i++) {
-      sparks.push(createSpark());
-    }
-
-    function frame() {
-      ctx.fillStyle = "rgba(5, 2, 0, 0.25)";
+    } else {
+      ctx.fillStyle = "rgba(5, 2, 0, 0.20)";
       ctx.fillRect(0, 0, width, height);
       
-      for (let i = 0; i < sparks.length; i++) {
-        const s = sparks[i];
+      const currentHue = Number(getComputedStyle(document.documentElement).getPropertyValue("--hue").trim() || 15);
+      
+      for (let i = 0; i < solarSparks.length; i++) {
+        const s = solarSparks[i];
         
         if (pointer.active) {
           const dx = s.x - pointer.x;
           const dy = s.y - pointer.y;
           const d = Math.hypot(dx, dy);
-          if (d < 120 * devicePixelRatio) {
-            s.vx += (dx / Math.max(d, 1)) * 0.08;
-            s.vy -= 0.04;
+          if (d < 150 * devicePixelRatio) {
+            s.vx += (dx / Math.max(d, 1)) * 0.15;
+            s.vy -= 0.08;
           }
         }
         
@@ -757,19 +926,19 @@ function startCanvas() {
         s.alpha -= s.decay;
         
         if (s.alpha <= 0 || s.y < 0 || s.x < 0 || s.x > width) {
-          sparks[i] = createSpark(true);
+          solarSparks[i] = createSolarSpark(true);
         } else {
-          ctx.fillStyle = `hsla(${session.hue + (s.alpha * 15)}, 90%, 55%, ${s.alpha})`;
+          ctx.fillStyle = `hsla(${currentHue + (s.alpha * 20)}, 95%, 60%, ${s.alpha})`;
           ctx.beginPath();
           ctx.arc(s.x, s.y, s.r * devicePixelRatio, 0, Math.PI * 2);
           ctx.fill();
         }
       }
-      
-      requestAnimationFrame(frame);
     }
-    frame();
+    
+    requestAnimationFrame(animate);
   }
+  requestAnimationFrame(animate);
 }
 
 startCanvas();

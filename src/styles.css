@@ -412,6 +412,47 @@ button:active {
   z-index: 10;
 }
 
+/* Breadcrumbs Navigation */
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  color: var(--muted);
+  margin: 1.5rem 0 1rem;
+  padding: 0.8rem 1.5rem;
+  background: rgba(var(--base-rgb), 0.02);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.breadcrumbs span.crumb {
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.breadcrumbs span.crumb:hover {
+  color: var(--hot);
+  text-shadow: 0 0 10px hsla(var(--accent), 100%, 65%, 0.4);
+}
+
+.breadcrumbs span.active {
+  color: var(--text);
+  font-weight: 700;
+  cursor: default;
+}
+
+.breadcrumbs .separator {
+  color: var(--panel-border);
+  user-select: none;
+}
+
 .topbar h2 {
   margin: 0;
   font-size: 1.8rem;
