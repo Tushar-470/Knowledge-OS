@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Tushar Mathapati's private Knowledge OS portal.">
     <title>Knowledge OS - ChronoVault</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Inter:wght@300..800&family=Outfit:wght@300..900&family=Space+Grotesk:wght@300..700&family=Syne:wght@400..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
@@ -22,7 +25,8 @@
             <input id="password" name="password" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="0000" aria-describedby="hint">
             <button type="submit">Unlock</button>
           </div>
-          <p id="hint" class="hint">Use your private date formula.</p>
+          <button type="button" id="guest-btn" class="guest-btn">Explore Public Notes</button>
+          <p id="hint" class="hint">Use today's DD + MM + 11 formula.</p>
           <p id="status" class="status" role="status"></p>
         </form>
       </section>
@@ -30,10 +34,13 @@
       <section id="vault" class="vault-view hidden" aria-label="Encrypted files">
         <header class="topbar">
           <div>
-            <p class="eyebrow">Unlocked</p>
+            <p id="vault-mode" class="eyebrow">Unlocked</p>
             <h2>Knowledge OS</h2>
           </div>
-          <input id="search" type="search" placeholder="Search files">
+          <div class="topbar-controls">
+            <input id="search" type="search" placeholder="Search files">
+            <button id="lock-vault-btn" type="button" class="lock-vault-btn">Lock</button>
+          </div>
         </header>
         <div id="folder-grid" class="folder-grid"></div>
         <section id="file-section" class="file-section hidden">
@@ -56,6 +63,15 @@
       </div>
       <div id="preview-body" class="preview-body"></div>
     </dialog>
+    <div id="scanner-overlay" class="scanner-overlay hidden" aria-hidden="true">
+      <div class="scan-grid"></div>
+      <div class="scanner-hud">
+        <div class="scanner-line"></div>
+        <div class="scanner-text">DECRYPTING SYSTEM VAULT...</div>
+        <div class="scanner-progress">0%</div>
+      </div>
+    </div>
+    <div id="glitch-overlay" class="glitch-overlay hidden" aria-hidden="true"></div>
     <script type="module" src="./main.js"></script>
   </body>
 </html>
