@@ -18,23 +18,14 @@
           <p class="eyebrow">ChronoVault</p>
           <h1 id="title">Knowledge OS</h1>
           <p class="owner">Tushar Mathapati</p>
-          <div class="hud-stats">
-            <div class="hud-stat"><span class="hud-label">SESSION:</span> <span id="hud-session">CV-000000</span></div>
-            <div class="hud-stat"><span class="hud-label">ENCRYPT:</span> <span>AES-GCM-256</span></div>
-            <div class="hud-stat"><span class="hud-label">STRETCH:</span> <span>600K PBKDF2</span></div>
-            <div class="hud-stat"><span class="hud-label">HUD SYSTEM:</span> <span id="hud-system-name">NEON_NET</span></div>
-            <div class="hud-stat"><span class="hud-label">LOCK LAYER:</span> <span>5-LETTER LOCK</span></div>
-            <div class="hud-stat"><span class="hud-label">SECURE ENVT:</span> <span>ACTIVE</span></div>
-          </div>
         </div>
         <form id="unlock-form" class="lock-panel">
-          <label for="password">Secure Key Authorization</label>
+          <label for="password" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">Access Key</label>
           <div class="code-row">
-            <input id="password" name="password" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="••••" aria-describedby="hint">
+            <input id="password" name="password" type="password" inputmode="numeric" autocomplete="off" maxlength="24" placeholder="ENTER ACCESS KEY">
             <button type="submit">Unlock</button>
           </div>
           <button type="button" id="guest-btn" class="guest-btn">Explore Public Notes</button>
-          <p id="hint" class="hint">Authorized Access Only. Decryption key required.</p>
           <p id="status" class="status" role="status"></p>
         </form>
       </section>

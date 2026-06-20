@@ -35,35 +35,55 @@ function todaySession() {
   const mm = now.getMonth() + 1;
   const yy = now.getFullYear() % 100;
   
-  // Daily access password
+  // Daily access password formula
   const password = String(dd + mm + SECRET_NUMBER).padStart(4, "0");
   
   // Visit-based seed (changes every visit/load)
   const visitSeed = Math.floor(Math.random() * 1000000);
+  const style = visitSeed % 4;
+  
+  // Scoped randomized colors to ensure distinct vibes per visit
+  let hue = 0;
+  let accent = 0;
+  
+  if (style === 0) {
+    // Cyber Neon (Cyan base, Magenta accent)
+    hue = 180 + (visitSeed % 40); // 180 - 220
+    accent = 300 + (Math.floor(visitSeed / 13) % 40); // 300 - 340
+  } else if (style === 1) {
+    // Matrix Green
+    hue = 100 + (visitSeed % 40); // 100 - 140
+    accent = hue;
+  } else if (style === 2) {
+    // Nebula Purple (Violet base, Fuchsia accent)
+    hue = 250 + (visitSeed % 40); // 250 - 290
+    accent = 310 + (Math.floor(visitSeed / 13) % 40); // 310 - 350
+  } else {
+    // Solar Flare (Amber base, Crimson/Red accent)
+    hue = 15 + (visitSeed % 35); // 15 - 50
+    accent = 350 + (Math.floor(visitSeed / 13) % 20); // 350 - 10
+  }
   
   return {
     password,
     visitSeed,
-    hue: visitSeed % 360,
-    accent: (visitSeed + 142) % 360,
+    hue,
+    accent,
     count: (visitSeed % 40) + 30,
-    style: visitSeed % 4
+    style,
+    dd,
+    mm
   };
 }
 
 const session = todaySession();
 const visitSeed = session.visitSeed;
 
-// Set root custom variables and dynamic classes
+// Apply dynamic theme custom properties and body class layers
 document.documentElement.style.setProperty("--hue", session.hue);
 document.documentElement.style.setProperty("--accent", session.accent);
 document.body.classList.add(`theme-${session.style}`);
 document.body.classList.add(`layout-${session.style}`);
-
-// Initialize HUD diagnostic stats
-document.querySelector("#hud-session").textContent = `CV-${session.visitSeed.toString().padStart(6, "0")}`;
-const systems = ["NEON_NET", "MATRIX_RAIN", "COSMIC_NEBULA", "SOLAR_FLARE"];
-document.querySelector("#hud-system-name").textContent = systems[session.style];
 
 function base64ToBytes(base64) {
   const binary = atob(base64);
@@ -265,6 +285,70 @@ function fileUrl(file) {
   return url;
 }
 
+// Global lookup handler for wiki links in previews
+window.previewByName = (name) => {
+  const searchName = name.toLowerCase().trim();
+  const file = state.vault.files.find(f => 
+    f.name.toLowerCase() === searchName || 
+    f.name.toLowerCase().replace(/\.md$/, "") === searchName
+  );
+  if (file) {
+    el.preview.close();
+    setTimeout(() => previewFile(file), 150);
+  } else {
+    alert(`Document "${name}" not found in this vault.`);
+  }
+};
+
+// Rich Markdown Parser
+function renderMarkdown(md) {
+  // 1. Safe HTML escape first
+  let html = escapeHtml(md);
+  
+  // 2. Parse image embeds: ![[Image.png]]
+  html = html.replace(/!\[\[(.*?)\]\]/g, (match, filename) => {
+    const searchName = filename.toLowerCase().trim();
+    const file = state.vault.files.find(f => f.name.toLowerCase() === searchName);
+    if (file && file.mime.startsWith("image/")) {
+      const url = fileUrl(file);
+      return `<img src="${url}" alt="${escapeHtml(filename)}" class="embedded-image">`;
+    }
+    return `<span class="meta">[Attachment: ${escapeHtml(filename)} not found]</span>`;
+  });
+  
+  // 3. Parse wiki links: [[Other Note]] or [[Other Note|Alias]]
+  html = html.replace(/\[\[(.*?)\]\]/g, (match, inner) => {
+    let filename = inner;
+    let alias = inner;
+    if (inner.includes("|")) {
+      const parts = inner.split("|");
+      filename = parts[0];
+      alias = parts[1];
+    }
+    return `<a href="#" class="wiki-link" onclick="event.preventDefault(); window.previewByName('${escapeHtml(filename.replace(/'/g, "\\'"))}')">${escapeHtml(alias)}</a>`;
+  });
+  
+  // 4. Parse Headers: # Title
+  html = html.replace(/^# (.*?)$/gm, '<h1>$1</h1>');
+  html = html.replace(/^## (.*?)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
+  
+  // 5. Parse Bold & Italics
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  
+  // 6. Parse Lists
+  html = html.replace(/^- (.*?)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul>$&</ul>');
+  
+  // 7. Parse Paragraphs and Breaks
+  html = html.replace(/\n\n/g, '</p><p>');
+  html = html.replace(/\n/g, '<br>');
+  
+  return `<div class="markdown-body"><p>${html}</p></div>`;
+}
+
+// Preview File Routine
 function previewFile(file) {
   const url = fileUrl(file);
   el.previewTitle.textContent = file.name;
@@ -272,21 +356,31 @@ function previewFile(file) {
   el.download.download = file.name;
   el.previewBody.innerHTML = "";
   
-  if (file.mime.startsWith("text/") || file.ext === ".md") {
+  const textExtensions = [".json", ".js", ".css", ".html", ".xml", ".csv", ".yaml", ".yml", ".py", ".sh", ".ini", ".conf"];
+  
+  if (file.ext === ".md") {
+    // Rich Markdown preview
+    const rawText = bytesToText(base64ToBytes(file.content));
+    el.previewBody.innerHTML = renderMarkdown(rawText);
+  } else if (file.mime.startsWith("text/") || textExtensions.includes(file.ext)) {
+    // Common text code files
     const pre = document.createElement("pre");
     pre.textContent = bytesToText(base64ToBytes(file.content));
     el.previewBody.append(pre);
   } else if (file.mime.startsWith("image/")) {
+    // Images
     const img = document.createElement("img");
     img.src = url;
     img.alt = file.name;
     el.previewBody.append(img);
   } else if (file.ext === ".pdf") {
+    // PDFs
     const frame = document.createElement("iframe");
     frame.src = url;
     frame.title = file.name;
     el.previewBody.append(frame);
   } else {
+    // Non-previewable
     const p = document.createElement("p");
     p.textContent = "Preview is not available for this file type. Use Download.";
     el.previewBody.append(p);
@@ -321,21 +415,45 @@ function lockVault(message = "") {
   state.urls.clear();
 }
 
-// Private Decrypt Submit
+// Progressive lockout cooldown variables
 let wrongAttempts = 0;
+let cooldownTime = 0;
+
+function startCooldown(seconds) {
+  cooldownTime = seconds;
+  el.password.disabled = true;
+  el.form.querySelector("button[type='submit']").disabled = true;
+  
+  const interval = setInterval(() => {
+    cooldownTime--;
+    if (cooldownTime <= 0) {
+      clearInterval(interval);
+      el.password.disabled = false;
+      el.form.querySelector("button[type='submit']").disabled = false;
+      el.status.textContent = "";
+      wrongAttempts = 0;
+    } else {
+      el.status.textContent = `Too many attempts. Locked out for ${cooldownTime}s.`;
+    }
+  }, 1000);
+}
+
+// Private Decrypt Submit
 el.form.addEventListener("submit", async event => {
   event.preventDefault();
-  const entered = el.password.value.trim();
+  if (cooldownTime > 0) return;
+  
+  const entered = el.password.value.trim().padStart(4, "0");
   const numeric = Number.parseInt(entered, 10);
+  const secret = numeric - session.dd - session.mm;
   
-  const now = new Date();
-  const dd = now.getDate();
-  const mm = now.getMonth() + 1;
-  const correctNumeric = dd + mm + SECRET_NUMBER;
-  
-  if (isNaN(numeric) || numeric !== correctNumeric) {
+  if (entered !== session.password) {
     wrongAttempts += 1;
-    el.status.textContent = wrongAttempts >= 4 ? "Access denied. Temporary lockout active." : "Access Denied.";
+    if (wrongAttempts >= 4) {
+      startCooldown(30);
+    } else {
+      el.status.textContent = `Incorrect code. Attempt ${wrongAttempts}/4.`;
+    }
     el.form.classList.remove("shake");
     requestAnimationFrame(() => el.form.classList.add("shake"));
     return;
@@ -343,7 +461,7 @@ el.form.addEventListener("submit", async event => {
   
   el.status.textContent = "Deriving key...";
   try {
-    const decrypted = await decryptVault(SECRET_NUMBER);
+    const decrypted = await decryptVault(secret);
     el.status.textContent = "";
     state.vault = decrypted;
     state.isGuest = false;
@@ -404,9 +522,11 @@ el.search.addEventListener("input", () => {
   if (state.activeFolder) renderFiles();
 });
 
+// Close folder: hides folder and scrolls back to folder list smoothly
 el.closeFolder.addEventListener("click", () => {
   state.activeFolder = null;
   el.fileSection.classList.add("hidden");
+  el.folderGrid.scrollIntoView({ behavior: "smooth", block: "nearest" });
 });
 
 el.closePreview.addEventListener("click", () => el.preview.close());

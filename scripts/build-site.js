@@ -11,7 +11,7 @@ const owner = process.env.CHRONOVAULT_OWNER || "Tushar Mathapati";
 const salt = "chronovault:knowledge-os:tushar:v1";
 const iterations = 600000;
 const excludeDirs = new Set([".git", ".github", ".obsidian", "dist", "node_modules", "public", "scripts", "src"]);
-const excludeFiles = new Set(["package.json", "package-lock.json", "README.md", "robots.txt", "sitemap.xml"]);
+const excludeFiles = new Set(["package.json", "package-lock.json", "robots.txt", "sitemap.xml"]);
 const includeExtensions = new Set([
   ".md", ".txt", ".pdf", ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".csv",
   ".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg"
