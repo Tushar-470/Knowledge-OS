@@ -135,11 +135,12 @@ for (const file of files) {
     publicFiles.push(record);
     if (!publicFolderMap.has(folder)) publicFolderMap.set(folder, { name: folder, count: 0 });
     publicFolderMap.get(folder).count += 1;
-  } else {
-    privateFiles.push(record);
-    if (!privateFolderMap.has(folder)) privateFolderMap.set(folder, { name: folder, count: 0 });
-    privateFolderMap.get(folder).count += 1;
   }
+  
+  // All files (both public and private) are included in the private owner payload
+  privateFiles.push(record);
+  if (!privateFolderMap.has(folder)) privateFolderMap.set(folder, { name: folder, count: 0 });
+  privateFolderMap.get(folder).count += 1;
 }
 
 const privatePayload = {
