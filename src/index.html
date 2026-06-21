@@ -18,7 +18,7 @@
           <p class="eyebrow">ChronoVault</p>
           <h1 id="title">Knowledge OS</h1>
           <div class="owner-container">
-            <p id="owner-name" class="owner">Tushar Mathapati</p>
+            <canvas id="lock-name-canvas"></canvas>
           </div>
         </div>
         <form id="unlock-form" class="lock-panel">
@@ -33,24 +33,143 @@
       </section>
 
       <section id="vault" class="vault-view hidden" aria-label="Encrypted files">
-        <header class="topbar">
-          <div>
-            <p id="vault-mode" class="eyebrow">Unlocked</p>
-            <h2>Knowledge OS</h2>
+        <aside class="vault-sidebar">
+          <div class="sidebar-brand">
+            <div class="brand-logo" id="sidebar-logo">CV</div>
+            <h3>CHRONOVAULT</h3>
           </div>
-          <div class="topbar-controls">
-            <input id="search" type="search" placeholder="Search files">
-            <button id="lock-vault-btn" type="button" class="lock-vault-btn">Lock</button>
+          <nav class="sidebar-nav" aria-label="Vault sections">
+            <div class="nav-progress-line">
+              <div class="nav-progress-fill" id="nav-progress-fill"></div>
+            </div>
+            <button type="button" class="nav-item active" data-section="01">
+              <span class="nav-num">01</span>
+              <span class="nav-text">PORTAL HOME</span>
+            </button>
+            <button type="button" class="nav-item" data-section="02">
+              <span class="nav-num">02</span>
+              <span class="nav-text">VAULT EXPLORER</span>
+            </button>
+            <button type="button" class="nav-item" data-section="03">
+              <span class="nav-num">03</span>
+              <span class="nav-text">DOC PREVIEW</span>
+            </button>
+            <button type="button" class="nav-item" data-section="04">
+              <span class="nav-num">04</span>
+              <span class="nav-text">DECRYPT SYSTEM</span>
+            </button>
+          </nav>
+          <div class="sidebar-footer">
+            <button id="lock-vault-btn" type="button" class="lock-vault-btn">LOCK PORTAL</button>
           </div>
-        </header>
-        <nav id="breadcrumbs" class="breadcrumbs" aria-label="Breadcrumbs"></nav>
-        <div id="folder-grid" class="folder-grid"></div>
-        <section id="file-section" class="file-section hidden">
-          <div class="section-head">
-            <h3 id="folder-title">Files</h3>
+        </aside>
+        
+        <div class="vault-content">
+          <!-- View 01: Portal Home -->
+          <div id="view-home" class="vault-view-section">
+            <div class="view-header">
+              <p class="eyebrow" id="vault-mode">Unlocked</p>
+              <h2>Portal Home</h2>
+            </div>
+            <div class="home-dashboard">
+              <div class="dashboard-welcome">
+                <div class="owner-container">
+                  <canvas id="home-name-canvas"></canvas>
+                </div>
+                <p class="subtitle">Secure information vault. Select explorer to browse documents.</p>
+              </div>
+              <div class="search-box-container">
+                <input id="search" type="search" placeholder="Search secure files...">
+              </div>
+              <div class="dashboard-stats">
+                <div class="stat-card">
+                  <span class="stat-num" id="stat-files">-</span>
+                  <span class="stat-lbl">Encrypted Files</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-num" id="stat-folders">-</span>
+                  <span class="stat-lbl">Secure Folders</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-num" id="stat-session">ACTIVE</span>
+                  <span class="stat-lbl">Access Session</span>
+                </div>
+              </div>
+              <div class="recent-files-container">
+                <h3>Quick Reference</h3>
+                <div id="recent-files-grid" class="recent-grid"></div>
+              </div>
+            </div>
           </div>
-          <div id="file-grid" class="file-grid"></div>
-        </section>
+          
+          <!-- View 02: Vault Explorer -->
+          <div id="view-explorer" class="vault-view-section hidden">
+            <div class="view-header">
+              <p class="eyebrow">Explorer</p>
+              <h2>Vault Directory</h2>
+            </div>
+            <nav id="breadcrumbs" class="breadcrumbs" aria-label="Breadcrumbs"></nav>
+            <div id="folder-grid" class="folder-grid"></div>
+            <section id="file-section" class="file-section hidden">
+              <div class="section-head">
+                <h3 id="folder-title">Files</h3>
+              </div>
+              <div id="file-grid" class="file-grid"></div>
+            </section>
+          </div>
+          
+          <!-- View 03: Document Preview -->
+          <div id="view-preview" class="vault-view-section hidden">
+            <div class="view-header">
+              <p class="eyebrow">Reader</p>
+              <h2>Document Viewer</h2>
+            </div>
+            <div class="preview-panel-container">
+              <div id="active-preview-header" class="active-preview-head">
+                <strong id="active-preview-title">No document loaded</strong>
+                <div class="preview-actions">
+                  <a id="active-download-link" download class="download-btn hidden">Download</a>
+                  <button id="close-active-preview" type="button" class="close-btn hidden">Clear View</button>
+                </div>
+              </div>
+              <div id="active-preview-body" class="active-preview-body">
+                <div class="empty-preview-placeholder">
+                  <div class="placeholder-icon"></div>
+                  <p>Select a document from the <a href="#" class="navigate-to-explorer">Vault Explorer</a> to view its decrypted contents here.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- View 04: Decrypt Diagnostics -->
+          <div id="view-decrypt" class="vault-view-section hidden">
+            <div class="view-header">
+              <p class="eyebrow">Decryption</p>
+              <h2>System Security & Lock Rules</h2>
+            </div>
+            <div class="diagnostics-panel">
+              <div class="diag-card">
+                <h3>Decryption Passcode Parity Rules</h3>
+                <p>The daily secure letter lock runs on a parity formula derived from the primary vault passcode.</p>
+                <div class="formula-box">
+                  <div class="formula-item">
+                    <span class="formula-val">Even Last Digit</span>
+                    <span class="formula-desc">Correct button is the <strong>alphabetically last</strong> letter</span>
+                  </div>
+                  <div class="formula-item">
+                    <span class="formula-val">Odd Last Digit</span>
+                    <span class="formula-desc">Correct button is the <strong>alphabetically first</strong> letter</span>
+                  </div>
+                </div>
+                <div class="status-summary">
+                  <p>Daily Access Key: <span class="badge" id="diag-daily-key">Active</span></p>
+                  <p>Lock-out Cooldown Penalty: <span class="badge badge-hot">21 Seconds</span></p>
+                  <p>Session Unlocked Folders: <span class="badge badge-ok" id="diag-unlocked-count">0</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
 
