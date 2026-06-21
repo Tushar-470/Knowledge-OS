@@ -8,8 +8,7 @@ const srcDir = path.join(root, "src");
 const distDir = path.join(root, "dist");
 const secretNumber = String(process.env.CHRONOVAULT_SECRET_NUMBER || "11");
 const owner = process.env.CHRONOVAULT_OWNER || "Tushar Mathapati";
-// Dynamically generate a random salt per build to increase KDF entropy (Flaw 5)
-const salt = process.env.CHRONOVAULT_SALT || randomBytes(16).toString("base64");
+const salt = "chronovault:knowledge-os:tushar:v1";
 const iterations = 600000;
 const excludeDirs = new Set([".git", ".github", ".obsidian", "dist", "node_modules", "public", "scripts", "src"]);
 const excludeFiles = new Set(["package.json", "package-lock.json", "robots.txt", "sitemap.xml"]);
@@ -117,10 +116,7 @@ for (const file of files) {
   const data = await readFile(file.absolute);
   const info = await stat(file.absolute);
   const ext = path.extname(file.relative).toLowerCase();
-  let rawFolder = path.dirname(file.relative);
-  // Sanitize folder path to strip directory traversal sequences (Flaw 18)
-  rawFolder = rawFolder.replace(/\.\./g, "").replace(/\/+/g, "/");
-  const folder = toWebPath(rawFolder === "." ? "Root" : rawFolder);
+  const folder = toWebPath(path.dirname(file.relative) === "." ? "Root" : path.dirname(file.relative));
   
   const record = {
     id: Buffer.from(file.relative).toString("base64url"),
@@ -165,13 +161,6 @@ const encryptedPayload = encryptJson(privatePayload);
 console.log("Writing static site...");
 await rm(distDir, { recursive: true, force: true });
 await copyDir(srcDir, distDir);
-
-// Inject secrets and metadata into compiled JS at build time (Flaw 1, Flaw 8)
-let mainJs = await readFile(path.join(distDir, "main.js"), "utf8");
-mainJs = mainJs.replace("const SECRET_NUMBER = 11; // INJECTED_AT_BUILD", `const SECRET_NUMBER = ${secretNumber};`);
-mainJs = mainJs.replace('this.text = "Tushar Mathapati";', `this.text = "${owner}";`);
-await writeFile(path.join(distDir, "main.js"), mainJs);
-
 await writeFile(path.join(distDir, "vault-data.json"), JSON.stringify(encryptedPayload));
 await writeFile(path.join(distDir, "public-data.json"), JSON.stringify(publicPayload));
 await writeFile(path.join(distDir, "404.html"), await readFile(path.join(srcDir, "index.html"), "utf8"));

@@ -1,10 +1,116 @@
-const SECRET_NUMBER = 11; // INJECTED_AT_BUILD
+const SECRET_NUMBER = 11;
 const state = {
   vault: null,
   activeFolder: "", // empty string is Root level
   isGuest: false,
   urls: new Map(),
   unlockedFolders: new Set()
+};
+
+// Web Audio API Sound Engine (Zero-Network SFX)
+const VaultAudio = {
+  ctx: null,
+  muted: localStorage.getItem("vault_sfx_muted") === "true",
+  
+  init() {
+    if (!this.ctx) {
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (this.ctx.state === "suspended") {
+      this.ctx.resume();
+    }
+  },
+  
+  toggleMute() {
+    this.muted = !this.muted;
+    localStorage.setItem("vault_sfx_muted", this.muted);
+    this.updateButtonUI();
+    this.playChirp();
+  },
+  
+  updateButtonUI() {
+    const btn = document.querySelector("#audio-toggle-btn");
+    if (btn) {
+      btn.textContent = this.muted ? "UNMUTE SFX" : "MUTE SFX";
+    }
+  },
+  
+  playChirp() {
+    if (this.muted) return;
+    this.init();
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(650 + Math.random() * 150, this.ctx.currentTime);
+      gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.05);
+      osc.start(this.ctx.currentTime);
+      osc.stop(this.ctx.currentTime + 0.06);
+    } catch (e) {
+      console.warn("Audio context not allowed or failed to start:", e);
+    }
+  },
+  
+  playUnlock() {
+    if (this.muted) return;
+    this.init();
+    try {
+      const now = this.ctx.currentTime;
+      const freqs = [523.25, 659.25, 783.99, 987.77, 1046.50];
+      freqs.forEach((f, idx) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(f, now + idx * 0.07);
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.06, now + idx * 0.07 + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.07 + 0.12);
+        osc.start(now + idx * 0.07);
+        osc.stop(now + idx * 0.07 + 0.15);
+      });
+    } catch (e) {
+      console.warn(e);
+    }
+  },
+  
+  playWarning() {
+    if (this.muted) return;
+    this.init();
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(80, now);
+      osc.frequency.linearRampToValueAtTime(45, now + 0.45);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+      osc.start(now);
+      osc.stop(now + 0.55);
+      
+      const osc2 = this.ctx.createOscillator();
+      const gain2 = this.ctx.createGain();
+      osc2.connect(gain2);
+      gain2.connect(this.ctx.destination);
+      osc2.type = "sine";
+      osc2.frequency.setValueAtTime(1000, now);
+      osc2.frequency.setValueAtTime(300, now + 0.06);
+      osc2.frequency.setValueAtTime(800, now + 0.12);
+      gain2.gain.setValueAtTime(0.03, now);
+      gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+      osc2.start(now);
+      osc2.stop(now + 0.22);
+    } catch (e) {
+      console.warn(e);
+    }
+  }
 };
 
 const el = {
@@ -196,6 +302,10 @@ function bind3DTilt(element) {
     const rotateX = ((y / rect.height) - 0.5) * -20;
     element.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg) translateY(-8px) scale(1.02)`;
     element.style.transition = "transform 0.05s ease-out";
+    
+    // Set mouse coordinates for specular reflection glare
+    element.style.setProperty("--glare-x", `${(x / rect.width) * 100}%`);
+    element.style.setProperty("--glare-y", `${(y / rect.height) * 100}%`);
   });
   
   element.addEventListener("mouseleave", () => {
@@ -332,6 +442,7 @@ function renderVaultView() {
       if (isUnlocked) {
         card.style.cursor = "pointer";
         card.innerHTML = `
+          <div class="card-glare"></div>
           <div class="folder-icon" aria-hidden="true"></div>
           <h3>${escapeHtml(folderBaseName)}</h3>
           <p class="meta" style="font-size: 0.8rem; border: 1px dashed var(--panel-border); padding: 0.35rem; text-align: center; border-radius: 6px; color: var(--muted); margin-top: 1rem;">Click to Open</p>
@@ -341,6 +452,7 @@ function renderVaultView() {
       } else {
         const lock = folderLetters(folderPath);
         card.innerHTML = `
+          <div class="card-glare"></div>
           <div class="folder-icon" aria-hidden="true"></div>
           <h3>${escapeHtml(folderBaseName)}</h3>
           <div class="letter-row" aria-label="Folder letter lock"></div>
@@ -354,11 +466,13 @@ function renderVaultView() {
           button.addEventListener("click", (event) => {
             event.stopPropagation();
             if (letter === lock.correct) {
+              VaultAudio.playChirp();
               button.classList.add("correct");
               row.querySelectorAll("button").forEach(btn => btn.disabled = true);
               state.unlockedFolders.add(folderPath);
               setTimeout(() => openFolder(folderPath), 250);
             } else {
+              VaultAudio.playWarning();
               button.classList.add("wrong");
               card.classList.remove("shake");
               requestAnimationFrame(() => card.classList.add("shake"));
@@ -410,6 +524,7 @@ function renderFilesList(files) {
     card.tabIndex = 0;
     card.style.animationDelay = `${Math.min(index * 30, 350)}ms`;
     card.innerHTML = `
+      <div class="card-glare"></div>
       <p class="eyebrow file-type">${escapeHtml(file.ext.replace(".", "") || "file")}</p>
       <h4>${escapeHtml(file.name)}</h4>
       <p class="meta">${formatSize(file.size)}</p>
@@ -470,6 +585,7 @@ function showLinkLockDialog(file) {
     button.textContent = letter;
     button.addEventListener("click", () => {
       if (letter === lock.correct) {
+        VaultAudio.playChirp();
         button.classList.add("correct");
         state.unlockedFolders.add(file.folder);
         setTimeout(() => {
@@ -477,6 +593,7 @@ function showLinkLockDialog(file) {
           previewFile(file);
         }, 250);
       } else {
+        VaultAudio.playWarning();
         button.classList.add("wrong");
         dialog.classList.remove("shake");
         requestAnimationFrame(() => dialog.classList.add("shake"));
@@ -692,49 +809,17 @@ function renderMarkdown(md) {
     return `<a href="#" class="wiki-link" onclick="event.preventDefault(); window.previewByName('${escapeHtml(filename.replace(/'/g, "\\'"))}')">${escapeHtml(alias)}</a>`;
   });
   
-  // Bold & Italics (restricted to non-newlines to prevent styling leakage across paragraphs - Flaw 3)
-  finalHtml = finalHtml.replace(/\*\*([^\n*]+)\*\*/g, '<strong>$1</strong>');
-  finalHtml = finalHtml.replace(/\*([^\n*]+)\*/g, '<em>$1</em>');
+  // Bold & Italics
+  finalHtml = finalHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  finalHtml = finalHtml.replace(/\*(.*?)\*/g, '<em>$1</em>');
   
   // Inline code
-  finalHtml = finalHtml.replace(/`([^\n`]+)`/g, '<code>$1</code>');
+  finalHtml = finalHtml.replace(/`(.*?)`/g, '<code>$1</code>');
   
   return `<div class="markdown-body">${finalHtml}</div>`;
 }
 
-function previewFile(file) {
-  const url = fileUrl(file);
-  el.previewTitle.textContent = file.name;
-  el.download.href = url;
-  el.download.download = file.name;
-  el.previewBody.innerHTML = "";
-  
-  const textExtensions = [".json", ".js", ".css", ".html", ".xml", ".csv", ".yaml", ".yml", ".py", ".sh", ".ini", ".conf"];
-  
-  if (file.ext === ".md") {
-    const rawText = bytesToText(base64ToBytes(file.content));
-    el.previewBody.innerHTML = renderMarkdown(rawText);
-  } else if (file.mime.startsWith("text/") || textExtensions.includes(file.ext)) {
-    const pre = document.createElement("pre");
-    pre.textContent = bytesToText(base64ToBytes(file.content));
-    el.previewBody.append(pre);
-  } else if (file.mime.startsWith("image/")) {
-    const img = document.createElement("img");
-    img.src = url;
-    img.alt = file.name;
-    el.previewBody.append(img);
-  } else if (file.ext === ".pdf") {
-    const frame = document.createElement("iframe");
-    frame.src = url;
-    frame.title = file.name;
-    el.previewBody.append(frame);
-  } else {
-    const p = document.createElement("p");
-    p.textContent = "Preview is not available for this file type. Use Download.";
-    el.previewBody.append(p);
-  }
-  el.preview.showModal();
-}
+// previewFile(file) is declared below with tab-view navigation support.
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, char => ({
@@ -796,6 +881,7 @@ el.form.addEventListener("submit", async event => {
   
   if (entered !== session.password) {
     wrongAttempts += 1;
+    VaultAudio.playWarning();
     if (wrongAttempts >= 4) {
       startCooldown(30);
     } else {
@@ -831,6 +917,7 @@ el.form.addEventListener("submit", async event => {
           el.lock.classList.add("hidden");
           el.vault.classList.remove("hidden");
           renderVaultView();
+          VaultAudio.playUnlock();
         }, 400);
       }
       progressEl.textContent = `${progress}%`;
@@ -863,6 +950,7 @@ el.form.addEventListener("submit", async event => {
             el.vault.classList.remove("hidden");
             renderVaultView();
             initVaultUI(); // Initialize home dashboard and stats
+            VaultAudio.playUnlock();
           }, 400);
         }
         progressEl.textContent = `${progress}%`;
@@ -872,6 +960,7 @@ el.form.addEventListener("submit", async event => {
       console.error(error);
       el.status.textContent = "Decryption failure. Invalid secret key.";
     }
+  }
   });
 
   el.guestBtn.addEventListener("click", async () => {
@@ -887,6 +976,7 @@ el.form.addEventListener("submit", async event => {
       el.vault.classList.remove("hidden");
       renderVaultView();
       initVaultUI(); // Initialize public stats and dashboard
+      VaultAudio.playUnlock();
     } catch (error) {
       console.error(error);
       el.status.textContent = "Failed to load public data.";
@@ -897,15 +987,11 @@ el.form.addEventListener("submit", async event => {
     lockVault("System locked securely.");
   });
 
-  let searchTimeout = null;
   el.search.addEventListener("input", () => {
-    if (searchTimeout) clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-      renderVaultView();
-      if (el.search.value.trim() !== "") {
-        navigateToSection("02"); // Focus explorer to show search results
-      }
-    }, 150); // 150ms debounce delay to prevent input thrashing (Flaw 20)
+    renderVaultView();
+    if (el.search.value.trim() !== "") {
+      navigateToSection("02"); // Focus explorer to show search results
+    }
   });
 
   el.closePreview.addEventListener("click", () => el.preview.close());
@@ -1004,6 +1090,7 @@ el.form.addEventListener("submit", async event => {
       card.className = "file-card";
       card.style.minHeight = "auto";
       card.innerHTML = `
+        <div class="card-glare"></div>
         <p class="eyebrow file-type" style="font-size: 0.6rem;">${escapeHtml(file.ext.replace(".", "") || "file")}</p>
         <h5 style="margin: 0.4rem 0 0.2rem; font-size: 0.95rem; font-weight: 700; word-break: break-all;">${escapeHtml(file.name)}</h5>
         <p class="meta" style="font-size: 0.75rem;">${file.folder || "Root"}</p>
@@ -1669,10 +1756,7 @@ el.form.addEventListener("submit", async event => {
       
       const imgData = this.offCtx.getImageData(0, 0, 440, 110);
       this.particles = [];
-      
-      // Optimize particle density based on viewport size and pixel ratio to prevent performance lag (Flaw 9)
-      const isMobile = window.innerWidth <= 768;
-      const step = isMobile ? 6 : (devicePixelRatio > 1 ? 5 : 4);
+      const step = 4;
       
       for (let y = 0; y < 110; y += step) {
         for (let x = 0; x < 440; x += step) {
@@ -1787,14 +1871,6 @@ el.form.addEventListener("submit", async event => {
       return;
     }
     
-    // Revoke previous URLs to keep memory footprint minimal (Flaw 15)
-    for (const [id, cachedUrl] of state.urls.entries()) {
-      if (id !== file.id) {
-        URL.revokeObjectURL(cachedUrl);
-        state.urls.delete(id);
-      }
-    }
-    
     const url = fileUrl(file);
     
     const titleEl = document.querySelector("#active-preview-title");
@@ -1857,5 +1933,51 @@ el.form.addEventListener("submit", async event => {
   startCanvas();
   const nameEngine = new NameParticleEngine();
 
-  // Wipe memory state cache on tab unload for maximum session security (Flaw 13)
-  window.addEventListener("beforeunload", () => lockVault());
+  // Setup audio toggle button binding
+  const audioBtn = document.querySelector("#audio-toggle-btn");
+  if (audioBtn) {
+    VaultAudio.updateButtonUI();
+    audioBtn.addEventListener("click", () => {
+      VaultAudio.toggleMute();
+    });
+  }
+
+  // Bind keypress sounds to passcode input
+  if (el.password) {
+    el.password.addEventListener("input", () => {
+      VaultAudio.playChirp();
+    });
+  }
+
+  // Trailing Spring Cursor Lerp System
+  let cursorX = 0, cursorY = 0;
+  let targetX = 0, targetY = 0;
+  const spring = 0.18;
+  const cursorEl = document.querySelector("#custom-cursor");
+
+  window.addEventListener("mousemove", (e) => {
+    targetX = e.clientX;
+    targetY = e.clientY;
+  });
+
+  function updateCursor() {
+    cursorX += (targetX - cursorX) * spring;
+    cursorY += (targetY - cursorY) * spring;
+    if (cursorEl) {
+      cursorEl.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
+    }
+    requestAnimationFrame(updateCursor);
+  }
+  requestAnimationFrame(updateCursor);
+
+  // Custom cursor hover expansions
+  document.addEventListener("mouseover", (e) => {
+    const interactive = e.target.closest("a, button, input, .folder-card, .file-card, .crumb, .nav-item");
+    if (cursorEl) {
+      if (interactive) {
+        cursorEl.classList.add("hovering");
+      } else {
+        cursorEl.classList.remove("hovering");
+      }
+    }
+  });
