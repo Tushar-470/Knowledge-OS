@@ -978,6 +978,224 @@ dialog.preview::backdrop {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
+/* Markdown Tables */
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  border: 1px solid var(--panel-border);
+}
+.markdown-body th, .markdown-body td {
+  padding: 0.8rem 1.2rem;
+  border-bottom: 1px solid var(--panel-border);
+  text-align: left;
+}
+.markdown-body th {
+  background: rgba(0, 240, 255, 0.1);
+  font-weight: 700;
+  color: var(--text);
+}
+.markdown-body tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.015);
+}
+.markdown-body tr:last-child td {
+  border-bottom: none;
+}
+
+/* Markdown Blockquotes */
+.markdown-body blockquote {
+  margin: 1.5rem 0;
+  padding: 0.8rem 1.5rem;
+  border-left: 4px solid var(--hot);
+  background: rgba(255, 0, 127, 0.04);
+  border-radius: 4px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Markdown Task Lists */
+.markdown-body li.task-list-item {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-left: -1.2rem;
+}
+.markdown-body li.task-list-item input[type="checkbox"] {
+  accent-color: var(--hot);
+  width: 16px;
+  height: 16px;
+  cursor: default;
+}
+
+/* Code Blocks */
+.markdown-body code {
+  font-family: 'Geist Mono', monospace;
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--hot);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+.markdown-body .code-container {
+  margin: 1.5rem 0;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background: #05080c;
+}
+.markdown-body .code-header {
+  padding: 0.5rem 1.2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--panel-border);
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  font-family: 'Geist Mono', monospace;
+  font-weight: 600;
+}
+.markdown-body .code-container pre {
+  margin: 0;
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+}
+.markdown-body .code-container code {
+  background: transparent;
+  color: #e2e8f0;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.9rem;
+}
+
+/* Link Lock Dialog */
+.link-lock-dialog {
+  max-width: 440px !important;
+  border: 1px solid var(--panel-border) !important;
+  background: var(--panel) !important;
+  box-shadow: var(--panel-glow) !important;
+  border-radius: var(--border-radius) !important;
+  backdrop-filter: blur(35px) !important;
+  -webkit-backdrop-filter: blur(35px) !important;
+}
+
+/* Depth of Field blur when dialogs are active */
+body:has(dialog[open]) .app-shell {
+  filter: blur(12px);
+  transition: filter 0.3s ease;
+}
+body .app-shell {
+  transition: filter 0.3s ease;
+}
+
+/* 3D Typography Effects */
+.owner-container {
+  perspective: 800px;
+  margin-top: 0.5rem;
+}
+
+.owner {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  margin: 0;
+  transition: all 0.5s ease-out;
+  transform-style: preserve-3d;
+  display: inline-block;
+}
+
+/* Style 0: Mouse-Reactive 3D Isometric Tilt */
+.owner.name-style-0 {
+  color: #ffffff;
+  text-shadow: 
+    1px 1px var(--panel-border),
+    2px 2px var(--panel-border),
+    3px 3px var(--panel-border),
+    4px 4px var(--hot),
+    5px 5px var(--hot),
+    6px 6px rgba(0, 0, 0, 0.4);
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+}
+
+/* Style 1: Chromatic Aberration Glitch */
+.owner.name-style-1 {
+  color: #ffffff;
+  position: relative;
+  animation: rgb-glitch 1.5s infinite steps(2);
+}
+.owner.name-style-1::before,
+.owner.name-style-1::after {
+  content: 'Tushar Mathapati';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+.owner.name-style-1::before {
+  color: #00ffff;
+  left: -2px;
+  text-shadow: -1px 0 #00ffff;
+  clip-path: rect(10px, 9999px, 30px, 0);
+  animation: glitch-clip-1 2s infinite linear alternate-reverse;
+}
+.owner.name-style-1::after {
+  color: #ff00ff;
+  left: 2px;
+  text-shadow: 1px 0 #ff00ff;
+  clip-path: rect(35px, 9999px, 55px, 0);
+  animation: glitch-clip-2 2s infinite linear alternate-reverse;
+}
+
+@keyframes rgb-glitch {
+  0% { transform: skew(0deg); }
+  10% { transform: skew(-1deg); }
+  20% { transform: skew(1deg); }
+  30% { transform: skew(0deg); }
+  100% { transform: skew(0deg); }
+}
+@keyframes glitch-clip-1 {
+  0% { clip-path: inset(40% 0 61% 0); }
+  20% { clip-path: inset(92% 0 1% 0); }
+  40% { clip-path: inset(15% 0 80% 0); }
+  60% { clip-path: inset(80% 0 5% 0); }
+  80% { clip-path: inset(5% 0 92% 0); }
+  100% { clip-path: inset(62% 0 15% 0); }
+}
+@keyframes glitch-clip-2 {
+  0% { clip-path: inset(25% 0 58% 0); }
+  20% { clip-path: inset(85% 0 10% 0); }
+  40% { clip-path: inset(5% 0 88% 0); }
+  60% { clip-path: inset(70% 0 25% 0); }
+  80% { clip-path: inset(15% 0 80% 0); }
+  100% { clip-path: inset(55% 0 35% 0); }
+}
+
+/* Style 2: Holographic Metallic Shimmer */
+.owner.name-style-2 {
+  background: linear-gradient(135deg, var(--text) 30%, var(--hot) 50%, var(--text) 70%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 4s linear infinite;
+  text-shadow: 0 4px 15px rgba(255, 0, 127, 0.15);
+}
+@keyframes shine {
+  to { background-position: 200% center; }
+}
+
+/* Style 3: Generative Matrix Code-flicker */
+.owner.name-style-3 {
+  font-family: 'Geist Mono', monospace;
+  color: var(--ok);
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+  letter-spacing: 0.1em;
+}
+
 .hidden {
   display: none !important;
 }

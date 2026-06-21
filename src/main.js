@@ -146,7 +146,12 @@ function folderLetters(folderName) {
     chosen.push(available.splice(idx, 1)[0]);
   }
   
-  const correct = [...chosen].sort().at(-1);
+  // Parity rule: Even last digit -> last in alphabet. Odd last digit -> first in alphabet.
+  const lastDigit = Number(session.password.slice(-1));
+  const isEven = (lastDigit % 2 === 0);
+  const sorted = [...chosen].sort();
+  const correct = isEven ? sorted.at(-1) : sorted.at(0);
+  
   const shuffled = [];
   while (chosen.length > 0) {
     const idx = Math.floor(random() * chosen.length);
@@ -159,6 +164,24 @@ function formatSize(size) {
   if (size < 1024) return `${size} B`;
   if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
   return `${(size / 1024 / 1024).toFixed(1)} MB`;
+}
+
+// Bind interactive 3D perspective card tilt to mouse movements
+function bind3DTilt(element) {
+  element.addEventListener("mousemove", (e) => {
+    const rect = element.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const rotateY = ((x / rect.width) - 0.5) * 20; 
+    const rotateX = ((y / rect.height) - 0.5) * -20;
+    element.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg) translateY(-8px) scale(1.02)`;
+    element.style.transition = "transform 0.05s ease-out";
+  });
+  
+  element.addEventListener("mouseleave", () => {
+    element.style.transform = "";
+    element.style.transition = "transform 0.4s ease-out";
+  });
 }
 
 function getFolderContents(currentPath) {
@@ -183,7 +206,7 @@ function getFolderContents(currentPath) {
         const firstSegment = filePath.split("/")[0];
         subfolders.add(firstSegment);
       } else {
-        files.push(file);
+        // Soft-hide root files: do not display them on the homepage list
       }
     } else {
       const prefix = currentPath + "/";
@@ -294,6 +317,7 @@ function renderVaultView() {
           <p class="meta" style="font-size: 0.8rem; border: 1px dashed var(--panel-border); padding: 0.35rem; text-align: center; border-radius: 6px; color: var(--muted); margin-top: 1rem;">Click to Open</p>
         `;
         card.addEventListener("click", () => openFolder(folderPath));
+        bind3DTilt(card);
       } else {
         const lock = folderLetters(folderPath);
         card.innerHTML = `
@@ -331,6 +355,7 @@ function renderVaultView() {
           });
           row.append(button);
         }
+        bind3DTilt(card);
       }
       el.folderGrid.append(card);
     }
@@ -373,6 +398,7 @@ function renderFilesList(files) {
     card.addEventListener("keydown", event => {
       if (event.key === "Enter") previewFile(file);
     });
+    bind3DTilt(card);
     el.fileGrid.append(card);
   }
 }
@@ -392,17 +418,239 @@ window.previewByName = (name) => {
     f.name.toLowerCase().replace(/\.md$/, "") === searchName
   );
   if (file) {
-    el.preview.close();
-    setTimeout(() => previewFile(file), 150);
+    // If the file folder is locked, show the link-lock decryption dialog
+    const isUnlocked = state.isGuest || !file.folder || file.folder === "Root" || state.unlockedFolders.has(file.folder);
+    
+    if (isUnlocked) {
+      el.preview.close();
+      setTimeout(() => previewFile(file), 150);
+    } else {
+      el.preview.close();
+      showLinkLockDialog(file);
+    }
   } else {
     alert(`Document "${name}" not found in this vault.`);
   }
 };
 
-function renderMarkdown(md) {
-  let html = escapeHtml(md);
+function showLinkLockDialog(file) {
+  const dialog = document.querySelector("#link-lock-dialog");
+  const folderNameEl = document.querySelector("#link-lock-folder-name");
+  const letterRow = document.querySelector("#link-lock-letter-row");
+  const cancelBtn = document.querySelector("#close-link-lock");
   
-  html = html.replace(/!\[\[(.*?)\]\]/g, (match, filename) => {
+  folderNameEl.textContent = file.folder;
+  letterRow.innerHTML = "";
+  
+  const lock = folderLetters(file.folder);
+  
+  for (const letter of lock.display) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = letter;
+    button.addEventListener("click", () => {
+      if (letter === lock.correct) {
+        button.classList.add("correct");
+        state.unlockedFolders.add(file.folder);
+        setTimeout(() => {
+          dialog.close();
+          previewFile(file);
+        }, 250);
+      } else {
+        button.classList.add("wrong");
+        dialog.classList.remove("shake");
+        requestAnimationFrame(() => dialog.classList.add("shake"));
+        
+        const glitchOverlay = document.querySelector("#glitch-overlay");
+        glitchOverlay.classList.remove("hidden");
+        
+        setTimeout(() => {
+          glitchOverlay.classList.add("hidden");
+          dialog.close();
+          lockVault("Intrusion detected. Vault locked.");
+        }, 1000);
+      }
+    });
+    letterRow.append(button);
+  }
+  
+  cancelBtn.onclick = () => dialog.close();
+  dialog.showModal();
+}
+
+function parseMarkdownTable(rows) {
+  if (rows.length < 2) return "";
+  
+  let html = "<table>";
+  
+  const cleanedRows = rows.filter((row, idx) => {
+    if (idx === 1 && row.includes("-")) {
+      return false; // Skip the separator row
+    }
+    return true;
+  });
+  
+  cleanedRows.forEach((row, idx) => {
+    const cells = row.split("|").map(c => c.trim());
+    if (cells[0] === "") cells.shift();
+    if (cells[cells.length - 1] === "") cells.pop();
+    
+    if (idx === 0) {
+      html += "<thead><tr>";
+      cells.forEach(cell => {
+        html += `<th>${cell}</th>`;
+      });
+      html += "</tr></thead><tbody>";
+    } else {
+      html += "<tr>";
+      cells.forEach(cell => {
+        html += `<td>${cell}</td>`;
+      });
+      html += "</tr>";
+    }
+  });
+  
+  html += "</tbody></table>";
+  return html;
+}
+
+// Rich Markdown Parser
+function renderMarkdown(md) {
+  let escaped = escapeHtml(md);
+  
+  const lines = escaped.split(/\r?\n/);
+  let inList = false;
+  let listType = null; // 'ul' or 'ol'
+  let inTable = false;
+  let tableRows = [];
+  let inCodeBlock = false;
+  let codeBlockContent = [];
+  let codeLanguage = "";
+  let inBlockquote = false;
+  
+  let output = [];
+  
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    
+    // Code blocks
+    if (line.trim().startsWith("```")) {
+      if (inCodeBlock) {
+        output.push(`<div class="code-container"><div class="code-header">${escapeHtml(codeLanguage || "code")}</div><pre><code>${codeBlockContent.join("\n")}</code></pre></div>`);
+        codeBlockContent = [];
+        inCodeBlock = false;
+      } else {
+        inCodeBlock = true;
+        codeLanguage = line.trim().slice(3).trim();
+      }
+      continue;
+    }
+    
+    if (inCodeBlock) {
+      codeBlockContent.push(line);
+      continue;
+    }
+    
+    // Tables
+    const isTableLine = line.trim().startsWith("|") && line.trim().endsWith("|");
+    if (isTableLine) {
+      if (!inTable) {
+        inTable = true;
+        tableRows = [];
+      }
+      tableRows.push(line);
+      continue;
+    } else if (inTable) {
+      output.push(parseMarkdownTable(tableRows));
+      inTable = false;
+      tableRows = [];
+    }
+    
+    // Lists
+    const unorderedMatch = line.match(/^(\s*)-\s+(.*)$/);
+    const orderedMatch = line.match(/^(\s*)\d+\.\s+(.*)$/);
+    
+    if (unorderedMatch) {
+      if (!inList || listType !== "ul") {
+        if (inList) output.push(`</${listType}>`);
+        output.push("<ul>");
+        inList = true;
+        listType = "ul";
+      }
+      let content = unorderedMatch[2];
+      if (content.startsWith("[ ] ")) {
+        output.push(`<li class="task-list-item"><input type="checkbox" disabled> ${content.slice(4)}</li>`);
+      } else if (content.startsWith("[x] ")) {
+        output.push(`<li class="task-list-item"><input type="checkbox" checked disabled> ${content.slice(4)}</li>`);
+      } else {
+        output.push(`<li>${content}</li>`);
+      }
+      continue;
+    }
+    
+    if (orderedMatch) {
+      if (!inList || listType !== "ol") {
+        if (inList) output.push(`</${listType}>`);
+        output.push("<ol>");
+        inList = true;
+        listType = "ol";
+      }
+      output.push(`<li>${orderedMatch[2]}</li>`);
+      continue;
+    }
+    
+    if (inList && !unorderedMatch && !orderedMatch) {
+      output.push(`</${listType}>`);
+      inList = false;
+      listType = null;
+    }
+    
+    // Blockquote
+    if (line.startsWith("&gt; ")) {
+      if (!inBlockquote) {
+        inBlockquote = true;
+        output.push("<blockquote>");
+      }
+      output.push(line.slice(5) + "<br>");
+      continue;
+    } else if (inBlockquote) {
+      output.push("</blockquote>");
+      inBlockquote = false;
+    }
+    
+    // Headers
+    if (line.startsWith("# ")) {
+      output.push(`<h1>${line.slice(2)}</h1>`);
+    } else if (line.startsWith("## ")) {
+      output.push(`<h2>${line.slice(3)}</h2>`);
+    } else if (line.startsWith("### ")) {
+      output.push(`<h3>${line.slice(4)}</h3>`);
+    } else if (line.startsWith("#### ")) {
+      output.push(`<h4>${line.slice(5)}</h4>`);
+    } else if (line.trim() === "") {
+      output.push("<br>");
+    } else {
+      output.push(`<p>${line}</p>`);
+    }
+  }
+  
+  if (inCodeBlock) {
+    output.push(`<div class="code-container"><pre><code>${codeBlockContent.join("\n")}</code></pre></div>`);
+  }
+  if (inTable) {
+    output.push(parseMarkdownTable(tableRows));
+  }
+  if (inList) {
+    output.push(`</${listType}>`);
+  }
+  if (inBlockquote) {
+    output.push("</blockquote>");
+  }
+  
+  let finalHtml = output.join("\n");
+  
+  // Image links
+  finalHtml = finalHtml.replace(/!\[\[(.*?)\]\]/g, (match, filename) => {
     const searchName = filename.toLowerCase().trim();
     const file = state.vault.files.find(f => f.name.toLowerCase() === searchName);
     if (file && file.mime.startsWith("image/")) {
@@ -412,7 +660,8 @@ function renderMarkdown(md) {
     return `<span class="meta">[Attachment: ${escapeHtml(filename)} not found]</span>`;
   });
   
-  html = html.replace(/\[\[(.*?)\]\]/g, (match, inner) => {
+  // Wiki links
+  finalHtml = finalHtml.replace(/\[\[(.*?)\]\]/g, (match, inner) => {
     let filename = inner;
     let alias = inner;
     if (inner.includes("|")) {
@@ -423,20 +672,14 @@ function renderMarkdown(md) {
     return `<a href="#" class="wiki-link" onclick="event.preventDefault(); window.previewByName('${escapeHtml(filename.replace(/'/g, "\\'"))}')">${escapeHtml(alias)}</a>`;
   });
   
-  html = html.replace(/^# (.*?)$/gm, '<h1>$1</h1>');
-  html = html.replace(/^## (.*?)$/gm, '<h2>$1</h2>');
-  html = html.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
+  // Bold & Italics
+  finalHtml = finalHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  finalHtml = finalHtml.replace(/\*(.*?)\*/g, '<em>$1</em>');
   
-  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  // Inline code
+  finalHtml = finalHtml.replace(/`(.*?)`/g, '<code>$1</code>');
   
-  html = html.replace(/^- (.*?)$/gm, '<li>$1</li>');
-  html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul>$&</ul>');
-  
-  html = html.replace(/\n\n/g, '</p><p>');
-  html = html.replace(/\n/g, '<br>');
-  
-  return `<div class="markdown-body"><p>${html}</p></div>`;
+  return `<div class="markdown-body">${finalHtml}</div>`;
 }
 
 function previewFile(file) {
@@ -714,6 +957,36 @@ function startCanvas() {
     }
   }
 
+  // Perspective 3D synthwave grid floor drawing routine
+  function draw3DGrid(currentHue, currentAccent) {
+    ctx.strokeStyle = `hsla(${currentAccent}, 90%, 60%, 0.07)`;
+    ctx.lineWidth = 1.5;
+    
+    const horizon = height * 0.45;
+    const vanishingX = pointer.active ? pointer.x : width / 2;
+    
+    // Vertical perspective lines
+    const lines = 24;
+    for (let i = 0; i <= lines; i++) {
+      const targetX = (width / lines) * i;
+      ctx.beginPath();
+      ctx.moveTo(vanishingX, horizon);
+      ctx.lineTo(targetX, height);
+      ctx.stroke();
+    }
+    
+    // Horizontal perspective lines (receding into the horizon)
+    const horizLines = 15;
+    for (let i = 0; i < horizLines; i++) {
+      const ratio = Math.pow(i / horizLines, 2.5);
+      const y = horizon + (height - horizon) * ratio;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(width, y);
+      ctx.stroke();
+    }
+  }
+
   resize();
   initNeon();
   initNebula();
@@ -762,10 +1035,11 @@ function startCanvas() {
     }
   }
 
+  // Changed cycling speed to exactly 67 seconds!
   setInterval(() => {
     currentStyle = (currentStyle + 1) % 4;
     randomizeParams();
-  }, 5000);
+  }, 67000);
 
   randomizeParams();
 
@@ -776,6 +1050,9 @@ function startCanvas() {
       const currentHue = getComputedStyle(document.documentElement).getPropertyValue("--hue").trim();
       const currentAccent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
       
+      // Draw convergent 3D floor grid
+      draw3DGrid(currentHue, currentAccent);
+
       ctx.fillStyle = `hsla(${currentHue}, 90%, 70%, 0.65)`;
       ctx.strokeStyle = `hsla(${currentAccent}, 90%, 60%, 0.2)`;
       
@@ -871,7 +1148,11 @@ function startCanvas() {
       ctx.fillRect(0, 0, width, height);
       
       const currentHue = Number(getComputedStyle(document.documentElement).getPropertyValue("--hue").trim() || 250);
+      const currentAccent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
       
+      // Draw convergent perspective grid
+      draw3DGrid(currentHue, currentAccent);
+
       for (const b of nebulaBlobs) {
         b.x += b.vx;
         b.y += b.vy;
@@ -892,7 +1173,6 @@ function startCanvas() {
       }
       
       if (pointer.active) {
-        const currentAccent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
         const grad = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 120 * devicePixelRatio);
         grad.addColorStop(0, `hsla(${currentAccent}, 100%, 50%, 0.16)`);
         grad.addColorStop(1, "transparent");
@@ -941,4 +1221,60 @@ function startCanvas() {
   requestAnimationFrame(animate);
 }
 
+// 3D Owner Name Typography Cycling Routine
+let nameStyle = 0;
+let nameGlitchInterval = null;
+
+function init3DName() {
+  const nameEl = document.querySelector("#owner-name");
+  if (!nameEl) return;
+  
+  // Track mouse coordinates to skew/rotate Style 0
+  window.addEventListener("mousemove", (e) => {
+    if (nameStyle !== 0) return;
+    const rect = nameEl.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const dx = e.clientX - centerX;
+    const dy = e.clientY - centerY;
+    const rx = (dy / window.innerHeight) * -35; 
+    const ry = (dx / window.innerWidth) * 35;
+    nameEl.style.setProperty("--rx", `${rx}deg`);
+    nameEl.style.setProperty("--ry", `${ry}deg`);
+  });
+  
+  function updateNameStyle() {
+    if (nameGlitchInterval) {
+      clearInterval(nameGlitchInterval);
+      nameGlitchInterval = null;
+    }
+    
+    nameEl.className = "owner";
+    nameEl.textContent = "Tushar Mathapati";
+    
+    nameStyle = (nameStyle + 1) % 4;
+    nameEl.classList.add(`name-style-${nameStyle}`);
+    
+    if (nameStyle === 3) {
+      // Style 3 (Matrix Code-flicker): Replace letters with random code symbols
+      const originalText = "Tushar Mathapati";
+      const symbols = "0123456789$#@%&*+-/<>[]{}";
+      nameGlitchInterval = setInterval(() => {
+        let glyphs = originalText.split("").map((char) => {
+          if (char === " ") return " ";
+          return Math.random() > 0.85 ? symbols[Math.floor(Math.random() * symbols.length)] : char;
+        }).join("");
+        nameEl.textContent = glyphs;
+      }, 150);
+    }
+  }
+  
+  // Cycle name styles every 10 seconds
+  setInterval(updateNameStyle, 10000);
+  
+  // Initialize first style
+  nameEl.classList.add("name-style-0");
+}
+
 startCanvas();
+init3DName();

@@ -14,7 +14,8 @@ const excludeDirs = new Set([".git", ".github", ".obsidian", "dist", "node_modul
 const excludeFiles = new Set(["package.json", "package-lock.json", "robots.txt", "sitemap.xml"]);
 const includeExtensions = new Set([
   ".md", ".txt", ".pdf", ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".csv",
-  ".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg"
+  ".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg",
+  ".json", ".js", ".css", ".html", ".xml", ".yaml", ".yml", ".py", ".sh"
 ]);
 
 function toWebPath(filePath) {
@@ -38,7 +39,16 @@ function mimeFor(ext) {
     ".jpeg": "image/jpeg",
     ".webp": "image/webp",
     ".gif": "image/gif",
-    ".svg": "image/svg+xml"
+    ".svg": "image/svg+xml",
+    ".json": "application/json; charset=utf-8",
+    ".js": "text/javascript; charset=utf-8",
+    ".css": "text/css; charset=utf-8",
+    ".html": "text/html; charset=utf-8",
+    ".xml": "application/xml; charset=utf-8",
+    ".yaml": "text/yaml; charset=utf-8",
+    ".yml": "text/yaml; charset=utf-8",
+    ".py": "text/x-python; charset=utf-8",
+    ".sh": "text/x-shellscript; charset=utf-8"
   };
   return map[ext] || "application/octet-stream";
 }
