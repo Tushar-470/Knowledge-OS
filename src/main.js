@@ -111,6 +111,96 @@ const VaultAudio = {
     } catch (e) {
       console.warn(e);
     }
+  },
+  
+  playClick() {
+    if (this.muted) return;
+    this.init();
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(1200, this.ctx.currentTime);
+      gain.gain.setValueAtTime(0.015, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.015);
+      osc.start(this.ctx.currentTime);
+      osc.stop(this.ctx.currentTime + 0.02);
+    } catch (e) {
+      console.warn(e);
+    }
+  },
+
+  playSweep(up = true) {
+    if (this.muted) return;
+    this.init();
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.type = "sine";
+      if (up) {
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.exponentialRampToValueAtTime(800, now + 0.4);
+      } else {
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.exponentialRampToValueAtTime(150, now + 0.4);
+      }
+      gain.gain.setValueAtTime(0.04, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+      osc.start(now);
+      osc.stop(now + 0.45);
+    } catch (e) {
+      console.warn(e);
+    }
+  },
+
+  playChime() {
+    if (this.muted) return;
+    this.init();
+    try {
+      const now = this.ctx.currentTime;
+      const notes = [261.63, 329.63, 392.00, 523.25]; // C major chord
+      notes.forEach((f, idx) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(f, now + idx * 0.06);
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.03, now + idx * 0.06 + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.06 + 0.25);
+        osc.start(now + idx * 0.06);
+        osc.stop(now + idx * 0.06 + 0.3);
+      });
+    } catch (e) {
+      console.warn(e);
+    }
+  },
+
+  playDecline() {
+    if (this.muted) return;
+    this.init();
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(440, now);
+      osc.frequency.linearRampToValueAtTime(220, now + 0.2);
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+      osc.start(now);
+      osc.stop(now + 0.25);
+    } catch (e) {
+      console.warn(e);
+    }
   }
 };
 
@@ -246,6 +336,554 @@ const VaultSpeech = {
       playBtn.classList.remove("speaking");
       if (stopBtn) stopBtn.classList.add("hidden");
     }
+  }
+};
+
+// System Sandbox Arcade Mini-Games Engine
+const SandboxArcade = {
+  activeLoop: null,
+  currentGameState: {},
+
+  init() {
+    // Setup portal home page games grid
+    const portalGrid = document.querySelector("#portal-games-grid");
+    if (portalGrid) {
+      this.renderGamesGrid(portalGrid);
+    }
+
+    // Setup lockscreen games button
+    const lockGamesBtn = document.querySelector("#lockscreen-games-btn");
+    if (lockGamesBtn) {
+      lockGamesBtn.addEventListener("click", () => {
+        VaultAudio.playChirp();
+        this.openSelectionMenu();
+      });
+    }
+
+    // Bind modal close button
+    const closeBtn = document.querySelector("#close-game-modal");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        VaultAudio.playDecline();
+        this.stopGame();
+        document.querySelector("#game-modal").close();
+      });
+    }
+  },
+
+  openSelectionMenu() {
+    const modal = document.querySelector("#game-modal");
+    const titleEl = document.querySelector("#game-modal-title");
+    const contentArea = document.querySelector("#game-content-area");
+    
+    titleEl.textContent = "Sandbox Arcade Selector";
+    contentArea.innerHTML = `
+      <div class="game-select-menu" style="display: flex; flex-direction: column; gap: 1rem; padding: 1rem 0;">
+        <p style="color: var(--muted); margin-bottom: 0.5rem;">Select a secure sandbox recreation program:</p>
+        <button type="button" data-game="tracer">🕹️ Cyber-Grid Tracer (Memory Matrix)</button>
+        <button type="button" data-game="decrypt">📡 Signal Decryption (Codebreaker)</button>
+        <button type="button" data-game="snake">🐍 Data Packet Collector (Retro Snake)</button>
+        <button type="button" data-game="firewall">🛡️ Quantum Firewall (Tic-Tac-Toe vs AI)</button>
+      </div>
+    `;
+    
+    contentArea.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const gameId = btn.getAttribute("data-game");
+        VaultAudio.playChirp();
+        this.launchGame(gameId);
+      });
+    });
+
+    modal.showModal();
+  },
+
+  renderGamesGrid(container) {
+    container.innerHTML = "";
+    const games = [
+      { id: "tracer", name: "Cyber-Grid Tracer", icon: "🕹️", desc: "Test pattern retention sequence" },
+      { id: "decrypt", name: "Signal Decryption", icon: "📡", desc: "Break logical 4-digit numeric code" },
+      { id: "snake", name: "Data Packet Collector", icon: "🐍", desc: "Steer and digest node packets" },
+      { id: "firewall", name: "Quantum Firewall", icon: "🛡️", desc: "Bypass security grid against AI" }
+    ];
+
+    games.forEach(g => {
+      const card = document.createElement("div");
+      card.className = "game-card";
+      card.innerHTML = `
+        <span class="game-icon">${g.icon}</span>
+        <h4>${g.name}</h4>
+        <p>${g.desc}</p>
+      `;
+      card.addEventListener("click", () => {
+        VaultAudio.playChirp();
+        this.launchGame(g.id);
+      });
+      container.appendChild(card);
+    });
+  },
+
+  launchGame(gameId) {
+    this.stopGame();
+    const modal = document.querySelector("#game-modal");
+    const titleEl = document.querySelector("#game-modal-title");
+    const contentArea = document.querySelector("#game-content-area");
+
+    if (gameId === "tracer") {
+      titleEl.textContent = "Cyber-Grid Tracer";
+      contentArea.innerHTML = `
+        <div class="game-wrapper" style="display:flex; flex-direction:column; align-items:center; gap:1rem;">
+          <p style="font-family:'Space Grotesk',sans-serif; color:var(--muted); font-size:0.85rem; margin:0;">Replicate the flashed pattern of grid cells.</p>
+          <div id="tracer-grid" style="display:grid; grid-template-columns:repeat(3, 80px); gap:10px; margin: 0.5rem 0;">
+            ${Array.from({length:9}).map((_, i) => `<div class="tracer-cell" data-idx="${i}" style="width:80px; height:80px; background:rgba(255,255,255,0.05); border:1px solid var(--panel-border); border-radius:8px; cursor:pointer; transition:all 0.15s;"></div>`).join("")}
+          </div>
+          <div style="display:flex; justify-content:space-between; width:100%; max-width:260px; font-size:0.9rem;">
+            <span>Score: <strong id="tracer-score">0</strong></span>
+            <span>Status: <strong id="tracer-status" style="color:var(--accent);">Ready</strong></span>
+          </div>
+          <button id="tracer-start-btn" class="download-btn" style="width:100%; max-width:260px; margin-top:0.25rem;">Start Test</button>
+        </div>
+      `;
+      this.initTracer();
+    } else if (gameId === "decrypt") {
+      titleEl.textContent = "Signal Decryption";
+      contentArea.innerHTML = `
+        <div class="game-wrapper" style="display:flex; flex-direction:column; align-items:center; gap:0.75rem; text-align:center;">
+          <p style="font-family:'Space Grotesk',sans-serif; color:var(--muted); font-size:0.85rem; margin:0;">Decrypt the 4-digit code. Each digit is unique (0-9).</p>
+          <div style="display:flex; gap:0.5rem; margin: 0.5rem 0;">
+            <input id="guess-input" type="text" maxlength="4" placeholder="4 digits" style="padding:0.5rem; font-family:'Geist Mono',monospace; font-size:1.1rem; width:120px; text-align:center; border:1px solid var(--panel-border); background:rgba(0,0,0,0.3); color:#fff; border-radius:6px;">
+            <button id="guess-btn" class="download-btn">Decrypt</button>
+          </div>
+          <p id="guess-status" style="font-size:0.9rem; color:var(--accent);">Awaiting input...</p>
+          <div id="guess-history" style="width:100%; max-width:320px; height:120px; overflow-y:auto; border:1px solid var(--panel-border); background:rgba(0,0,0,0.2); border-radius:6px; padding:0.5rem; text-align:left; font-family:'Geist Mono',monospace; font-size:0.8rem;"></div>
+          <button id="guess-reset-btn" class="download-btn" style="width:100%; max-width:320px; font-size:0.8rem; margin-top:0.25rem;">Regenerate Signal</button>
+        </div>
+      `;
+      this.initDecrypt();
+    } else if (gameId === "snake") {
+      titleEl.textContent = "Data Packet Collector";
+      contentArea.innerHTML = `
+        <div class="game-wrapper" style="display:flex; flex-direction:column; align-items:center; gap:0.75rem;">
+          <p style="font-family:'Space Grotesk',sans-serif; color:var(--muted); font-size:0.85rem; margin:0;">Feed the node data packets (arrows, WASD, or buttons).</p>
+          <canvas id="snake-canvas" width="220" height="220" style="border:1px solid var(--panel-border); background:rgba(0,0,0,0.5); border-radius:8px; display:block;"></canvas>
+          <div style="display:flex; justify-content:space-between; width:100%; max-width:220px; font-size:0.85rem;">
+            <span>Score: <strong id="snake-score">0</strong></span>
+            <span id="snake-status" style="color:var(--accent);">Ready</span>
+          </div>
+          <div class="mobile-controls" style="display:grid; grid-template-columns:repeat(3, 40px); gap:6px; margin-top:0.25rem;">
+            <div></div><button id="s-up" style="width:40px; height:40px; border-radius:4px; border:1px solid var(--panel-border); background:rgba(255,255,255,0.05); color:#fff; font-size:1.1rem; cursor:pointer;">▲</button><div></div>
+            <button id="s-left" style="width:40px; height:40px; border-radius:4px; border:1px solid var(--panel-border); background:rgba(255,255,255,0.05); color:#fff; font-size:1.1rem; cursor:pointer;">◀</button><div></div><button id="s-right" style="width:40px; height:40px; border-radius:4px; border:1px solid var(--panel-border); background:rgba(255,255,255,0.05); color:#fff; font-size:1.1rem; cursor:pointer;">▶</button>
+            <div></div><button id="s-down" style="width:40px; height:40px; border-radius:4px; border:1px solid var(--panel-border); background:rgba(255,255,255,0.05); color:#fff; font-size:1.1rem; cursor:pointer;">▼</button><div></div>
+          </div>
+        </div>
+      `;
+      this.initSnake();
+    } else if (gameId === "firewall") {
+      titleEl.textContent = "Quantum Firewall";
+      contentArea.innerHTML = `
+        <div class="game-wrapper" style="display:flex; flex-direction:column; align-items:center; gap:0.75rem;">
+          <p style="font-family:'Space Grotesk',sans-serif; color:var(--muted); font-size:0.85rem; margin:0;">Bypass the firewall nodes (X is Cyan, AI is Magenta).</p>
+          <div id="ttt-board" style="display:grid; grid-template-columns:repeat(3, 60px); gap:8px; margin:0.5rem 0;">
+            ${Array.from({length:9}).map((_, i) => `<button class="ttt-cell" data-idx="${i}" style="width:60px; height:60px; font-size:1.5rem; font-family:'Geist Mono',monospace; font-weight:700; background:rgba(255,255,255,0.03); border:1px solid var(--panel-border); border-radius:6px; color:#fff; cursor:pointer;"></button>`).join("")}
+          </div>
+          <p id="ttt-status" style="font-size:0.9rem; color:var(--accent);">Your turn</p>
+          <button id="ttt-reset-btn" class="download-btn" style="width:100%; max-width:180px; font-size:0.8rem; margin-top:0.25rem;">Restart Node</button>
+        </div>
+      `;
+      this.initTTT();
+    }
+
+    if (!modal.open) {
+      modal.showModal();
+    }
+  },
+
+  stopGame() {
+    if (this.activeLoop) {
+      clearInterval(this.activeLoop);
+      this.activeLoop = null;
+    }
+    this.currentGameState = {};
+    if (this._onKeyDown) {
+      window.removeEventListener("keydown", this._onKeyDown);
+      this._onKeyDown = null;
+    }
+  },
+
+  initTracer() {
+    const grid = document.querySelector("#tracer-grid");
+    const cells = grid.querySelectorAll(".tracer-cell");
+    const startBtn = document.querySelector("#tracer-start-btn");
+    const scoreVal = document.querySelector("#tracer-score");
+    const statusVal = document.querySelector("#tracer-status");
+
+    let sequence = [];
+    let playerSeq = [];
+    let score = 0;
+    let isFlashing = false;
+
+    const flashCell = (idx) => {
+      return new Promise(resolve => {
+        const cell = cells[idx];
+        cell.style.background = "var(--accent, #00f0ff)";
+        cell.style.boxShadow = "0 0 15px var(--accent)";
+        VaultAudio.playChirp();
+        setTimeout(() => {
+          cell.style.background = "rgba(255,255,255,0.05)";
+          cell.style.boxShadow = "none";
+          setTimeout(resolve, 200);
+        }, 350);
+      });
+    };
+
+    const flashSequence = async () => {
+      isFlashing = true;
+      statusVal.textContent = "Decrypting...";
+      statusVal.style.color = "var(--hot, #ff3b30)";
+      for (const idx of sequence) {
+        await flashCell(idx);
+      }
+      isFlashing = false;
+      statusVal.textContent = "Your turn";
+      statusVal.style.color = "var(--accent)";
+    };
+
+    const startNextLevel = () => {
+      playerSeq = [];
+      sequence.push(Math.floor(Math.random() * 9));
+      flashSequence();
+    };
+
+    startBtn.addEventListener("click", () => {
+      VaultAudio.playChirp();
+      sequence = [];
+      score = 0;
+      scoreVal.textContent = "0";
+      startNextLevel();
+    });
+
+    cells.forEach(cell => {
+      cell.addEventListener("click", () => {
+        if (isFlashing || sequence.length === 0) return;
+        const idx = parseInt(cell.getAttribute("data-idx"));
+        playerSeq.push(idx);
+
+        cell.style.background = "rgba(255, 255, 255, 0.2)";
+        VaultAudio.playClick();
+        setTimeout(() => {
+          cell.style.background = "rgba(255,255,255,0.05)";
+        }, 100);
+
+        const currentCheckIdx = playerSeq.length - 1;
+        if (playerSeq[currentCheckIdx] !== sequence[currentCheckIdx]) {
+          VaultAudio.playWarning();
+          statusVal.textContent = "FAILED";
+          statusVal.style.color = "var(--hot)";
+          sequence = [];
+          return;
+        }
+
+        if (playerSeq.length === sequence.length) {
+          score++;
+          scoreVal.textContent = score;
+          statusVal.textContent = "SECURE";
+          statusVal.style.color = "var(--ok)";
+          setTimeout(() => {
+            startNextLevel();
+          }, 800);
+        }
+      });
+    });
+  },
+
+  initDecrypt() {
+    const input = document.querySelector("#guess-input");
+    const btn = document.querySelector("#guess-btn");
+    const status = document.querySelector("#guess-status");
+    const history = document.querySelector("#guess-history");
+    const resetBtn = document.querySelector("#guess-reset-btn");
+
+    let secret = "";
+    let attempts = 0;
+
+    const generateSecret = () => {
+      let nums = [0,1,2,3,4,5,6,7,8,9];
+      secret = "";
+      for (let i = 0; i < 4; i++) {
+        const idx = Math.floor(Math.random() * nums.length);
+        secret += nums.splice(idx, 1)[0];
+      }
+      attempts = 0;
+      status.textContent = "Awaiting input...";
+      status.style.color = "var(--accent)";
+      history.innerHTML = "";
+    };
+
+    generateSecret();
+
+    btn.addEventListener("click", () => {
+      const val = input.value.trim();
+      if (val.length !== 4 || isNaN(val)) {
+        VaultAudio.playWarning();
+        status.textContent = "ERROR: Enter exactly 4 digits";
+        status.style.color = "var(--hot)";
+        return;
+      }
+
+      const set = new Set(val.split(""));
+      if (set.size !== 4) {
+        VaultAudio.playWarning();
+        status.textContent = "ERROR: Digits must be unique";
+        status.style.color = "var(--hot)";
+        return;
+      }
+
+      attempts++;
+      let correctPos = 0;
+      let correctDig = 0;
+
+      for (let i = 0; i < 4; i++) {
+        if (val[i] === secret[i]) {
+          correctPos++;
+        } else if (secret.includes(val[i])) {
+          correctDig++;
+        }
+      }
+
+      const log = document.createElement("div");
+      log.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
+      log.style.padding = "0.2rem 0";
+      
+      if (correctPos === 4) {
+        VaultAudio.playUnlock();
+        status.textContent = `DECRYPTED in ${attempts} attempts!`;
+        status.style.color = "var(--ok)";
+        log.innerHTML = `<span style="color:var(--ok)">#${attempts}: ${val} - BYPASS SUCCESS!</span>`;
+      } else {
+        VaultAudio.playClick();
+        status.textContent = "Bypassing Firewall...";
+        log.textContent = `#${attempts}: ${val} -> Position: ${correctPos}, Digits: ${correctDig}`;
+      }
+
+      history.appendChild(log);
+      history.scrollTop = history.scrollHeight;
+      input.value = "";
+      input.focus();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      VaultAudio.playChirp();
+      generateSecret();
+    });
+  },
+
+  initSnake() {
+    const canvas = document.querySelector("#snake-canvas");
+    const ctx = canvas.getContext("2d");
+    const scoreVal = document.querySelector("#snake-score");
+    const statusVal = document.querySelector("#snake-status");
+
+    const grid = 10;
+    let snake = [{x: 80, y: 80}, {x: 70, y: 80}];
+    let dx = 10;
+    let dy = 0;
+    let food = {x: 120, y: 120};
+    let score = 0;
+    let gameOver = false;
+
+    const spawnFood = () => {
+      food.x = Math.floor(Math.random() * (canvas.width / grid)) * grid;
+      food.y = Math.floor(Math.random() * (canvas.height / grid)) * grid;
+    };
+
+    const draw = () => {
+      if (gameOver) return;
+
+      const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+
+      if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
+        endGame();
+        return;
+      }
+
+      for (let i = 0; i < snake.length; i++) {
+        if (snake[i].x === head.x && snake[i].y === head.y) {
+          endGame();
+          return;
+        }
+      }
+
+      snake.unshift(head);
+
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        scoreVal.textContent = score;
+        VaultAudio.playChirp();
+        spawnFood();
+      } else {
+        snake.pop();
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "var(--hot, #ff3b30)";
+      ctx.beginPath();
+      ctx.arc(food.x + grid/2, food.y + grid/2, grid/2 - 1, 0, Math.PI*2);
+      ctx.fill();
+
+      snake.forEach((part, idx) => {
+        if (idx === 0) ctx.fillStyle = "var(--ok, #00ff66)";
+        else ctx.fillStyle = "var(--accent, #00f0ff)";
+        ctx.fillRect(part.x + 1, part.y + 1, grid - 2, grid - 2);
+      });
+    };
+
+    const endGame = () => {
+      gameOver = true;
+      statusVal.textContent = "CRASH DETECTED";
+      statusVal.style.color = "var(--hot)";
+      VaultAudio.playWarning();
+      clearInterval(this.activeLoop);
+    };
+
+    this.activeLoop = setInterval(draw, 100);
+
+    const handleDirection = (dir) => {
+      if (gameOver) {
+        snake = [{x: 80, y: 80}, {x: 70, y: 80}];
+        dx = 10; dy = 0;
+        score = 0;
+        scoreVal.textContent = "0";
+        statusVal.textContent = "Live";
+        statusVal.style.color = "var(--accent)";
+        spawnFood();
+        gameOver = false;
+        clearInterval(this.activeLoop);
+        this.activeLoop = setInterval(draw, 100);
+        return;
+      }
+
+      if (dir === "left" && dx === 0) { dx = -grid; dy = 0; }
+      else if (dir === "right" && dx === 0) { dx = grid; dy = 0; }
+      else if (dir === "up" && dy === 0) { dx = 0; dy = -grid; }
+      else if (dir === "down" && dy === 0) { dx = 0; dy = grid; }
+    };
+
+    this._onKeyDown = (e) => {
+      if (["ArrowUp", "KeyW"].includes(e.code)) { e.preventDefault(); handleDirection("up"); }
+      else if (["ArrowDown", "KeyS"].includes(e.code)) { e.preventDefault(); handleDirection("down"); }
+      else if (["ArrowLeft", "KeyA"].includes(e.code)) { e.preventDefault(); handleDirection("left"); }
+      else if (["ArrowRight", "KeyD"].includes(e.code)) { e.preventDefault(); handleDirection("right"); }
+    };
+
+    window.addEventListener("keydown", this._onKeyDown);
+
+    document.querySelector("#s-up").addEventListener("click", () => handleDirection("up"));
+    document.querySelector("#s-left").addEventListener("click", () => handleDirection("left"));
+    document.querySelector("#s-right").addEventListener("click", () => handleDirection("right"));
+    document.querySelector("#s-down").addEventListener("click", () => handleDirection("down"));
+  },
+
+  initTTT() {
+    const board = document.querySelector("#ttt-board");
+    const cells = board.querySelectorAll(".ttt-cell");
+    const status = document.querySelector("#ttt-status");
+    const resetBtn = document.querySelector("#ttt-reset-btn");
+
+    let grid = Array(9).fill(null);
+    let isGameOver = false;
+
+    const checkWinner = (g) => {
+      const wins = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
+      ];
+      for (const w of wins) {
+        if (g[w[0]] && g[w[0]] === g[w[1]] && g[w[0]] === g[w[2]]) {
+          return g[w[0]];
+        }
+      }
+      if (g.every(c => c !== null)) return "tie";
+      return null;
+    };
+
+    const aiMove = () => {
+      const empty = grid.map((val, idx) => val === null ? idx : null).filter(v => v !== null);
+      for (const idx of empty) {
+        const testGrid = [...grid];
+        testGrid[idx] = "O";
+        if (checkWinner(testGrid) === "O") return idx;
+      }
+      for (const idx of empty) {
+        const testGrid = [...grid];
+        testGrid[idx] = "X";
+        if (checkWinner(testGrid) === "X") return idx;
+      }
+      if (grid[4] === null) return 4;
+      return empty[Math.floor(Math.random() * empty.length)];
+    };
+
+    const makeMove = (idx, player) => {
+      grid[idx] = player;
+      const cell = cells[idx];
+      cell.textContent = player;
+      cell.style.color = player === "X" ? "var(--accent)" : "var(--hot)";
+      cell.style.textShadow = player === "X" ? "0 0 10px var(--accent)" : "0 0 10px var(--hot)";
+      
+      const win = checkWinner(grid);
+      if (win) {
+        isGameOver = true;
+        if (win === "X") {
+          VaultAudio.playUnlock();
+          status.textContent = "FIREWALL BYPASS: SUCCESS";
+          status.style.color = "var(--ok)";
+        } else if (win === "O") {
+          VaultAudio.playWarning();
+          status.textContent = "GRID SHUTDOWN: FAILED";
+          status.style.color = "var(--hot)";
+        } else {
+          VaultAudio.playChirp();
+          status.textContent = "GRID PARITY LOCK: TIE";
+          status.style.color = "var(--muted)";
+        }
+        return true;
+      }
+      return false;
+    };
+
+    cells.forEach(cell => {
+      cell.addEventListener("click", () => {
+        const idx = parseInt(cell.getAttribute("data-idx"));
+        if (grid[idx] !== null || isGameOver) return;
+        
+        VaultAudio.playClick();
+        if (makeMove(idx, "X")) return;
+
+        status.textContent = "AI decrypting...";
+        setTimeout(() => {
+          if (isGameOver) return;
+          const aiIdx = aiMove();
+          makeMove(aiIdx, "O");
+          if (!isGameOver) {
+            status.textContent = "Your turn";
+          }
+        }, 500);
+      });
+    });
+
+    resetBtn.addEventListener("click", () => {
+      VaultAudio.playChirp();
+      grid = Array(9).fill(null);
+      isGameOver = false;
+      cells.forEach(cell => {
+        cell.textContent = "";
+        cell.style.color = "#fff";
+        cell.style.textShadow = "none";
+      });
+      status.textContent = "Your turn";
+      status.style.color = "var(--accent)";
+    });
   }
 };
 
@@ -412,13 +1050,14 @@ function folderLetters(folderName) {
   const lastDigit = Number(session.password.slice(-1));
   const isEven = (lastDigit % 2 === 0);
   const sorted = [...chosen].sort();
-  const correct = isEven ? sorted.at(-1) : sorted.at(0);
+  const correct = isEven ? sorted[sorted.length - 1] : sorted[0];
   
   const shuffled = [];
   while (chosen.length > 0) {
     const idx = Math.floor(random() * chosen.length);
     shuffled.push(chosen.splice(idx, 1)[0]);
   }
+  console.log(`[Decryption Debug] Folder letters for "${folderName}":`, shuffled, `Correct letter: "${correct}" (parity is ${isEven ? 'even' : 'odd'}, last passcode digit: ${lastDigit})`);
   return { display: shuffled, correct };
 }
 
@@ -583,7 +1222,10 @@ function renderVaultView() {
           <h3>${escapeHtml(folderBaseName)}</h3>
           <p class="meta" style="font-size: 0.8rem; border: 1px dashed var(--panel-border); padding: 0.35rem; text-align: center; border-radius: 6px; color: var(--muted); margin-top: 1rem;">Click to Open</p>
         `;
-        card.addEventListener("click", () => openFolder(folderPath));
+        card.addEventListener("click", () => {
+          VaultAudio.playClick();
+          openFolder(folderPath);
+        });
         bind3DTilt(card);
       } else {
         const lock = folderLetters(folderPath);
@@ -665,9 +1307,15 @@ function renderFilesList(files) {
       <h4>${escapeHtml(file.name)}</h4>
       <p class="meta">${formatSize(file.size)}</p>
     `;
-    card.addEventListener("click", () => previewFile(file));
+    card.addEventListener("click", () => {
+      VaultAudio.playClick();
+      previewFile(file);
+    });
     card.addEventListener("keydown", event => {
-      if (event.key === "Enter") previewFile(file);
+      if (event.key === "Enter") {
+        VaultAudio.playClick();
+        previewFile(file);
+      }
     });
     bind3DTilt(card);
     el.fileGrid.append(card);
@@ -1181,7 +1829,10 @@ el.form.addEventListener("submit", async event => {
   // Setup sidebar navigation bindings
   document.querySelectorAll(".nav-item").forEach(item => {
     const sec = item.getAttribute("data-section");
-    item.addEventListener("click", () => navigateToSection(sec));
+    item.addEventListener("click", () => {
+      VaultAudio.playClick();
+      navigateToSection(sec);
+    });
   });
 
   document.addEventListener("click", (e) => {
@@ -1229,7 +1880,10 @@ el.form.addEventListener("submit", async event => {
         <h5 style="margin: 0.4rem 0 0.2rem; font-size: 0.95rem; font-weight: 700; word-break: break-all;">${escapeHtml(file.name)}</h5>
         <p class="meta" style="font-size: 0.75rem;">${file.folder || "Root"}</p>
       `;
-      card.addEventListener("click", () => previewFile(file));
+      card.addEventListener("click", () => {
+        VaultAudio.playClick();
+        previewFile(file);
+      });
       bind3DTilt(card);
       recentGrid.appendChild(card);
     });
@@ -1579,6 +2233,10 @@ el.form.addEventListener("submit", async event => {
 
     // Changed visual theme cycle speed to exactly 67 seconds!
     setInterval(() => {
+      const container = document.querySelector(".preview-panel-container");
+      if (container && container.classList.contains("read-mode-active")) {
+        return; // Do not shift themes/lighting while reading in fullscreen
+      }
       currentStyle = (currentStyle + 1) % 9; // Cycle between all 9 styles!
       randomizeParams();
     }, 67000);
@@ -2133,7 +2791,7 @@ el.form.addEventListener("submit", async event => {
     }
   });
 
-  // Document Viewer Read Mode Option
+  // Document Viewer Full Screen Option
   const fullscreenBtn = document.querySelector("#active-fullscreen-btn");
   if (fullscreenBtn) {
     fullscreenBtn.addEventListener("click", () => {
@@ -2141,7 +2799,7 @@ el.form.addEventListener("submit", async event => {
       if (container) {
         const isActive = container.classList.toggle("read-mode-active");
         if (isActive) {
-          fullscreenBtn.textContent = "Exit Read Mode";
+          fullscreenBtn.textContent = "Exit Full Screen";
           fullscreenBtn.classList.add("active");
           // Enter native fullscreen on document root for true fullscreen visual reading!
           if (document.documentElement.requestFullscreen) {
@@ -2149,8 +2807,9 @@ el.form.addEventListener("submit", async event => {
               console.warn("Failed to enter native fullscreen:", err);
             });
           }
+          VaultAudio.playSweep(true);
         } else {
-          fullscreenBtn.textContent = "Read Mode";
+          fullscreenBtn.textContent = "Full Screen";
           fullscreenBtn.classList.remove("active");
           // Exit native fullscreen if active
           if (document.fullscreenElement) {
@@ -2158,6 +2817,7 @@ el.form.addEventListener("submit", async event => {
               console.warn("Failed to exit native fullscreen:", err);
             });
           }
+          VaultAudio.playSweep(false);
         }
       }
     });
@@ -2170,13 +2830,14 @@ el.form.addEventListener("submit", async event => {
     if (!document.fullscreenElement && container && container.classList.contains("read-mode-active")) {
       container.classList.remove("read-mode-active");
       if (btn) {
-        btn.textContent = "Read Mode";
+        btn.textContent = "Full Screen";
         btn.classList.remove("active");
       }
+      VaultAudio.playSweep(false);
     }
   });
 
-  // Handle escape key fallback to exit Read Mode
+  // Handle escape key fallback to exit Full Screen
   window.addEventListener("keydown", event => {
     if (event.key === "Escape") {
       const container = document.querySelector(".preview-panel-container");
@@ -2184,12 +2845,13 @@ el.form.addEventListener("submit", async event => {
         container.classList.remove("read-mode-active");
         const btn = document.querySelector("#active-fullscreen-btn");
         if (btn) {
-          btn.textContent = "Read Mode";
+          btn.textContent = "Full Screen";
           btn.classList.remove("active");
         }
         if (document.fullscreenElement) {
           document.exitFullscreen().catch(() => {});
         }
+        VaultAudio.playSweep(false);
       }
     }
   });
@@ -2202,12 +2864,29 @@ el.form.addEventListener("submit", async event => {
     playSpeechBtn.addEventListener("click", () => {
       if (!VaultSpeech.isSpeaking) {
         if (state.activeFile) {
+          // Automatically trigger Full Screen mode first!
+          const container = document.querySelector(".preview-panel-container");
+          const fsBtn = document.querySelector("#active-fullscreen-btn");
+          if (container && !container.classList.contains("read-mode-active")) {
+            container.classList.add("read-mode-active");
+            if (fsBtn) {
+              fsBtn.textContent = "Exit Full Screen";
+              fsBtn.classList.add("active");
+            }
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(() => {});
+            }
+            VaultAudio.playSweep(true);
+          }
+          VaultAudio.playChime();
           VaultSpeech.start(state.activeFile);
         }
       } else {
         if (VaultSpeech.isPaused) {
+          VaultAudio.playClick();
           VaultSpeech.resume();
         } else {
+          VaultAudio.playClick();
           VaultSpeech.pause();
         }
       }
@@ -2216,7 +2895,11 @@ el.form.addEventListener("submit", async event => {
 
   if (stopSpeechBtn) {
     stopSpeechBtn.addEventListener("click", () => {
+      VaultAudio.playDecline();
       VaultSpeech.stop();
     });
   }
+
+  // Initialize Sandbox Arcade Games
+  SandboxArcade.init();
 

@@ -28,6 +28,7 @@
             <button type="submit">Unlock</button>
           </div>
           <button type="button" id="guest-btn" class="guest-btn">Explore Public Notes</button>
+          <button type="button" id="lockscreen-games-btn" class="guest-btn" style="margin-top: 0.5rem; border-color: hsla(var(--hue, 180), 100%, 50%, 0.25);">Launch Sandbox Arcade</button>
           <p id="status" class="status" role="status"></p>
         </form>
       </section>
@@ -95,6 +96,10 @@
               <div class="recent-files-container">
                 <h3>Quick Reference</h3>
                 <div id="recent-files-grid" class="recent-grid"></div>
+              </div>
+              <div class="games-container" style="margin-top: 2rem; border-top: 1px dashed var(--panel-border); padding-top: 1.5rem;">
+                <h3>System Mini-Games</h3>
+                <div id="portal-games-grid" class="games-grid"></div>
               </div>
             </div>
           </div>
@@ -168,6 +173,19 @@
         <div id="link-lock-letter-row" class="letter-row" aria-label="Link letter lock"></div>
       </div>
     </dialog>
+
+    <dialog id="game-modal" class="preview game-modal-dialog" style="max-width: 540px; width: 95%;">
+      <div class="preview-head">
+        <strong id="game-modal-title">System Sandbox Arcade</strong>
+        <button id="close-game-modal" type="button" class="close-btn">Close Game</button>
+      </div>
+      <div class="preview-body" style="padding: 1.5rem; text-align: center; color: var(--text); overflow-y: auto; max-height: calc(82vh - 4rem);">
+        <div id="game-content-area">
+          <!-- Game HTML will be injected dynamically -->
+        </div>
+      </div>
+    </dialog>
+
     <div id="scanner-overlay" class="scanner-overlay hidden" aria-hidden="true">
       <div class="scan-grid"></div>
       <div class="scanner-hud">
