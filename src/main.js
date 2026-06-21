@@ -10,9 +10,10 @@ const state = {
 // Web Audio API Sound Engine (Zero-Network SFX)
 const VaultAudio = {
   ctx: null,
-  muted: localStorage.getItem("vault_sfx_muted") === "true",
+  muted: false,
   
   init() {
+    localStorage.removeItem("vault_sfx_muted");
     if (!this.ctx) {
       this.ctx = new (window.AudioContext || window.webkitAudioContext)();
     }
