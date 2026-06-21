@@ -1,4 +1,4 @@
-const SECRET_NUMBER = 11;
+const SECRET_NUMBER = 10;
 const state = {
   vault: null,
   activeFolder: "", // empty string is Root level
@@ -547,20 +547,30 @@ function fileUrl(file) {
 }
 
 window.previewByName = (name) => {
-  const searchName = name.toLowerCase().trim();
-  const file = state.vault.files.find(f => 
-    f.name.toLowerCase() === searchName || 
-    f.name.toLowerCase().replace(/\.md$/, "") === searchName
-  );
+  const searchName = name.trim();
+  
+  const normalizePath = (p) => {
+    return p.toLowerCase()
+            .replace(/\\/g, "/")
+            .replace(/\.md$/, "")
+            .replace(/[\s_\-]/g, "")
+            .trim();
+  };
+  
+  const cleanSearch = normalizePath(searchName);
+  
+  const file = state.vault.files.find(f => {
+    const relativePath = f.folder === "Root" ? f.name : `${f.folder}/${f.name}`;
+    const cleanRelPath = normalizePath(relativePath);
+    const cleanFileName = normalizePath(f.name);
+    return cleanRelPath === cleanSearch || cleanFileName === cleanSearch;
+  });
+  
   if (file) {
-    // If the file folder is locked, show the link-lock decryption dialog
     const isUnlocked = state.isGuest || !file.folder || file.folder === "Root" || state.unlockedFolders.has(file.folder);
-    
     if (isUnlocked) {
-      el.preview.close();
-      setTimeout(() => previewFile(file), 150);
+      previewFile(file);
     } else {
-      el.preview.close();
       showLinkLockDialog(file);
     }
   } else {
@@ -917,6 +927,7 @@ el.form.addEventListener("submit", async event => {
           el.lock.classList.add("hidden");
           el.vault.classList.remove("hidden");
           renderVaultView();
+          initVaultUI(); // Initialize home dashboard and stats
           VaultAudio.playUnlock();
         }, 400);
       }
@@ -924,42 +935,8 @@ el.form.addEventListener("submit", async event => {
     }, 70);
     
   } catch (error) {
-    el.status.textContent = "Deriving key...";
-    try {
-      const decrypted = await decryptVault(secret);
-      el.status.textContent = "";
-      state.vault = decrypted;
-      state.isGuest = false;
-      state.activeFolder = "";
-      state.unlockedFolders.clear();
-      el.vaultMode.textContent = "Private Portal (Unlocked)";
-      
-      const scannerOverlay = document.querySelector("#scanner-overlay");
-      const progressEl = scannerOverlay.querySelector(".scanner-progress");
-      scannerOverlay.classList.remove("hidden");
-      
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += Math.floor(Math.random() * 15) + 5;
-        if (progress >= 100) {
-          progress = 100;
-          clearInterval(interval);
-          setTimeout(() => {
-            scannerOverlay.classList.add("hidden");
-            el.lock.classList.add("hidden");
-            el.vault.classList.remove("hidden");
-            renderVaultView();
-            initVaultUI(); // Initialize home dashboard and stats
-            VaultAudio.playUnlock();
-          }, 400);
-        }
-        progressEl.textContent = `${progress}%`;
-      }, 70);
-      
-    } catch (error) {
-      console.error(error);
-      el.status.textContent = "Decryption failure. Invalid secret key.";
-    }
+    console.error(error);
+    el.status.textContent = "Decryption failure. Invalid secret key.";
   }
   });
 
@@ -1016,9 +993,8 @@ el.form.addEventListener("submit", async event => {
     if (fill) {
       const percentage = {
         "01": 0,
-        "02": 33,
-        "03": 66,
-        "04": 100
+        "02": 50,
+        "03": 100
       }[sectionId];
       fill.style.height = `${percentage}%`;
     }
@@ -1031,18 +1007,12 @@ el.form.addEventListener("submit", async event => {
     const targetViewMap = {
       "01": "#view-home",
       "02": "#view-explorer",
-      "03": "#view-preview",
-      "04": "#view-decrypt"
+      "03": "#view-preview"
     };
     
     const targetView = document.querySelector(targetViewMap[sectionId]);
     if (targetView) {
       targetView.classList.remove("hidden");
-    }
-    
-    // Update Diagnostics variables
-    if (sectionId === "04") {
-      document.querySelector("#diag-unlocked-count").textContent = state.unlockedFolders.size;
     }
   };
 
@@ -1074,8 +1044,10 @@ el.form.addEventListener("submit", async event => {
     
     document.querySelector("#stat-files").textContent = totalFiles;
     document.querySelector("#stat-folders").textContent = totalFolders;
-    document.querySelector("#diag-daily-key").textContent = session.password;
-    document.querySelector("#diag-unlocked-count").textContent = state.unlockedFolders.size;
+    const diagKeyEl = document.querySelector("#diag-daily-key");
+    if (diagKeyEl) diagKeyEl.textContent = session.password;
+    const diagUnlockedEl = document.querySelector("#diag-unlocked-count");
+    if (diagUnlockedEl) diagUnlockedEl.textContent = state.unlockedFolders.size;
     
     // Render Quick Reference recent files grid
     const recentGrid = document.querySelector("#recent-files-grid");
@@ -1981,3 +1953,20 @@ el.form.addEventListener("submit", async event => {
       }
     }
   });
+
+  // Document Viewer Full Screen Option
+  const fullscreenBtn = document.querySelector("#active-fullscreen-btn");
+  if (fullscreenBtn) {
+    fullscreenBtn.addEventListener("click", () => {
+      const viewerBody = document.querySelector("#active-preview-body");
+      if (viewerBody) {
+        if (!document.fullscreenElement) {
+          viewerBody.requestFullscreen().catch(err => {
+            console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+          });
+        } else {
+          document.exitFullscreen();
+        }
+      }
+    });
+  }

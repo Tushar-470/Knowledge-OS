@@ -54,13 +54,9 @@
               <span class="nav-num">03</span>
               <span class="nav-text">DOC PREVIEW</span>
             </button>
-            <button type="button" class="nav-item" data-section="04">
-              <span class="nav-num">04</span>
-              <span class="nav-text">DECRYPT SYSTEM</span>
-            </button>
+
           </nav>
           <div class="sidebar-footer">
-            <button id="audio-toggle-btn" type="button" class="audio-toggle-btn">MUTE SFX</button>
             <button id="lock-vault-btn" type="button" class="lock-vault-btn">LOCK PORTAL</button>
           </div>
         </aside>
@@ -129,6 +125,7 @@
               <div id="active-preview-header" class="active-preview-head">
                 <strong id="active-preview-title">No document loaded</strong>
                 <div class="preview-actions">
+                  <button id="active-fullscreen-btn" type="button" class="download-btn">Full Screen</button>
                   <a id="active-download-link" download class="download-btn hidden">Download</a>
                   <button id="close-active-preview" type="button" class="close-btn hidden">Clear View</button>
                 </div>
@@ -142,34 +139,7 @@
             </div>
           </div>
           
-          <!-- View 04: Decrypt Diagnostics -->
-          <div id="view-decrypt" class="vault-view-section hidden">
-            <div class="view-header">
-              <p class="eyebrow">Decryption</p>
-              <h2>System Security & Lock Rules</h2>
-            </div>
-            <div class="diagnostics-panel">
-              <div class="diag-card">
-                <h3>Decryption Passcode Parity Rules</h3>
-                <p>The daily secure letter lock runs on a parity formula derived from the primary vault passcode.</p>
-                <div class="formula-box">
-                  <div class="formula-item">
-                    <span class="formula-val">Even Last Digit</span>
-                    <span class="formula-desc">Correct button is the <strong>alphabetically last</strong> letter</span>
-                  </div>
-                  <div class="formula-item">
-                    <span class="formula-val">Odd Last Digit</span>
-                    <span class="formula-desc">Correct button is the <strong>alphabetically first</strong> letter</span>
-                  </div>
-                </div>
-                <div class="status-summary">
-                  <p>Daily Access Key: <span class="badge" id="diag-daily-key">Active</span></p>
-                  <p>Lock-out Cooldown Penalty: <span class="badge badge-hot">21 Seconds</span></p>
-                  <p>Session Unlocked Folders: <span class="badge badge-ok" id="diag-unlocked-count">0</span></p>
-                </div>
-              </div>
-            </div>
-          </div>
+
         </div>
       </section>
     </main>

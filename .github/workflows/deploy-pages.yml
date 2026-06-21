@@ -33,7 +33,7 @@ jobs:
       - name: Build encrypted portal
         run: npm run build
         env:
-          CHRONOVAULT_SECRET_NUMBER: "11"
+          CHRONOVAULT_SECRET_NUMBER: "10"
           CHRONOVAULT_OWNER: "Tushar Mathapati"
 
       - name: Configure Pages
