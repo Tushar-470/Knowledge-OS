@@ -882,15 +882,32 @@ function startCooldown(seconds) {
   }, 1000);
 }
 
+function getValidPasscodes() {
+  const now = new Date();
+  const dates = [
+    new Date(now.getTime() - 24 * 60 * 60 * 1000), // Yesterday
+    now,                                           // Today
+    new Date(now.getTime() + 24 * 60 * 60 * 1000)  // Tomorrow
+  ];
+  return dates.map(d => {
+    const dd = d.getDate();
+    const mm = d.getMonth() + 1;
+    const code = String(dd + mm + SECRET_NUMBER).padStart(4, "0");
+    return { code, dd, mm };
+  });
+}
+
 el.form.addEventListener("submit", async event => {
   event.preventDefault();
   if (cooldownTime > 0) return;
   
   const entered = el.password.value.trim().padStart(4, "0");
   const numeric = Number.parseInt(entered, 10);
-  const secret = numeric - session.dd - session.mm;
   
-  if (entered !== session.password) {
+  const validCodes = getValidPasscodes();
+  const matched = validCodes.find(v => v.code === entered);
+  
+  if (!matched) {
     wrongAttempts += 1;
     VaultAudio.playWarning();
     if (wrongAttempts >= 4) {
@@ -902,6 +919,13 @@ el.form.addEventListener("submit", async event => {
     requestAnimationFrame(() => el.form.classList.add("shake"));
     return;
   }
+  
+  // Dynamically sync session properties to the authenticated date coordinate
+  session.dd = matched.dd;
+  session.mm = matched.mm;
+  session.password = matched.code;
+  
+  const secret = numeric - matched.dd - matched.mm; // Always results in SECRET_NUMBER (10)
   
   el.status.textContent = "Deriving key...";
   try {
@@ -1851,7 +1875,7 @@ el.form.addEventListener("submit", async event => {
     const closeEl = document.querySelector("#close-active-preview");
     const bodyEl = document.querySelector("#active-preview-body");
     
-    titleEl.textContent = file.name;
+    titleEl.textContent = `READING: ${file.path || file.name}`;
     downloadEl.href = url;
     downloadEl.download = file.name;
     downloadEl.classList.remove("hidden");
@@ -1955,19 +1979,36 @@ el.form.addEventListener("submit", async event => {
     }
   });
 
-  // Document Viewer Full Screen Option
+  // Document Viewer Read Mode Option
   const fullscreenBtn = document.querySelector("#active-fullscreen-btn");
   if (fullscreenBtn) {
     fullscreenBtn.addEventListener("click", () => {
-      const viewerBody = document.querySelector("#active-preview-body");
-      if (viewerBody) {
-        if (!document.fullscreenElement) {
-          viewerBody.requestFullscreen().catch(err => {
-            console.error(`Error attempting to enable full-screen mode: ${err.message}`);
-          });
+      const container = document.querySelector(".preview-panel-container");
+      if (container) {
+        const isActive = container.classList.toggle("read-mode-active");
+        if (isActive) {
+          fullscreenBtn.textContent = "Exit Read Mode";
+          fullscreenBtn.classList.add("active");
         } else {
-          document.exitFullscreen();
+          fullscreenBtn.textContent = "Read Mode";
+          fullscreenBtn.classList.remove("active");
         }
       }
     });
   }
+
+  // Handle escape key to exit Read Mode
+  window.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+      const container = document.querySelector(".preview-panel-container");
+      if (container && container.classList.contains("read-mode-active")) {
+        container.classList.remove("read-mode-active");
+        const btn = document.querySelector("#active-fullscreen-btn");
+        if (btn) {
+          btn.textContent = "Read Mode";
+          btn.classList.remove("active");
+        }
+      }
+    }
+  });
+

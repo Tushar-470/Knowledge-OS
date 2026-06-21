@@ -1913,13 +1913,49 @@ body.theme-4 .active-preview-body pre, body.theme-5 .active-preview-body pre, bo
   }
 }
 
-/* Document Viewer Full Screen Mode Styling */
-#active-preview-body:fullscreen {
-  background: var(--bg, #000);
-  color: var(--text, #fff);
-  padding: 3rem;
-  overflow-y: auto;
+/* Document Viewer Read Mode Overlay Styling */
+.preview-panel-container.read-mode-active {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
+  z-index: 9999;
+  background: var(--panel);
+  backdrop-filter: blur(45px);
+  -webkit-backdrop-filter: blur(45px);
+  border-radius: 0;
+  border: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
+
+.preview-panel-container.read-mode-active .active-preview-head {
+  padding: 1.5rem 3rem;
+  border-bottom: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.02);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.preview-panel-container.read-mode-active .active-preview-body {
+  padding: 3rem 2rem;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  overflow-y: auto;
+  box-sizing: border-box;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+/* Ensure markdown content renders beautifully in Read Mode */
+.preview-panel-container.read-mode-active .active-preview-body .markdown-body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+}
+
 
