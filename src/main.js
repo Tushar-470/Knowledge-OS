@@ -114,6 +114,141 @@ const VaultAudio = {
   }
 };
 
+// Web Speech API Read Aloud Engine
+const VaultSpeech = {
+  activeFile: null,
+  paragraphs: [],
+  currentIndex: -1,
+  utterance: null,
+  isSpeaking: false,
+  isPaused: false,
+
+  start(file) {
+    this.stop();
+    this.activeFile = file;
+
+    const bodyEl = document.querySelector("#active-preview-body");
+    if (!bodyEl) return;
+
+    // Find all readable block elements (paragraphs, list items, headings, blockquotes, etc.)
+    const blocks = Array.from(bodyEl.querySelectorAll("p, li, h1, h2, h3, h4, h5, h6, blockquote, pre"));
+    if (blocks.length === 0) {
+      this.paragraphs = [bodyEl];
+    } else {
+      this.paragraphs = blocks;
+    }
+
+    this.currentIndex = 0;
+    this.isSpeaking = true;
+    this.isPaused = false;
+    this.updateControlsUI();
+    this.speakCurrent();
+  },
+
+  speakCurrent() {
+    if (!this.isSpeaking || this.currentIndex < 0 || this.currentIndex >= this.paragraphs.length) {
+      this.stop();
+      return;
+    }
+
+    // Remove active highlight from all paragraphs
+    this.paragraphs.forEach(el => el.classList.remove("speech-active"));
+
+    const currentEl = this.paragraphs[this.currentIndex];
+    currentEl.classList.add("speech-active");
+    currentEl.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    const text = currentEl.innerText.trim();
+    if (!text) {
+      // Skip empty elements
+      this.next();
+      return;
+    }
+
+    this.utterance = new SpeechSynthesisUtterance(text);
+    
+    // Attempt to set a high quality English voice
+    const voices = window.speechSynthesis.getVoices();
+    const voice = voices.find(v => v.lang.startsWith("en-") && v.name.includes("Google")) || 
+                  voices.find(v => v.lang.startsWith("en-")) || 
+                  voices[0];
+    if (voice) {
+      this.utterance.voice = voice;
+    }
+
+    this.utterance.onend = () => {
+      if (this.isSpeaking && !this.isPaused) {
+        this.next();
+      }
+    };
+
+    this.utterance.onerror = (e) => {
+      console.warn("Speech synthesis error:", e);
+      if (this.isSpeaking && !this.isPaused) {
+        this.next();
+      }
+    };
+
+    window.speechSynthesis.speak(this.utterance);
+  },
+
+  next() {
+    this.currentIndex++;
+    this.speakCurrent();
+  },
+
+  pause() {
+    if (this.isSpeaking && !this.isPaused) {
+      window.speechSynthesis.pause();
+      this.isPaused = true;
+      this.updateControlsUI();
+    }
+  },
+
+  resume() {
+    if (this.isSpeaking && this.isPaused) {
+      window.speechSynthesis.resume();
+      this.isPaused = false;
+      this.updateControlsUI();
+    }
+  },
+
+  stop() {
+    window.speechSynthesis.cancel();
+    if (this.paragraphs) {
+      this.paragraphs.forEach(el => el.classList.remove("speech-active"));
+    }
+    this.activeFile = null;
+    this.paragraphs = [];
+    this.currentIndex = -1;
+    this.utterance = null;
+    this.isSpeaking = false;
+    this.isPaused = false;
+    this.updateControlsUI();
+  },
+
+  updateControlsUI() {
+    const playBtn = document.querySelector("#active-readaloud-btn");
+    const stopBtn = document.querySelector("#active-stopaloud-btn");
+    if (!playBtn) return;
+
+    if (this.isSpeaking) {
+      if (stopBtn) stopBtn.classList.remove("hidden");
+      if (this.isPaused) {
+        playBtn.textContent = "Resume Aloud";
+        playBtn.classList.remove("speaking");
+      } else {
+        playBtn.textContent = "Pause Aloud";
+        playBtn.classList.add("speaking");
+      }
+    } else {
+      playBtn.textContent = "Read Aloud";
+      playBtn.classList.remove("speaking");
+      if (stopBtn) stopBtn.classList.add("hidden");
+    }
+  }
+};
+
 const el = {
   form: document.querySelector("#unlock-form"),
   password: document.querySelector("#password"),
@@ -843,6 +978,8 @@ function escapeHtml(value) {
 }
 
 function lockVault(message = "") {
+  VaultSpeech.stop();
+  state.activeFile = null;
   state.vault = null;
   state.activeFolder = "";
   state.isGuest = false;
@@ -1868,6 +2005,10 @@ el.form.addEventListener("submit", async event => {
       return;
     }
     
+    // Stop any reading aloud when opening a new file
+    VaultSpeech.stop();
+    state.activeFile = file;
+    
     const url = fileUrl(file);
     
     const titleEl = document.querySelector("#active-preview-title");
@@ -1907,6 +2048,12 @@ el.form.addEventListener("submit", async event => {
       bodyEl.append(p);
     }
     
+    // Show the read aloud button when a document is successfully loaded
+    const readAloudBtn = document.querySelector("#active-readaloud-btn");
+    if (readAloudBtn) {
+      readAloudBtn.classList.remove("hidden");
+    }
+    
     navigateToSection("03"); // Open Section 03: DOC PREVIEW
   }
 
@@ -1914,6 +2061,13 @@ el.form.addEventListener("submit", async event => {
   const clearPreviewBtn = document.querySelector("#close-active-preview");
   if (clearPreviewBtn) {
     clearPreviewBtn.addEventListener("click", () => {
+      VaultSpeech.stop();
+      state.activeFile = null;
+      const readAloudBtn = document.querySelector("#active-readaloud-btn");
+      const stopAloudBtn = document.querySelector("#active-stopaloud-btn");
+      if (readAloudBtn) readAloudBtn.classList.add("hidden");
+      if (stopAloudBtn) stopAloudBtn.classList.add("hidden");
+      
       document.querySelector("#active-preview-title").textContent = "No document loaded";
       document.querySelector("#active-download-link").classList.add("hidden");
       document.querySelector("#close-active-preview").classList.add("hidden");
@@ -1989,15 +2143,40 @@ el.form.addEventListener("submit", async event => {
         if (isActive) {
           fullscreenBtn.textContent = "Exit Read Mode";
           fullscreenBtn.classList.add("active");
+          // Enter native fullscreen on document root for true fullscreen visual reading!
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(err => {
+              console.warn("Failed to enter native fullscreen:", err);
+            });
+          }
         } else {
           fullscreenBtn.textContent = "Read Mode";
           fullscreenBtn.classList.remove("active");
+          // Exit native fullscreen if active
+          if (document.fullscreenElement) {
+            document.exitFullscreen().catch(err => {
+              console.warn("Failed to exit native fullscreen:", err);
+            });
+          }
         }
       }
     });
   }
 
-  // Handle escape key to exit Read Mode
+  // Handle browser native fullscreen change to keep UI synced
+  document.addEventListener("fullscreenchange", () => {
+    const container = document.querySelector(".preview-panel-container");
+    const btn = document.querySelector("#active-fullscreen-btn");
+    if (!document.fullscreenElement && container && container.classList.contains("read-mode-active")) {
+      container.classList.remove("read-mode-active");
+      if (btn) {
+        btn.textContent = "Read Mode";
+        btn.classList.remove("active");
+      }
+    }
+  });
+
+  // Handle escape key fallback to exit Read Mode
   window.addEventListener("keydown", event => {
     if (event.key === "Escape") {
       const container = document.querySelector(".preview-panel-container");
@@ -2008,7 +2187,36 @@ el.form.addEventListener("submit", async event => {
           btn.textContent = "Read Mode";
           btn.classList.remove("active");
         }
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        }
       }
     }
   });
+
+  // Read Aloud Option Controls
+  const playSpeechBtn = document.querySelector("#active-readaloud-btn");
+  const stopSpeechBtn = document.querySelector("#active-stopaloud-btn");
+  
+  if (playSpeechBtn) {
+    playSpeechBtn.addEventListener("click", () => {
+      if (!VaultSpeech.isSpeaking) {
+        if (state.activeFile) {
+          VaultSpeech.start(state.activeFile);
+        }
+      } else {
+        if (VaultSpeech.isPaused) {
+          VaultSpeech.resume();
+        } else {
+          VaultSpeech.pause();
+        }
+      }
+    });
+  }
+
+  if (stopSpeechBtn) {
+    stopSpeechBtn.addEventListener("click", () => {
+      VaultSpeech.stop();
+    });
+  }
 

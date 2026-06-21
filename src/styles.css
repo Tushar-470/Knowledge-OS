@@ -1958,4 +1958,28 @@ body.theme-4 .active-preview-body pre, body.theme-5 .active-preview-body pre, bo
   color: var(--text);
 }
 
+/* Highlight styling for paragraph currently being read aloud */
+.speech-active {
+  background: hsla(var(--hue, 180), 100%, 50%, 0.1) !important;
+  box-shadow: 0 0 15px hsla(var(--hue, 180), 100%, 50%, 0.12) !important;
+  border-left: 4px solid var(--accent, #00f0ff) !important;
+  padding-left: 14px !important;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+/* Micro-animation for active speech button */
+.download-btn.speaking {
+  background: var(--hot) !important;
+  color: #fff !important;
+  border-color: var(--hot) !important;
+  animation: pulse-speaking 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse-speaking {
+  0% { box-shadow: 0 0 0 0 rgba(255, 75, 75, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 75, 75, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 75, 75, 0); }
+}
+
 
