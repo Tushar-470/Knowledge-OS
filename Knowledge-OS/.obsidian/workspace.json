@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Areas/Career/2.PHARMACEUTICAL FORMULATION SCIENCE — DEEP DIVE (Part 1).md",
-                "mode": "preview",
+                "file": "Areas/MPharm/Dashboard.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2.PHARMACEUTICAL FORMULATION SCIENCE — DEEP DIVE (Part 1)"
+              "title": "Dashboard"
             }
           }
         ]
@@ -78,8 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 281.5,
-    "collapsed": true
+    "width": 281.5
   },
   "right": {
     "id": "4eddfa58c37bc1d1",
@@ -194,8 +193,9 @@
   },
   "active": "e7a7b303c61786dc",
   "lastOpenFiles": [
-    "Areas/Career/Dashboard.md",
     "Home.md",
+    "Areas/Career/2.PHARMACEUTICAL FORMULATION SCIENCE — DEEP DIVE (Part 1).md",
+    "Areas/Career/Dashboard.md",
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.16 pH Microclimate and Intracellular pH Environment.md",
     "pharma_rd_career_guide.md",
     "LONG_FILENAME_REPORT.md",
@@ -222,7 +222,6 @@
     "drug_excipient_docking_research_guide.md",
     "pharma_rd_career_guide 1.md",
     "THESIS_DASHBOARD.md",
-    "Areas/Career/3.PHARMACEUTICAL FORMULATION SCIENCE — DEEP DIVE (Part 2).md",
     "Areas/Research/Thesis/Screenshot (1).png",
     "Areas/MPharm/PYQs",
     "Areas/MPharm/Molecular Pharmaceutics",

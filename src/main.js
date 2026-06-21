@@ -1,4 +1,4 @@
-const SECRET_NUMBER = 11;
+const SECRET_NUMBER = 11; // INJECTED_AT_BUILD
 const state = {
   vault: null,
   activeFolder: "", // empty string is Root level
@@ -692,12 +692,12 @@ function renderMarkdown(md) {
     return `<a href="#" class="wiki-link" onclick="event.preventDefault(); window.previewByName('${escapeHtml(filename.replace(/'/g, "\\'"))}')">${escapeHtml(alias)}</a>`;
   });
   
-  // Bold & Italics
-  finalHtml = finalHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  finalHtml = finalHtml.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  // Bold & Italics (restricted to non-newlines to prevent styling leakage across paragraphs - Flaw 3)
+  finalHtml = finalHtml.replace(/\*\*([^\n*]+)\*\*/g, '<strong>$1</strong>');
+  finalHtml = finalHtml.replace(/\*([^\n*]+)\*/g, '<em>$1</em>');
   
   // Inline code
-  finalHtml = finalHtml.replace(/`(.*?)`/g, '<code>$1</code>');
+  finalHtml = finalHtml.replace(/`([^\n`]+)`/g, '<code>$1</code>');
   
   return `<div class="markdown-body">${finalHtml}</div>`;
 }
@@ -897,11 +897,15 @@ el.form.addEventListener("submit", async event => {
     lockVault("System locked securely.");
   });
 
+  let searchTimeout = null;
   el.search.addEventListener("input", () => {
-    renderVaultView();
-    if (el.search.value.trim() !== "") {
-      navigateToSection("02"); // Focus explorer to show search results
-    }
+    if (searchTimeout) clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      renderVaultView();
+      if (el.search.value.trim() !== "") {
+        navigateToSection("02"); // Focus explorer to show search results
+      }
+    }, 150); // 150ms debounce delay to prevent input thrashing (Flaw 20)
   });
 
   el.closePreview.addEventListener("click", () => el.preview.close());
@@ -1665,7 +1669,10 @@ el.form.addEventListener("submit", async event => {
       
       const imgData = this.offCtx.getImageData(0, 0, 440, 110);
       this.particles = [];
-      const step = 4;
+      
+      // Optimize particle density based on viewport size and pixel ratio to prevent performance lag (Flaw 9)
+      const isMobile = window.innerWidth <= 768;
+      const step = isMobile ? 6 : (devicePixelRatio > 1 ? 5 : 4);
       
       for (let y = 0; y < 110; y += step) {
         for (let x = 0; x < 440; x += step) {
@@ -1780,6 +1787,14 @@ el.form.addEventListener("submit", async event => {
       return;
     }
     
+    // Revoke previous URLs to keep memory footprint minimal (Flaw 15)
+    for (const [id, cachedUrl] of state.urls.entries()) {
+      if (id !== file.id) {
+        URL.revokeObjectURL(cachedUrl);
+        state.urls.delete(id);
+      }
+    }
+    
     const url = fileUrl(file);
     
     const titleEl = document.querySelector("#active-preview-title");
@@ -1841,3 +1856,6 @@ el.form.addEventListener("submit", async event => {
   // Start visual effects & typography name engine
   startCanvas();
   const nameEngine = new NameParticleEngine();
+
+  // Wipe memory state cache on tab unload for maximum session security (Flaw 13)
+  window.addEventListener("beforeunload", () => lockVault());

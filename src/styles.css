@@ -1082,14 +1082,7 @@ dialog.preview::backdrop {
   -webkit-backdrop-filter: blur(35px) !important;
 }
 
-/* Depth of Field blur when dialogs are active */
-body:has(dialog[open]) .app-shell {
-  filter: blur(12px);
-  transition: filter 0.3s ease;
-}
-body .app-shell {
-  transition: filter 0.3s ease;
-}
+/* Depth of Field transitions handled natively by backdrop */
 
 /* 3D Typography Effects */
 .owner-container {
@@ -1642,7 +1635,6 @@ body.theme-4 .breadcrumbs, body.theme-5 .breadcrumbs, body.theme-8 .breadcrumbs 
   color: var(--ok);
 }
 
-/* Document Reader Panel */
 .preview-panel-container {
   border: 1px solid var(--panel-border);
   border-radius: var(--border-radius);
@@ -1651,7 +1643,7 @@ body.theme-4 .breadcrumbs, body.theme-5 .breadcrumbs, body.theme-8 .breadcrumbs 
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 12rem);
+  height: auto; /* Expand naturally to avoid double scrollbars */
   margin-top: 1rem;
 }
 .active-preview-head {
@@ -1706,7 +1698,7 @@ body.theme-4 .breadcrumbs, body.theme-5 .breadcrumbs, body.theme-8 .breadcrumbs 
 }
 .active-preview-body {
   padding: 2rem;
-  overflow-y: auto;
+  overflow-y: visible; /* Scroll naturally via vault-content container */
   flex-grow: 1;
   background: rgba(0, 0, 0, 0.2);
 }
@@ -1832,11 +1824,23 @@ body.theme-4 .active-preview-body pre, body.theme-5 .active-preview-body pre, bo
   }
   
   .preview-panel-container {
-    height: 70vh;
+    height: auto; /* Natural scrolling on mobile */
   }
   
   .formula-box {
     grid-template-columns: 1fr;
   }
+}
+
+/* Accessibility Focus Indicators */
+.folder-card:focus-visible, 
+.file-card:focus-visible, 
+input:focus-visible, 
+button:focus-visible,
+.nav-item:focus-visible,
+a.wiki-link:focus-visible,
+dialog.preview button:focus-visible {
+  outline: 3px solid var(--hot, #ff007f);
+  outline-offset: 4px;
 }
 
