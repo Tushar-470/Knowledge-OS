@@ -1139,6 +1139,93 @@ function getValidPasscodes() {
   });
 }
 
+function buildVaultFromGitHubTree(tree) {
+  const files = [];
+  const folderMap = new Map();
+  
+  const textExtensions = [
+    ".md", ".txt", ".pdf", ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".csv",
+    ".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg",
+    ".json", ".js", ".css", ".html", ".xml", ".yaml", ".yml", ".py", ".sh"
+  ];
+  const includeExtensions = new Set(textExtensions);
+
+  for (const item of tree) {
+    if (item.type !== "blob") continue;
+    if (!item.path.startsWith("Knowledge-OS/")) continue;
+    
+    const relativePath = item.path.substring("Knowledge-OS/".length);
+    if (!relativePath) continue;
+    
+    const segments = relativePath.split("/");
+    const filename = segments[segments.length - 1];
+    
+    const hasExcludedSegment = segments.slice(0, -1).some(seg => 
+      [".git", ".github", ".obsidian", "dist", "node_modules", "public", "scripts", "src"].includes(seg)
+    );
+    if (hasExcludedSegment) continue;
+    
+    const ext = "." + filename.split(".").pop().toLowerCase();
+    if (!includeExtensions.has(ext)) continue;
+    
+    const folder = segments.length > 1 ? segments.slice(0, -1).join("/") : "Root";
+    
+    const mimeMap = {
+      ".md": "text/markdown; charset=utf-8",
+      ".txt": "text/plain; charset=utf-8",
+      ".pdf": "application/pdf",
+      ".doc": "application/msword",
+      ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ".ppt": "application/vnd.ms-powerpoint",
+      ".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      ".xls": "application/vnd.ms-excel",
+      ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      ".csv": "text/csv; charset=utf-8",
+      ".png": "image/png",
+      ".jpg": "image/jpeg",
+      ".jpeg": "image/jpeg",
+      ".webp": "image/webp",
+      ".gif": "image/gif",
+      ".svg": "image/svg+xml",
+      ".json": "application/json; charset=utf-8",
+      ".js": "text/javascript; charset=utf-8",
+      ".css": "text/css; charset=utf-8",
+      ".html": "text/html; charset=utf-8",
+      ".xml": "application/xml; charset=utf-8",
+      ".yaml": "text/yaml; charset=utf-8",
+      ".yml": "text/yaml; charset=utf-8",
+      ".py": "text/x-python; charset=utf-8",
+      ".sh": "text/x-shellscript; charset=utf-8"
+    };
+    
+    const record = {
+      id: btoa(unescape(encodeURIComponent(relativePath))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''),
+      name: filename,
+      path: relativePath,
+      folder,
+      ext,
+      mime: mimeMap[ext] || "application/octet-stream",
+      size: item.size || 0,
+      modified: new Date().toISOString(),
+      content: null
+    };
+    
+    files.push(record);
+    
+    if (!folderMap.has(folder)) {
+      folderMap.set(folder, { name: folder, count: 0 });
+    }
+    folderMap.get(folder).count += 1;
+  }
+  
+  return {
+    owner: "Tushar Mathapati",
+    generatedAt: new Date().toISOString(),
+    files,
+    folders: [...folderMap.values()].sort((a, b) => a.name.localeCompare(b.name))
+  };
+}
+
 el.form.addEventListener("submit", async event => {
   event.preventDefault();
   if (cooldownTime > 0) return;
@@ -1169,9 +1256,29 @@ el.form.addEventListener("submit", async event => {
   
   const secret = numeric - matched.dd - matched.mm; // Always results in SECRET_NUMBER (10)
   
-  el.status.textContent = "Deriving key...";
+  el.status.textContent = "Deriving key & syncing vault...";
   try {
-    const decrypted = await decryptVault(secret);
+    let decrypted;
+    try {
+      const headers = {};
+      const pat = localStorage.getItem("KNOWLEDGE_OS_GITHUB_PAT");
+      if (pat) {
+        headers["Authorization"] = `token ${pat}`;
+      }
+      const treeRes = await fetch("https://api.github.com/repos/Tushar-470/Knowledge-OS/git/trees/main?recursive=1", { 
+        cache: "no-store",
+        headers
+      });
+      if (!treeRes.ok) {
+        throw new Error(`GitHub API returned ${treeRes.status}`);
+      }
+      const treeJson = await treeRes.json();
+      decrypted = buildVaultFromGitHubTree(treeJson.tree);
+      console.log("Successfully synced with GitHub real-time API.");
+    } catch (err) {
+      console.warn("GitHub API failed or rate-limited. Falling back to build-time vault-data.json...", err);
+      decrypted = await decryptVault(secret);
+    }
     el.status.textContent = "";
     state.vault = decrypted;
     state.isGuest = false;
@@ -1210,7 +1317,40 @@ el.form.addEventListener("submit", async event => {
   el.guestBtn.addEventListener("click", async () => {
     el.status.textContent = "Loading public records...";
     try {
-      const data = await fetch("./public-data.json", { cache: "no-store" }).then(r => r.json());
+      let data;
+      try {
+        const headers = {};
+        const pat = localStorage.getItem("KNOWLEDGE_OS_GITHUB_PAT");
+        if (pat) {
+          headers["Authorization"] = `token ${pat}`;
+        }
+        const treeRes = await fetch("https://api.github.com/repos/Tushar-470/Knowledge-OS/git/trees/main?recursive=1", { 
+          cache: "no-store",
+          headers
+        });
+        if (!treeRes.ok) {
+          throw new Error(`GitHub API returned ${treeRes.status}`);
+        }
+        const treeJson = await treeRes.json();
+        const fullVault = buildVaultFromGitHubTree(treeJson.tree);
+        // Filter public files for guest access
+        const publicFiles = fullVault.files.filter(f => f.folder === "Public" || f.folder.startsWith("Public/"));
+        const folderMap = new Map();
+        for (const file of publicFiles) {
+          if (!folderMap.has(file.folder)) folderMap.set(file.folder, { name: file.folder, count: 0 });
+          folderMap.get(file.folder).count += 1;
+        }
+        data = {
+          owner: fullVault.owner,
+          generatedAt: fullVault.generatedAt,
+          files: publicFiles,
+          folders: [...folderMap.values()].sort((a, b) => a.name.localeCompare(b.name))
+        };
+        console.log("Successfully loaded public files from GitHub API.");
+      } catch (err) {
+        console.warn("GitHub API failed, falling back to public-data.json...", err);
+        data = await fetch("./public-data.json", { cache: "no-store" }).then(r => r.json());
+      }
       el.status.textContent = "";
       state.vault = data;
       state.isGuest = true;
@@ -2112,7 +2252,7 @@ el.form.addEventListener("submit", async event => {
   }
 
   // Update active file viewer to use embedded View 03 instead of fallback Dialog
-  function previewFile(file) {
+  async function previewFile(file) {
     // If the folder is locked, show the secure link lock dialog first
     const isUnlocked = state.isGuest || !file.folder || file.folder === "Root" || state.unlockedFolders.has(file.folder);
     if (!isUnlocked) {
@@ -2123,6 +2263,34 @@ el.form.addEventListener("submit", async event => {
     // Stop any reading aloud when opening a new file
     VaultSpeech.stop();
     state.activeFile = file;
+    
+    // Load file content dynamically if not present (realtime sync mode)
+    if (file.content === null || file.content === undefined) {
+      const bodyEl = document.querySelector("#active-preview-body");
+      const titleEl = document.querySelector("#active-preview-title");
+      titleEl.textContent = `LOADING: ${file.path || file.name}...`;
+      bodyEl.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;height:200px;font-family:monospace;color:var(--muted)">Fetching document from GitHub...</div>`;
+      navigateToSection("03");
+      
+      try {
+        const rawUrl = `https://raw.githubusercontent.com/Tushar-470/Knowledge-OS/main/Knowledge-OS/${file.path}`;
+        const response = await fetch(rawUrl);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch file content from GitHub: ${response.statusText}`);
+        }
+        const buffer = await response.arrayBuffer();
+        const bytes = new Uint8Array(buffer);
+        let binary = "";
+        for (let i = 0; i < bytes.byteLength; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        file.content = btoa(binary);
+      } catch (error) {
+        console.error(error);
+        bodyEl.innerHTML = `<div style="color:var(--accent-red);padding:1rem;font-family:monospace">Error loading file from GitHub. Check connection or fallback to build: ${error.message}</div>`;
+        return;
+      }
+    }
     
     const url = fileUrl(file);
     
