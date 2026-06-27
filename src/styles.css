@@ -2024,3 +2024,14 @@ body.theme-4 .active-preview-body pre, body.theme-5 .active-preview-body pre, bo
   overflow: hidden !important;
 }
 
+.vault-view.read-mode-active .vault-view-section {
+  height: 100% !important;
+  min-height: 100vh !important;
+}
+
+.preview-panel-container.read-mode-active .active-preview-body {
+  flex-grow: 1 !important;
+  height: 100% !important;
+}
+
+
