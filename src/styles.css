@@ -2006,3 +2006,18 @@ body.theme-4 .active-preview-body pre, body.theme-5 .active-preview-body pre, bo
   70% { box-shadow: 0 0 0 10px rgba(255, 75, 75, 0); }
   100% { box-shadow: 0 0 0 0 rgba(255, 75, 75, 0); }
 }
+
+/* Ensure the sidebar and padding are hidden when fullscreen is active */
+.vault-view.read-mode-active .vault-sidebar {
+  display: none !important;
+}
+
+.vault-view.read-mode-active {
+  grid-template-columns: 1fr !important;
+}
+
+.vault-view.read-mode-active .vault-content {
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+

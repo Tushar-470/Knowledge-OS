@@ -2421,10 +2421,12 @@ el.form.addEventListener("submit", async event => {
   if (fullscreenBtn) {
     fullscreenBtn.addEventListener("click", () => {
       const container = document.querySelector(".preview-panel-container");
+      const vaultView = document.querySelector(".vault-view");
       if (container) {
         const isActive = container.classList.toggle("read-mode-active");
+        if (vaultView) vaultView.classList.toggle("read-mode-active", isActive);
         if (isActive) {
-          fullscreenBtn.textContent = "Exit Full Screen";
+          fullscreenBtn.textContent = "Exit Fullscreen";
           fullscreenBtn.classList.add("active");
           // Enter native fullscreen on document root for true fullscreen visual reading!
           if (document.documentElement.requestFullscreen) {
@@ -2434,7 +2436,7 @@ el.form.addEventListener("submit", async event => {
           }
           VaultAudio.playSweep(true);
         } else {
-          fullscreenBtn.textContent = "Full Screen";
+          fullscreenBtn.textContent = "Fullscreen Mode";
           fullscreenBtn.classList.remove("active");
           // Exit native fullscreen if active
           if (document.fullscreenElement) {
@@ -2451,11 +2453,13 @@ el.form.addEventListener("submit", async event => {
   // Handle browser native fullscreen change to keep UI synced
   document.addEventListener("fullscreenchange", () => {
     const container = document.querySelector(".preview-panel-container");
+    const vaultView = document.querySelector(".vault-view");
     const btn = document.querySelector("#active-fullscreen-btn");
     if (!document.fullscreenElement && container && container.classList.contains("read-mode-active")) {
       container.classList.remove("read-mode-active");
+      if (vaultView) vaultView.classList.remove("read-mode-active");
       if (btn) {
-        btn.textContent = "Full Screen";
+        btn.textContent = "Fullscreen Mode";
         btn.classList.remove("active");
       }
       VaultAudio.playSweep(false);
@@ -2466,11 +2470,13 @@ el.form.addEventListener("submit", async event => {
   window.addEventListener("keydown", event => {
     if (event.key === "Escape") {
       const container = document.querySelector(".preview-panel-container");
+      const vaultView = document.querySelector(".vault-view");
       if (container && container.classList.contains("read-mode-active")) {
         container.classList.remove("read-mode-active");
+        if (vaultView) vaultView.classList.remove("read-mode-active");
         const btn = document.querySelector("#active-fullscreen-btn");
         if (btn) {
-          btn.textContent = "Full Screen";
+          btn.textContent = "Fullscreen Mode";
           btn.classList.remove("active");
         }
         if (document.fullscreenElement) {
@@ -2491,11 +2497,13 @@ el.form.addEventListener("submit", async event => {
         if (state.activeFile) {
           // Automatically trigger Full Screen mode first!
           const container = document.querySelector(".preview-panel-container");
+          const vaultView = document.querySelector(".vault-view");
           const fsBtn = document.querySelector("#active-fullscreen-btn");
           if (container && !container.classList.contains("read-mode-active")) {
             container.classList.add("read-mode-active");
+            if (vaultView) vaultView.classList.add("read-mode-active");
             if (fsBtn) {
-              fsBtn.textContent = "Exit Full Screen";
+              fsBtn.textContent = "Exit Fullscreen";
               fsBtn.classList.add("active");
             }
             if (document.documentElement.requestFullscreen) {
