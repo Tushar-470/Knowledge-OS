@@ -2416,18 +2416,43 @@ el.form.addEventListener("submit", async event => {
     }
   });
 
+  // Helper to dynamically toggle fullscreen layout styles
+  function setFullscreenLayout(isActive) {
+    const container = document.querySelector(".preview-panel-container");
+    const sidebar = document.querySelector(".vault-sidebar");
+    const content = document.querySelector(".vault-content");
+    const vaultView = document.querySelector(".vault-view");
+    const btn = document.querySelector("#active-fullscreen-btn");
+    
+    if (container) {
+      container.classList.toggle("read-mode-active", isActive);
+    }
+    if (sidebar) {
+      sidebar.style.setProperty("display", isActive ? "none" : "", "important");
+    }
+    if (content) {
+      content.style.setProperty("padding", isActive ? "0" : "", "important");
+      content.style.setProperty("overflow", isActive ? "hidden" : "", "important");
+    }
+    if (vaultView) {
+      vaultView.style.setProperty("grid-template-columns", isActive ? "1fr" : "", "important");
+      vaultView.classList.toggle("read-mode-active", isActive);
+    }
+    if (btn) {
+      btn.textContent = isActive ? "Exit Fullscreen" : "Fullscreen Mode";
+      btn.classList.toggle("active", isActive);
+    }
+  }
+
   // Document Viewer Full Screen Option
   const fullscreenBtn = document.querySelector("#active-fullscreen-btn");
   if (fullscreenBtn) {
     fullscreenBtn.addEventListener("click", () => {
       const container = document.querySelector(".preview-panel-container");
-      const vaultView = document.querySelector(".vault-view");
       if (container) {
-        const isActive = container.classList.toggle("read-mode-active");
-        if (vaultView) vaultView.classList.toggle("read-mode-active", isActive);
+        const isActive = !container.classList.contains("read-mode-active");
+        setFullscreenLayout(isActive);
         if (isActive) {
-          fullscreenBtn.textContent = "Exit Fullscreen";
-          fullscreenBtn.classList.add("active");
           // Enter native fullscreen on document root for true fullscreen visual reading!
           if (document.documentElement.requestFullscreen) {
             document.documentElement.requestFullscreen().catch(err => {
@@ -2436,8 +2461,6 @@ el.form.addEventListener("submit", async event => {
           }
           VaultAudio.playSweep(true);
         } else {
-          fullscreenBtn.textContent = "Fullscreen Mode";
-          fullscreenBtn.classList.remove("active");
           // Exit native fullscreen if active
           if (document.fullscreenElement) {
             document.exitFullscreen().catch(err => {
@@ -2453,15 +2476,8 @@ el.form.addEventListener("submit", async event => {
   // Handle browser native fullscreen change to keep UI synced
   document.addEventListener("fullscreenchange", () => {
     const container = document.querySelector(".preview-panel-container");
-    const vaultView = document.querySelector(".vault-view");
-    const btn = document.querySelector("#active-fullscreen-btn");
     if (!document.fullscreenElement && container && container.classList.contains("read-mode-active")) {
-      container.classList.remove("read-mode-active");
-      if (vaultView) vaultView.classList.remove("read-mode-active");
-      if (btn) {
-        btn.textContent = "Fullscreen Mode";
-        btn.classList.remove("active");
-      }
+      setFullscreenLayout(false);
       VaultAudio.playSweep(false);
     }
   });
@@ -2470,15 +2486,8 @@ el.form.addEventListener("submit", async event => {
   window.addEventListener("keydown", event => {
     if (event.key === "Escape") {
       const container = document.querySelector(".preview-panel-container");
-      const vaultView = document.querySelector(".vault-view");
       if (container && container.classList.contains("read-mode-active")) {
-        container.classList.remove("read-mode-active");
-        if (vaultView) vaultView.classList.remove("read-mode-active");
-        const btn = document.querySelector("#active-fullscreen-btn");
-        if (btn) {
-          btn.textContent = "Fullscreen Mode";
-          btn.classList.remove("active");
-        }
+        setFullscreenLayout(false);
         if (document.fullscreenElement) {
           document.exitFullscreen().catch(() => {});
         }
@@ -2497,15 +2506,8 @@ el.form.addEventListener("submit", async event => {
         if (state.activeFile) {
           // Automatically trigger Full Screen mode first!
           const container = document.querySelector(".preview-panel-container");
-          const vaultView = document.querySelector(".vault-view");
-          const fsBtn = document.querySelector("#active-fullscreen-btn");
           if (container && !container.classList.contains("read-mode-active")) {
-            container.classList.add("read-mode-active");
-            if (vaultView) vaultView.classList.add("read-mode-active");
-            if (fsBtn) {
-              fsBtn.textContent = "Exit Fullscreen";
-              fsBtn.classList.add("active");
-            }
+            setFullscreenLayout(true);
             if (document.documentElement.requestFullscreen) {
               document.documentElement.requestFullscreen().catch(() => {});
             }
