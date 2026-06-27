@@ -2436,7 +2436,15 @@ el.form.addEventListener("submit", async event => {
     }
     if (vaultView) {
       vaultView.style.setProperty("grid-template-columns", isActive ? "1fr" : "", "important");
+      vaultView.style.setProperty("overflow-x", isActive ? "hidden" : "", "important");
       vaultView.classList.toggle("read-mode-active", isActive);
+    }
+    if (isActive) {
+      document.documentElement.style.setProperty("overflow-x", "hidden", "important");
+      document.body.style.setProperty("overflow-x", "hidden", "important");
+    } else {
+      document.documentElement.style.removeProperty("overflow-x");
+      document.body.style.removeProperty("overflow-x");
     }
     if (btn) {
       btn.textContent = isActive ? "Exit Fullscreen" : "Fullscreen Mode";

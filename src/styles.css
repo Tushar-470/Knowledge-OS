@@ -1919,8 +1919,11 @@ body.theme-4 .active-preview-body pre, body.theme-5 .active-preview-body pre, bo
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  box-sizing: border-box !important;
   z-index: 9999;
   background: var(--panel);
   backdrop-filter: blur(45px);
