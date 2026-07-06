@@ -13,7 +13,6 @@ Gene therapy is broadly classified into two distinct approaches based on *where*
 *   **Advantages:** Offers maximum control over the transfection process; highly efficient; allows for rigorous testing of the modified cells before putting them back into the patient; lower risk of the vector spreading to non-target tissues.
 *   **Limitations:** Restricted to cell types that can be easily extracted, cultured, and re-implanted (primarily blood cells).
 *   **Classic Example:** CAR-T cell therapy for cancer (modifying patient's T-cells); treatment of Severe Combined Immunodeficiency (SCID) using modified bone marrow stem cells.
-
 ### B. In-Vivo Gene Therapy ("Inside the living body")
 *   **Process:** The therapeutic gene is packaged into a delivery vector and directly injected or inhaled into the patient’s body (e.g., intravenously, intramuscularly, or directly into a specific organ like the eye or brain). The vector must then find the target cells, enter them, and deliver the gene.
 *   **Advantages:** Can be used for tissues that cannot be removed and grown in a lab (e.g., brain, lung, heart). Less invasive for the patient in terms of cell harvesting.
