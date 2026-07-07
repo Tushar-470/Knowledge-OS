@@ -901,6 +901,36 @@ function parseMarkdownTable(rows) {
 
 // Rich Markdown Parser
 function renderMarkdown(md) {
+  const mathBlocks = [];
+
+  // 1. Extract Display Math: $$ ... $$
+  md = md.replace(/\$\$([\s\S]*?)\$\$/g, (match, formula) => {
+    const index = mathBlocks.length;
+    mathBlocks.push({ formula: formula.trim(), displayMode: true, delimLeft: "$$", delimRight: "$$" });
+    return `KATEXPLACEHOLDER${index}`;
+  });
+
+  // 2. Extract Display Math: \\[ ... \\]
+  md = md.replace(/\\\[([\s\S]*?)\\\]/g, (match, formula) => {
+    const index = mathBlocks.length;
+    mathBlocks.push({ formula: formula.trim(), displayMode: true, delimLeft: "\\[", delimRight: "\\]" });
+    return `KATEXPLACEHOLDER${index}`;
+  });
+
+  // 3. Extract Inline Math: \( ... \)
+  md = md.replace(/\\\(([\s\S]*?)\\\)/g, (match, formula) => {
+    const index = mathBlocks.length;
+    mathBlocks.push({ formula: formula.trim(), displayMode: false, delimLeft: "\\(", delimRight: "\\)" });
+    return `KATEXPLACEHOLDER${index}`;
+  });
+
+  // 4. Extract Inline Math: $ ... $ (avoiding escaped dollars and space padding)
+  md = md.replace(/(?<!\\)\$((?:\S|\\\$)(?:[^\$]|\\\$)*?(?:\S|\\\$)?)(?<!\\)\$/g, (match, formula) => {
+    const index = mathBlocks.length;
+    mathBlocks.push({ formula: formula.replace(/\\\$/g, "$").trim(), displayMode: false, delimLeft: "$", delimRight: "$" });
+    return `KATEXPLACEHOLDER${index}`;
+  });
+
   let escaped = escapeHtml(md);
   
   const lines = escaped.split(/\r?\n/);
@@ -1063,6 +1093,28 @@ function renderMarkdown(md) {
   
   // Inline code
   finalHtml = finalHtml.replace(/`(.*?)`/g, '<code>$1</code>');
+
+  // Replace placeholders back with rendered KaTeX or fallback
+  for (let index = 0; index < mathBlocks.length; index++) {
+    const { formula, displayMode, delimLeft, delimRight } = mathBlocks[index];
+    let rendered;
+    if (typeof katex !== "undefined") {
+      try {
+        rendered = katex.renderToString(formula, { displayMode, throwOnError: false });
+      } catch (err) {
+        console.error("KaTeX rendering error:", err);
+        rendered = `<code class="math-fallback">${escapeHtml(delimLeft + formula + delimRight)}</code>`;
+      }
+    } else {
+      rendered = `<code class="math-fallback">${escapeHtml(delimLeft + formula + delimRight)}</code>`;
+    }
+    
+    if (displayMode) {
+      // If it was wrapped in a paragraph on its own, remove the paragraph wrapper to keep styling clean
+      finalHtml = finalHtml.replace(`<p>KATEXPLACEHOLDER${index}</p>`, rendered);
+    }
+    finalHtml = finalHtml.replace(`KATEXPLACEHOLDER${index}`, rendered);
+  }
   
   return `<div class="markdown-body">${finalHtml}</div>`;
 }

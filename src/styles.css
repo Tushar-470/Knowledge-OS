@@ -2034,4 +2034,13 @@ body.theme-4 .active-preview-body pre, body.theme-5 .active-preview-body pre, bo
   height: 100% !important;
 }
 
+.math-fallback {
+  font-family: 'Geist Mono', monospace;
+  background: rgba(255, 75, 75, 0.1);
+  color: #ff4b4b;
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
 
