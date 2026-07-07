@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/Unit 3.md",
+                "file": "Areas/MPharm/Computer Aided Drug Development/Unit 5.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Unit 3"
+              "title": "Unit 5"
             }
           }
         ]
@@ -193,10 +193,17 @@
   },
   "active": "e7a7b303c61786dc",
   "lastOpenFiles": [
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/Unit 4.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/Unit 5.md",
+    "Areas/MPharm/Computer Aided Drug Development/ARTIFICIAL INTELLIGENCE, ROBOTICS, AND COMPUTATIONAL FLUID DYNAMICS IN PHARMACEUTICAL R&D.md",
+    "Areas/MPharm/Computer Aided Drug Development/Unit 5.md",
+    "Areas/MPharm/Computer Aided Drug Development/Unit 4 c.md",
+    "Areas/MPharm/Computer Aided Drug Development/Unit 4 b.md",
+    "Areas/MPharm/Computer Aided Drug Development/Unit 4 a.md",
+    "Areas/MPharm/Computer Aided Drug Development/Computer-aided biopharmaceutical characterization.md",
+    "Areas/MPharm/Computer Aided Drug Development/COMPUTER SIMULATIONS IN PKPD AND CLINICAL DEVELOPMENT.md",
     "Home.md",
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/Unit 3.md",
+    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/Unit 4.md",
+    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/Unit 5.md",
     "Untitled 1.md",
     "Areas/MPharm/Molecular Pharmaceutics/PULMONARY AND INTRANASAL DRUG DELIVERY SYSTEMS.md",
     "Areas/MPharm/Molecular Pharmaceutics/NUCLEIC ACID-BASED THERAPEUTIC DELIVERY SYSTEMS.md",
@@ -205,9 +212,6 @@
     "Areas/MPharm/Cosmetics and Cosmeceuticals/Unit 5.md",
     "Areas/MPharm/Cosmetics and Cosmeceuticals/unit 3.md",
     "Areas/MPharm/Cosmetics and Cosmeceuticals/unit 4.md",
-    "Areas/MPharm/Computer Aided Drug Development/ARTIFICIAL INTELLIGENCE, ROBOTICS, AND COMPUTATIONAL FLUID DYNAMICS IN PHARMACEUTICAL R&D.md",
-    "Areas/MPharm/Computer Aided Drug Development/COMPUTER SIMULATIONS IN PKPD AND CLINICAL DEVELOPMENT.md",
-    "Areas/MPharm/Computer Aided Drug Development/Computer-aided biopharmaceutical characterization.md",
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.17 Tight Junction Complex.md",
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.16 pH Microclimate and Intracellular pH Environment.md",
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.15 Properties of the Gastrointestinal Tract.md",
@@ -215,10 +219,6 @@
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.13 Transport Model of Drug Absorption.md",
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.12 Correlation of In Vivo Data with In Vitro Dissolution Data (IVIVC).md",
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.11 Formulation and Processing Factors Affecting Drug Absorptio.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.10 Dissolution Methods.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.9a Gastrointestinal Absorption.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.9 Gastrointestinal Absorption Role of Dosage Form.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.8 Factors Affecting the Dissolution Rate.md",
     "Areas/Research/Research Ideas/KIMIII/PROJECTRESEARCH",
     "Areas/Research/Research Ideas/KIMIII",
     "Areas/Research/Research Ideas/New folder",

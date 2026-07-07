@@ -2043,4 +2043,19 @@ body.theme-4 .active-preview-body pre, body.theme-5 .active-preview-body pre, bo
   font-size: 0.9rem;
 }
 
+/* Hover cues for interactive block reading */
+.preview-panel-container.read-mode-active .active-preview-body p:hover,
+.preview-panel-container.read-mode-active .active-preview-body li:hover,
+.preview-panel-container.read-mode-active .active-preview-body h1:hover,
+.preview-panel-container.read-mode-active .active-preview-body h2:hover,
+.preview-panel-container.read-mode-active .active-preview-body h3:hover,
+.preview-panel-container.read-mode-active .active-preview-body h4:hover,
+.preview-panel-container.read-mode-active .active-preview-body blockquote:hover,
+.preview-panel-container.read-mode-active .active-preview-body pre:hover {
+  cursor: pointer;
+  background: rgba(0, 240, 255, 0.02) !important;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
 

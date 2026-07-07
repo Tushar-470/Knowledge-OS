@@ -2595,5 +2595,52 @@ el.form.addEventListener("submit", async event => {
     });
   }
 
+  // Click block to speak from that block or skip to that block
+  const bodyEl = document.querySelector("#active-preview-body");
+  if (bodyEl) {
+    bodyEl.addEventListener("click", (event) => {
+      // Ignore if clicking a link, button, input, or any interactive elements
+      if (event.target.closest("a, button, input, textarea")) return;
+
+      // Ignore if user is highlight-selecting text (to allow copy/paste)
+      const selection = window.getSelection().toString().trim();
+      if (selection.length > 0) return;
+
+      // Find the closest readable block element
+      const block = event.target.closest("p, li, h1, h2, h3, h4, h5, h6, blockquote, pre");
+      if (!block) return;
+
+      // Find all readable block elements in the document
+      const blocks = Array.from(bodyEl.querySelectorAll("p, li, h1, h2, h3, h4, h5, h6, blockquote, pre"));
+      const idx = blocks.indexOf(block);
+      
+      if (idx !== -1) {
+        // Stop current speech first
+        window.speechSynthesis.cancel();
+
+        // Update speech engine state
+        VaultSpeech.paragraphs = blocks;
+        VaultSpeech.currentIndex = idx;
+        VaultSpeech.isSpeaking = true;
+        VaultSpeech.isPaused = false;
+        
+        // Trigger Fullscreen Mode automatically if not already active
+        const container = document.querySelector(".preview-panel-container");
+        if (container && !container.classList.contains("read-mode-active")) {
+          setFullscreenLayout(true);
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(() => {});
+          }
+          VaultAudio.playSweep(true);
+        }
+
+        // Play feedback and start speaking from clicked position
+        VaultAudio.playChirp();
+        VaultSpeech.updateControlsUI();
+        VaultSpeech.speakCurrent();
+      }
+    });
+  }
+
 
 
