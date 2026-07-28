@@ -2424,9 +2424,10 @@ el.form.addEventListener("submit", async event => {
       bodyEl.append(frame);
 
     } else if (officeExtensions.includes(file.ext)) {
-      // Office files (PPTX, DOCX, XLSX) via Microsoft Office Online Viewer
-      const rawGitUrl = `https://raw.githubusercontent.com/Tushar-470/Knowledge-OS/main/Knowledge-OS/${encodeURIComponent(file.path).replace(/%2F/g, "/")}`;
-      const officeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(rawGitUrl)}`;
+      // Office files (PPTX, DOCX, XLSX) via Google Docs Viewer (primary) + MS Office Online (fallback)
+      const rawGitUrl = `https://raw.githubusercontent.com/Tushar-470/Knowledge-OS/main/Knowledge-OS/${file.path.split("/").map(s => encodeURIComponent(s)).join("/")}`;
+      const googleViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(rawGitUrl)}&embedded=true`;
+      const msOfficeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(rawGitUrl)}`;
 
       const officeWrapper = document.createElement("div");
       officeWrapper.className = "office-viewer-wrapper";
@@ -2434,11 +2435,25 @@ el.form.addEventListener("submit", async event => {
         <div class="office-viewer-toolbar">
           <span class="office-file-badge">${file.ext.toUpperCase().slice(1)}</span>
           <span class="office-file-name">${escapeHtml(file.name)}</span>
-          <a href="${officeViewerUrl.replace('/embed.aspx', '/view.aspx')}" target="_blank" class="office-open-external" title="Open in new tab">↗ Open Full</a>
+          <button class="office-switch-viewer" id="office-switch-btn" title="Switch viewer engine">⟳ Switch Viewer</button>
+          <a href="${url}" download="${escapeHtml(file.name)}" class="office-open-external" title="Download file">⬇ Download</a>
+          <a href="${googleViewerUrl.replace('&embedded=true', '')}" target="_blank" class="office-open-external" title="Open in new tab">↗ Open Full</a>
         </div>
-        <iframe src="${officeViewerUrl}" class="office-inline-viewer" title="${escapeHtml(file.name)}" allowfullscreen="true" frameborder="0"></iframe>
+        <iframe src="${googleViewerUrl}" class="office-inline-viewer" title="${escapeHtml(file.name)}" allowfullscreen="true" frameborder="0" id="office-viewer-frame"></iframe>
       `;
       bodyEl.append(officeWrapper);
+
+      // Switch between Google Docs Viewer and Microsoft Office Online
+      let usingGoogle = true;
+      const switchBtn = officeWrapper.querySelector("#office-switch-btn");
+      const viewerFrame = officeWrapper.querySelector("#office-viewer-frame");
+      if (switchBtn) {
+        switchBtn.addEventListener("click", () => {
+          usingGoogle = !usingGoogle;
+          viewerFrame.src = usingGoogle ? googleViewerUrl : msOfficeViewerUrl;
+          switchBtn.textContent = usingGoogle ? "⟳ Switch Viewer" : "⟳ Switch Viewer";
+        });
+      }
 
     } else {
       const p = document.createElement("p");
