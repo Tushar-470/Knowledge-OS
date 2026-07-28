@@ -9,6 +9,7 @@ Plain Markdown workspace for literature review, thesis preparation, and research
 - [[Areas/Research/Thesis/Dashboard|Thesis]]
 - [[Areas/Research/Dissertation/Dashboard|Dissertation]]
 - [[Areas/Research/Research Ideas/Dashboard|Research Ideas]]
+- [[Areas/Research/Publishing/Dashboard|Publishing]]
 - [[Areas/Research/Protocols/Dashboard|Protocols]]
 - [[Areas/Research/Experiment Logs/Dashboard|Experiment Logs]]
 

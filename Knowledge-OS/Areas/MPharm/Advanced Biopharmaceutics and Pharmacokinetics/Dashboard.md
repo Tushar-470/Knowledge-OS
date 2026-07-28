@@ -11,7 +11,7 @@
 
 ### Unit 1
 - [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.1 Gastrointestinal Tract (GIT)|1.1 Gastrointestinal Tract (GIT)]]
-- [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.2Mechanism of Drug Absorption|1.2Mechanism of Drug Absorption]]
+- [[1.2 Mechanism of Drug Absorption|1.2Mechanism of Drug Absorption]]
 - [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.3 Factors Affecting Drug Absorption|1.3 Factors Affecting Drug Absorption]]
 - [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.4 pH-Partition Theory of Drug Absorption|1.4 pH-Partition Theory of Drug Absorption]]
 - [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.5 Formulation and Physicochemical Factors Affecting Drug Absorption|1.5 Formulation and Physicochemical Factors Affecting Drug Absorption]]
@@ -50,7 +50,7 @@
 
 ### Not Started
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.1 Gastrointestinal Tract (GIT)|1.1 Gastrointestinal Tract (GIT)]]
-- [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.2Mechanism of Drug Absorption|1.2Mechanism of Drug Absorption]]
+- [ ] [[1.2 Mechanism of Drug Absorption|1.2Mechanism of Drug Absorption]]
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.3 Factors Affecting Drug Absorption|1.3 Factors Affecting Drug Absorption]]
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.4 pH-Partition Theory of Drug Absorption|1.4 pH-Partition Theory of Drug Absorption]]
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.5 Formulation and Physicochemical Factors Affecting Drug Absorption|1.5 Formulation and Physicochemical Factors Affecting Drug Absorption]]
@@ -85,7 +85,7 @@
 
 ### First Revision
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.1 Gastrointestinal Tract (GIT)|1.1 Gastrointestinal Tract (GIT)]]
-- [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.2Mechanism of Drug Absorption|1.2Mechanism of Drug Absorption]]
+- [ ] [[1.2 Mechanism of Drug Absorption|1.2Mechanism of Drug Absorption]]
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.3 Factors Affecting Drug Absorption|1.3 Factors Affecting Drug Absorption]]
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.4 pH-Partition Theory of Drug Absorption|1.4 pH-Partition Theory of Drug Absorption]]
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.5 Formulation and Physicochemical Factors Affecting Drug Absorption|1.5 Formulation and Physicochemical Factors Affecting Drug Absorption]]
@@ -120,7 +120,7 @@
 
 ### Second Revision
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.1 Gastrointestinal Tract (GIT)|1.1 Gastrointestinal Tract (GIT)]]
-- [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.2Mechanism of Drug Absorption|1.2Mechanism of Drug Absorption]]
+- [ ] [[1.2 Mechanism of Drug Absorption|1.2Mechanism of Drug Absorption]]
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.3 Factors Affecting Drug Absorption|1.3 Factors Affecting Drug Absorption]]
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.4 pH-Partition Theory of Drug Absorption|1.4 pH-Partition Theory of Drug Absorption]]
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.5 Formulation and Physicochemical Factors Affecting Drug Absorption|1.5 Formulation and Physicochemical Factors Affecting Drug Absorption]]
@@ -155,7 +155,7 @@
 
 ### Exam Ready
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.1 Gastrointestinal Tract (GIT)|1.1 Gastrointestinal Tract (GIT)]]
-- [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.2Mechanism of Drug Absorption|1.2Mechanism of Drug Absorption]]
+- [ ] [[1.2 Mechanism of Drug Absorption|1.2Mechanism of Drug Absorption]]
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.3 Factors Affecting Drug Absorption|1.3 Factors Affecting Drug Absorption]]
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.4 pH-Partition Theory of Drug Absorption|1.4 pH-Partition Theory of Drug Absorption]]
 - [ ] [[Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.5 Formulation and Physicochemical Factors Affecting Drug Absorption|1.5 Formulation and Physicochemical Factors Affecting Drug Absorption]]

@@ -51,60 +51,60 @@
 ## Revision Workflow
 
 ### Not Started
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/2.TUMOR TARGETING|2.TUMOR TARGETING]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/3.BRAIN SPECIFIC DRUG DELIVERY|3.BRAIN SPECIFIC DRUG DELIVERY]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/4.TARGETING METHODS|4.TARGETING METHODS]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/5.NANOPARTICLES|5.NANOPARTICLES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/6.LIPOSOMES|6.LIPOSOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/7.MICROCAPSULES|7.MICROCAPSULES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/8.MICROSPHERES|8.MICROSPHERES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/9.MONOCLONAL ANTIBODIES (mAbs)|9.MONOCLONAL ANTIBODIES (mAbs)]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/10.NIOSOMES|10.NIOSOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/11.AQUASOMES|11.AQUASOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/12.PHYTOSOMES|12.PHYTOSOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/13.ELECTROSOMES|13.ELECTROSOMES]]
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/2.TUMOR TARGETING|2.TUMOR TARGETING]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/3.BRAIN SPECIFIC DRUG DELIVERY|3.BRAIN SPECIFIC DRUG DELIVERY]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/4.TARGETING METHODS|4.TARGETING METHODS]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/5.NANOPARTICLES|5.NANOPARTICLES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/6.LIPOSOMES|6.LIPOSOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/7.MICROCAPSULES|7.MICROCAPSULES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/8.MICROSPHERES|8.MICROSPHERES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/9.MONOCLONAL ANTIBODIES (mAbs)|9.MONOCLONAL ANTIBODIES (mAbs)]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/10.NIOSOMES|10.NIOSOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/11.AQUASOMES|11.AQUASOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/12.PHYTOSOMES|12.PHYTOSOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/13.ELECTROSOMES|13.ELECTROSOMES]] ✅ 2026-07-25
 
 ### First Revision
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/2.TUMOR TARGETING|2.TUMOR TARGETING]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/3.BRAIN SPECIFIC DRUG DELIVERY|3.BRAIN SPECIFIC DRUG DELIVERY]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/4.TARGETING METHODS|4.TARGETING METHODS]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/5.NANOPARTICLES|5.NANOPARTICLES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/6.LIPOSOMES|6.LIPOSOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/7.MICROCAPSULES|7.MICROCAPSULES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/8.MICROSPHERES|8.MICROSPHERES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/9.MONOCLONAL ANTIBODIES (mAbs)|9.MONOCLONAL ANTIBODIES (mAbs)]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/10.NIOSOMES|10.NIOSOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/11.AQUASOMES|11.AQUASOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/12.PHYTOSOMES|12.PHYTOSOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/13.ELECTROSOMES|13.ELECTROSOMES]]
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/2.TUMOR TARGETING|2.TUMOR TARGETING]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/3.BRAIN SPECIFIC DRUG DELIVERY|3.BRAIN SPECIFIC DRUG DELIVERY]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/4.TARGETING METHODS|4.TARGETING METHODS]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/5.NANOPARTICLES|5.NANOPARTICLES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/6.LIPOSOMES|6.LIPOSOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/7.MICROCAPSULES|7.MICROCAPSULES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/8.MICROSPHERES|8.MICROSPHERES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/9.MONOCLONAL ANTIBODIES (mAbs)|9.MONOCLONAL ANTIBODIES (mAbs)]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/10.NIOSOMES|10.NIOSOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/11.AQUASOMES|11.AQUASOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/12.PHYTOSOMES|12.PHYTOSOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/13.ELECTROSOMES|13.ELECTROSOMES]] ✅ 2026-07-25
 
 ### Second Revision
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/2.TUMOR TARGETING|2.TUMOR TARGETING]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/3.BRAIN SPECIFIC DRUG DELIVERY|3.BRAIN SPECIFIC DRUG DELIVERY]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/4.TARGETING METHODS|4.TARGETING METHODS]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/5.NANOPARTICLES|5.NANOPARTICLES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/6.LIPOSOMES|6.LIPOSOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/7.MICROCAPSULES|7.MICROCAPSULES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/8.MICROSPHERES|8.MICROSPHERES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/9.MONOCLONAL ANTIBODIES (mAbs)|9.MONOCLONAL ANTIBODIES (mAbs)]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/10.NIOSOMES|10.NIOSOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/11.AQUASOMES|11.AQUASOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/12.PHYTOSOMES|12.PHYTOSOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/13.ELECTROSOMES|13.ELECTROSOMES]]
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/2.TUMOR TARGETING|2.TUMOR TARGETING]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/3.BRAIN SPECIFIC DRUG DELIVERY|3.BRAIN SPECIFIC DRUG DELIVERY]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/4.TARGETING METHODS|4.TARGETING METHODS]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/5.NANOPARTICLES|5.NANOPARTICLES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/6.LIPOSOMES|6.LIPOSOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/7.MICROCAPSULES|7.MICROCAPSULES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/8.MICROSPHERES|8.MICROSPHERES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/9.MONOCLONAL ANTIBODIES (mAbs)|9.MONOCLONAL ANTIBODIES (mAbs)]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/10.NIOSOMES|10.NIOSOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/11.AQUASOMES|11.AQUASOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/12.PHYTOSOMES|12.PHYTOSOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/13.ELECTROSOMES|13.ELECTROSOMES]] ✅ 2026-07-25
 
 ### Exam Ready
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/2.TUMOR TARGETING|2.TUMOR TARGETING]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/3.BRAIN SPECIFIC DRUG DELIVERY|3.BRAIN SPECIFIC DRUG DELIVERY]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/4.TARGETING METHODS|4.TARGETING METHODS]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/5.NANOPARTICLES|5.NANOPARTICLES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/6.LIPOSOMES|6.LIPOSOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/7.MICROCAPSULES|7.MICROCAPSULES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/8.MICROSPHERES|8.MICROSPHERES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/9.MONOCLONAL ANTIBODIES (mAbs)|9.MONOCLONAL ANTIBODIES (mAbs)]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/10.NIOSOMES|10.NIOSOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/11.AQUASOMES|11.AQUASOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/12.PHYTOSOMES|12.PHYTOSOMES]]
-- [ ] [[Areas/MPharm/Molecular Pharmaceutics/13.ELECTROSOMES|13.ELECTROSOMES]]
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/2.TUMOR TARGETING|2.TUMOR TARGETING]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/3.BRAIN SPECIFIC DRUG DELIVERY|3.BRAIN SPECIFIC DRUG DELIVERY]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/4.TARGETING METHODS|4.TARGETING METHODS]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/5.NANOPARTICLES|5.NANOPARTICLES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/6.LIPOSOMES|6.LIPOSOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/7.MICROCAPSULES|7.MICROCAPSULES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/8.MICROSPHERES|8.MICROSPHERES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/9.MONOCLONAL ANTIBODIES (mAbs)|9.MONOCLONAL ANTIBODIES (mAbs)]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/10.NIOSOMES|10.NIOSOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/11.AQUASOMES|11.AQUASOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/12.PHYTOSOMES|12.PHYTOSOMES]] ✅ 2026-07-25
+- [x] [[Areas/MPharm/Molecular Pharmaceutics/13.ELECTROSOMES|13.ELECTROSOMES]] ✅ 2026-07-25
 
 ## Exam Use
 
