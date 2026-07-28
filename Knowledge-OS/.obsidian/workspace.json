@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Home.md",
+                "file": "File Manager PC/05_Personal/Untitled.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Home"
+              "title": "Untitled"
             }
           }
         ]
@@ -191,8 +191,15 @@
       "homepage:Open homepage": false
     }
   },
-  "active": "48999942660a1509",
+  "active": "e7a7b303c61786dc",
   "lastOpenFiles": [
+    "File Manager PC/04_Archive/Untitled.md",
+    "File Manager PC/05_Personal/Untitled.md",
+    "File Manager PC/03_Resources/Untitled.md",
+    "File Manager PC/02_Areas/Untitled.md",
+    "File Manager PC/01_Projects/Untitled.md",
+    "File Manager PC/00_Inbox/Untitled.md",
+    "Home.md",
     "File Manager PC/01_Projects",
     "File Manager PC/00_Inbox",
     "File Manager PC/05_Personal",
@@ -200,7 +207,6 @@
     "File Manager PC/03_Resources",
     "File Manager PC/02_Areas",
     "File Manager PC/Dashboard.md",
-    "Home.md",
     "Areas/MPharm/Computer Aided Drug Development/Unit 5.md",
     "File Manager PC",
     "Areas/MPharm/Computer Aided Drug Development/Unit 4 c.md",
@@ -220,15 +226,9 @@
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/3.3 IV Bolus.md",
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/3.4 Intravenous (IV) Infusion.md",
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/3.5 Extravascular Administration.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/Dashboard.md",
-    "Areas/MPharm/Dashboard.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/Unit 4.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/Unit 2.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.17 Tight Junction Complex.md",
     "Areas/Research/Research Ideas/KIMIII/PROJECTRESEARCH",
     "Areas/Research/Research Ideas/KIMIII",
     "Areas/Research/Research Ideas/New folder",
-    "Areas/Research/Thesis/Screenshot (1).png",
-    "Areas/MPharm/PYQs"
+    "Areas/Research/Thesis/Screenshot (1).png"
   ]
 }
