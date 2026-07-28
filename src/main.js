@@ -2340,8 +2340,8 @@ el.form.addEventListener("submit", async event => {
       navigateToSection("03");
       
       try {
-        const rawUrl = `https://raw.githubusercontent.com/Tushar-470/Knowledge-OS/main/Knowledge-OS/${file.path}`;
-        const response = await fetch(rawUrl);
+        const rawUrl = `https://raw.githubusercontent.com/Tushar-470/Knowledge-OS/main/Knowledge-OS/${file.path.split("/").map(s => encodeURIComponent(s)).join("/")}?t=${Date.now()}`;
+        const response = await fetch(rawUrl, { cache: "no-cache" });
         if (!response.ok) {
           throw new Error(`Failed to fetch file content from GitHub: ${response.statusText}`);
         }
