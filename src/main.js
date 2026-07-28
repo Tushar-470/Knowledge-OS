@@ -440,9 +440,24 @@ document.documentElement.style.setProperty("--accent", session.accent);
 document.body.classList.add(`theme-${session.style}`);
 document.body.classList.add(`layout-${session.style}`);
 
+function bytesToBase64(bytes) {
+  let bin = "";
+  const chunkSize = 16384;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+  }
+  return btoa(bin);
+}
+
 function base64ToBytes(base64) {
-  const binary = atob(base64);
-  return Uint8Array.from(binary, char => char.charCodeAt(0));
+  const clean = String(base64 || "").replace(/[\r\n\s]/g, "");
+  const binary = atob(clean);
+  const len = binary.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
 }
 
 function bytesToText(bytes) {
@@ -2332,11 +2347,7 @@ el.form.addEventListener("submit", async event => {
         }
         const buffer = await response.arrayBuffer();
         const bytes = new Uint8Array(buffer);
-        let binary = "";
-        for (let i = 0; i < bytes.byteLength; i++) {
-          binary += String.fromCharCode(bytes[i]);
-        }
-        file.content = btoa(binary);
+        file.content = bytesToBase64(bytes);
       } catch (error) {
         console.error(error);
         bodyEl.innerHTML = `<div style="color:var(--accent-red);padding:1rem;font-family:monospace">Error loading file from GitHub. Check connection or fallback to build: ${error.message}</div>`;
@@ -2441,9 +2452,18 @@ el.form.addEventListener("submit", async event => {
 
       const docxBody = docWrapper.querySelector("#docx-rendered-body");
       try {
-        const arrayBuffer = base64ToBytes(file.content).buffer;
-        if (typeof mammoth !== "undefined") {
-          const result = await mammoth.convertToHtml({ arrayBuffer });
+        const bytes = base64ToBytes(file.content);
+        const isLfsPointer = bytes.length < 500 && new TextDecoder().decode(bytes).includes("version https://git-lfs");
+        if (isLfsPointer) {
+          docxBody.innerHTML = `
+            <div style="color:var(--accent-cyan);padding:2rem;text-align:center;font-family:monospace">
+              <p style="font-size:1.1rem;margin-bottom:0.5rem">📦 Git LFS File</p>
+              <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem">This document is tracked in Git Large File Storage.</p>
+              <a href="${url}" download="${escapeHtml(file.name)}" class="office-open-external" style="display:inline-block;padding:0.5rem 1rem">⬇ Download ${escapeHtml(file.name)}</a>
+            </div>
+          `;
+        } else if (typeof mammoth !== "undefined") {
+          const result = await mammoth.convertToHtml({ arrayBuffer: bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) });
           docxBody.innerHTML = `<div class="markdown-body">${result.value}</div>`;
         } else {
           docxBody.innerHTML = `<div style="color:var(--accent-red);padding:1rem;font-family:monospace">mammoth.js library failed to load. Please refresh the page.</div>`;
@@ -2471,9 +2491,18 @@ el.form.addEventListener("submit", async event => {
 
       const slideViewer = pptWrapper.querySelector("#pptx-slide-viewer");
       try {
-        const arrayBuffer = base64ToBytes(file.content).buffer;
-        if (typeof JSZip !== "undefined") {
-          const zip = await JSZip.loadAsync(arrayBuffer);
+        const bytes = base64ToBytes(file.content);
+        const isLfsPointer = bytes.length < 500 && new TextDecoder().decode(bytes).includes("version https://git-lfs");
+        if (isLfsPointer) {
+          slideViewer.innerHTML = `
+            <div style="color:var(--accent-cyan);padding:2.5rem;text-align:center;font-family:monospace">
+              <p style="font-size:1.1rem;margin-bottom:0.5rem">📦 Git LFS File</p>
+              <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem">This presentation is tracked in Git Large File Storage.</p>
+              <a href="${url}" download="${escapeHtml(file.name)}" class="office-open-external" style="display:inline-block;padding:0.5rem 1rem">⬇ Download ${escapeHtml(file.name)}</a>
+            </div>
+          `;
+        } else if (typeof JSZip !== "undefined") {
+          const zip = await JSZip.loadAsync(bytes);
 
           // Extract slide XMLs and images
           const slideFiles = Object.keys(zip.files)
