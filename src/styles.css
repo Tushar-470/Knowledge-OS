@@ -2214,5 +2214,101 @@ body.theme-4 .active-preview-body pre, body.theme-5 .active-preview-body pre, bo
   -webkit-user-drag: none;
 }
 
+/* ===== Client-Side PPTX & DOCX Rendered Views ===== */
+.office-rendered-body {
+  padding: 1.5rem;
+  background: var(--bg-card, rgba(10, 10, 20, 0.6));
+  min-height: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 0 0 10px 10px;
+}
+
+.pptx-slide-viewer {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card, rgba(10, 10, 20, 0.8));
+  border-radius: 0 0 10px 10px;
+  min-height: 500px;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.pptx-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  background: rgba(0, 240, 255, 0.05);
+  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+}
+
+.pptx-slides-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pptx-slide {
+  width: 100%;
+  max-width: 850px;
+  min-height: 450px;
+  background: #0d1117;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  position: relative;
+}
+
+.pptx-slide-number {
+  align-self: flex-end;
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent-cyan, #00f0ff);
+  letter-spacing: 0.1em;
+  background: rgba(0, 240, 255, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+
+.pptx-slide-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.pptx-slide-img {
+  max-width: 100%;
+  max-height: 350px;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.pptx-slide-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  color: #e6edf3;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+}
+
+.pptx-slide-text p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+
 
 
