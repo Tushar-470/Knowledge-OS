@@ -2475,9 +2475,9 @@ el.form.addEventListener("submit", async event => {
 
     } else if (file.ext === ".pptx" || file.ext === ".ppt") {
       // 100% Authentic PowerPoint Web Engine (Microsoft PowerPoint Web App with full animations & transitions)
-      const rawGitUrl = `https://raw.githubusercontent.com/Tushar-470/Knowledge-OS/main/Knowledge-OS/${file.path.split("/").map(s => encodeURIComponent(s)).join("/")}`;
-      const msOfficeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(rawGitUrl)}`;
-      const googleViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(rawGitUrl)}&embedded=true`;
+      const encodedPath = file.path.split("/").map(s => encodeURIComponent(s)).join("/");
+      const staticWebUrl = `${window.location.origin}${window.location.pathname.replace(/\/$/, "")}/raw/${encodedPath}`;
+      const msOfficeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(staticWebUrl)}`;
 
       const pptWrapper = document.createElement("div");
       pptWrapper.className = "office-viewer-wrapper";

@@ -162,6 +162,14 @@ const encryptedPayload = encryptJson(privatePayload);
 console.log("Writing static site...");
 await rm(distDir, { recursive: true, force: true });
 await copyDir(srcDir, distDir);
+
+console.log("Publishing raw static assets for web viewers...");
+for (const file of files) {
+  const dest = path.join(distDir, "raw", file.relative);
+  await mkdir(path.dirname(dest), { recursive: true });
+  await copyFile(file.absolute, dest);
+}
+
 await writeFile(path.join(distDir, "vault-data.json"), JSON.stringify(encryptedPayload));
 await writeFile(path.join(distDir, "public-data.json"), JSON.stringify(publicPayload));
 await writeFile(path.join(distDir, "404.html"), await readFile(path.join(srcDir, "index.html"), "utf8"));
