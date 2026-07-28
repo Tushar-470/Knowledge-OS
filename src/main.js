@@ -2359,6 +2359,7 @@ el.form.addEventListener("submit", async event => {
     bodyEl.innerHTML = "";
     
     const textExtensions = [".json", ".js", ".css", ".html", ".xml", ".csv", ".yaml", ".yml", ".py", ".sh", ".ini", ".conf"];
+    const officeExtensions = [".pptx", ".ppt", ".docx", ".doc", ".xlsx", ".xls"];
     
     if (file.ext === ".md") {
       const rawText = bytesToText(base64ToBytes(file.content));
@@ -2368,15 +2369,77 @@ el.form.addEventListener("submit", async event => {
       pre.textContent = bytesToText(base64ToBytes(file.content));
       bodyEl.append(pre);
     } else if (file.mime.startsWith("image/")) {
-      const img = document.createElement("img");
-      img.src = url;
-      img.alt = file.name;
-      bodyEl.append(img);
+      // Enhanced Image Lightbox Viewer
+      const wrapper = document.createElement("div");
+      wrapper.className = "image-lightbox-viewer";
+      wrapper.innerHTML = `
+        <div class="image-viewer-toolbar">
+          <button class="img-tool-btn" id="img-zoom-in" title="Zoom In">🔍+</button>
+          <button class="img-tool-btn" id="img-zoom-out" title="Zoom Out">🔍−</button>
+          <button class="img-tool-btn" id="img-zoom-reset" title="Reset">↺</button>
+          <span class="img-zoom-level" id="img-zoom-label">100%</span>
+        </div>
+        <div class="image-viewer-canvas" id="img-canvas-area">
+          <img src="${url}" alt="${escapeHtml(file.name)}" id="img-lightbox-main" draggable="false" />
+        </div>
+      `;
+      bodyEl.append(wrapper);
+
+      // Zoom & Pan logic
+      let scale = 1;
+      let panX = 0, panY = 0;
+      let isPanning = false;
+      let startX = 0, startY = 0;
+      const imgEl = wrapper.querySelector("#img-lightbox-main");
+      const canvasArea = wrapper.querySelector("#img-canvas-area");
+      const zoomLabel = wrapper.querySelector("#img-zoom-label");
+
+      function applyTransform() {
+        imgEl.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+        zoomLabel.textContent = `${Math.round(scale * 100)}%`;
+      }
+
+      wrapper.querySelector("#img-zoom-in").addEventListener("click", () => { scale = Math.min(scale + 0.25, 5); applyTransform(); });
+      wrapper.querySelector("#img-zoom-out").addEventListener("click", () => { scale = Math.max(scale - 0.25, 0.25); applyTransform(); });
+      wrapper.querySelector("#img-zoom-reset").addEventListener("click", () => { scale = 1; panX = 0; panY = 0; applyTransform(); });
+
+      canvasArea.addEventListener("wheel", (e) => {
+        e.preventDefault();
+        scale = Math.min(Math.max(scale + (e.deltaY > 0 ? -0.1 : 0.1), 0.25), 5);
+        applyTransform();
+      }, { passive: false });
+
+      canvasArea.addEventListener("mousedown", (e) => { isPanning = true; startX = e.clientX - panX; startY = e.clientY - panY; canvasArea.style.cursor = "grabbing"; });
+      canvasArea.addEventListener("mousemove", (e) => { if (!isPanning) return; panX = e.clientX - startX; panY = e.clientY - startY; applyTransform(); });
+      canvasArea.addEventListener("mouseup", () => { isPanning = false; canvasArea.style.cursor = "grab"; });
+      canvasArea.addEventListener("mouseleave", () => { isPanning = false; canvasArea.style.cursor = "grab"; });
+
     } else if (file.ext === ".pdf") {
+      // PDF Inline Viewer via browser native iframe
       const frame = document.createElement("iframe");
       frame.src = url;
       frame.title = file.name;
+      frame.className = "pdf-inline-viewer";
+      frame.setAttribute("allowfullscreen", "true");
       bodyEl.append(frame);
+
+    } else if (officeExtensions.includes(file.ext)) {
+      // Office files (PPTX, DOCX, XLSX) via Microsoft Office Online Viewer
+      const rawGitUrl = `https://raw.githubusercontent.com/Tushar-470/Knowledge-OS/main/Knowledge-OS/${encodeURIComponent(file.path).replace(/%2F/g, "/")}`;
+      const officeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(rawGitUrl)}`;
+
+      const officeWrapper = document.createElement("div");
+      officeWrapper.className = "office-viewer-wrapper";
+      officeWrapper.innerHTML = `
+        <div class="office-viewer-toolbar">
+          <span class="office-file-badge">${file.ext.toUpperCase().slice(1)}</span>
+          <span class="office-file-name">${escapeHtml(file.name)}</span>
+          <a href="${officeViewerUrl.replace('/embed.aspx', '/view.aspx')}" target="_blank" class="office-open-external" title="Open in new tab">↗ Open Full</a>
+        </div>
+        <iframe src="${officeViewerUrl}" class="office-inline-viewer" title="${escapeHtml(file.name)}" allowfullscreen="true" frameborder="0"></iframe>
+      `;
+      bodyEl.append(officeWrapper);
+
     } else {
       const p = document.createElement("p");
       p.textContent = "Preview is not available for this file type. Use Download.";
