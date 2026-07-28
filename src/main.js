@@ -2474,168 +2474,128 @@ el.form.addEventListener("submit", async event => {
       }
 
     } else if (file.ext === ".pptx" || file.ext === ".ppt") {
-      // PPTX: Client-side slide extraction via JSZip — no external viewer needed
+      // 100% Authentic PowerPoint Web Engine (Microsoft PowerPoint Web App with full animations & transitions)
+      const rawGitUrl = `https://raw.githubusercontent.com/Tushar-470/Knowledge-OS/main/Knowledge-OS/${file.path.split("/").map(s => encodeURIComponent(s)).join("/")}`;
+      const msOfficeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(rawGitUrl)}`;
+      const googleViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(rawGitUrl)}&embedded=true`;
+
       const pptWrapper = document.createElement("div");
       pptWrapper.className = "office-viewer-wrapper";
       pptWrapper.innerHTML = `
         <div class="office-viewer-toolbar">
           <span class="office-file-badge">PPTX</span>
           <span class="office-file-name">${escapeHtml(file.name)}</span>
-          <a href="${url}" download="${escapeHtml(file.name)}" class="office-open-external" title="Download file">⬇ Download</a>
+          <button class="office-switch-viewer" id="pptx-toggle-mode" title="Toggle between Official Presentation Engine and HTML5 Extractor">⚡ Switch to HTML5 Extractor</button>
+          <a href="${url}" download="${escapeHtml(file.name)}" class="office-open-external" title="Download PPTX file">⬇ Download</a>
+          <a href="${msOfficeViewerUrl.replace('/embed.aspx', '/view.aspx')}" target="_blank" class="office-open-external" title="Open full presentation in new tab">↗ Presentation Mode</a>
         </div>
-        <div class="pptx-slide-viewer" id="pptx-slide-viewer">
-          <div style="display:flex;justify-content:center;align-items:center;height:200px;color:var(--muted);font-family:monospace">Extracting slides...</div>
+        <div id="pptx-active-view-container" style="width:100%;height:80vh;min-height:550px;">
+          <iframe src="${msOfficeViewerUrl}" class="office-inline-viewer" title="${escapeHtml(file.name)}" allowfullscreen="true" frameborder="0" style="width:100%;height:100%;"></iframe>
         </div>
       `;
       bodyEl.append(pptWrapper);
 
-      const slideViewer = pptWrapper.querySelector("#pptx-slide-viewer");
-      try {
-        const bytes = base64ToBytes(file.content);
-        const isLfsPointer = bytes.length < 500 && new TextDecoder().decode(bytes).includes("version https://git-lfs");
-        if (isLfsPointer) {
-          slideViewer.innerHTML = `
-            <div style="color:var(--accent-cyan);padding:2.5rem;text-align:center;font-family:monospace">
-              <p style="font-size:1.1rem;margin-bottom:0.5rem">📦 Git LFS File</p>
-              <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem">This presentation is tracked in Git Large File Storage.</p>
-              <a href="${url}" download="${escapeHtml(file.name)}" class="office-open-external" style="display:inline-block;padding:0.5rem 1rem">⬇ Download ${escapeHtml(file.name)}</a>
-            </div>
-          `;
-        } else if (typeof JSZip !== "undefined") {
-          const zip = await JSZip.loadAsync(bytes);
+      // Toggle between 100% PowerPoint Web Engine and Local HTML5 Slide Extractor
+      let isOfficialMode = true;
+      const toggleBtn = pptWrapper.querySelector("#pptx-toggle-mode");
+      const viewContainer = pptWrapper.querySelector("#pptx-active-view-container");
 
-          // Extract slide XMLs and images
-          const slideFiles = Object.keys(zip.files)
-            .filter(name => /^ppt\/slides\/slide\d+\.xml$/i.test(name))
-            .sort((a, b) => {
-              const numA = parseInt(a.match(/slide(\d+)/i)[1]);
-              const numB = parseInt(b.match(/slide(\d+)/i)[1]);
-              return numA - numB;
-            });
-
-          // Extract embedded images
-          const imageFiles = {};
-          const mediaKeys = Object.keys(zip.files).filter(name => name.startsWith("ppt/media/"));
-          for (const mediaKey of mediaKeys) {
-            const blob = await zip.files[mediaKey].async("blob");
-            const ext = mediaKey.split(".").pop().toLowerCase();
-            const mimeMap = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif", svg: "image/svg+xml", emf: "image/emf", wmf: "image/wmf", tiff: "image/tiff" };
-            const mime = mimeMap[ext] || "application/octet-stream";
-            imageFiles[mediaKey.split("/").pop()] = URL.createObjectURL(new Blob([blob], { type: mime }));
-          }
-
-          // Extract relationships for each slide to map rId -> image filename
-          async function getSlideRels(slideIndex) {
-            const relsPath = `ppt/slides/_rels/slide${slideIndex}.xml.rels`;
-            const relsFile = zip.files[relsPath];
-            if (!relsFile) return {};
-            const relsXml = await relsFile.async("string");
-            const parser = new DOMParser();
-            const relsDoc = parser.parseFromString(relsXml, "application/xml");
-            const rels = {};
-            relsDoc.querySelectorAll("Relationship").forEach(rel => {
-              const target = rel.getAttribute("Target") || "";
-              const rId = rel.getAttribute("Id") || "";
-              const filename = target.replace("../media/", "").replace("../", "");
-              rels[rId] = filename;
-            });
-            return rels;
-          }
-
-          if (slideFiles.length === 0) {
-            slideViewer.innerHTML = `<div style="color:var(--muted);padding:2rem;text-align:center;font-family:monospace">No slides found in this file.</div>`;
-          } else {
-            let slidesHtml = `<div class="pptx-nav"><button class="img-tool-btn" id="pptx-prev">◀ Prev</button><span class="img-zoom-level" id="pptx-counter">Slide 1 of ${slideFiles.length}</span><button class="img-tool-btn" id="pptx-next">Next ▶</button></div>`;
-            slidesHtml += `<div class="pptx-slides-container" id="pptx-slides-container">`;
-
-            for (let si = 0; si < slideFiles.length; si++) {
-              const slideXmlStr = await zip.files[slideFiles[si]].async("string");
-              const parser = new DOMParser();
-              const slideDoc = parser.parseFromString(slideXmlStr, "application/xml");
-              const slideNum = parseInt(slideFiles[si].match(/slide(\d+)/i)[1]);
-              const rels = await getSlideRels(slideNum);
-
-              // Extract text from all <a:t> elements
-              const textEls = slideDoc.getElementsByTagNameNS("http://schemas.openxmlformats.org/drawingml/2006/main", "t");
-              let textBlocks = [];
-              let currentParagraph = [];
-
-              for (let ti = 0; ti < textEls.length; ti++) {
-                const textNode = textEls[ti];
-                const parentP = textNode.closest("a\\:p") || textNode.parentElement?.closest("[localName='p']");
-                currentParagraph.push(textNode.textContent);
-
-                const nextText = textEls[ti + 1];
-                const nextParentP = nextText ? (nextText.closest("a\\:p") || nextText.parentElement?.closest("[localName='p']")) : null;
-                if (parentP !== nextParentP || !nextText) {
-                  textBlocks.push(currentParagraph.join(""));
-                  currentParagraph = [];
-                }
-              }
-
-              // Extract image references
-              const blipEls = slideDoc.getElementsByTagNameNS("http://schemas.openxmlformats.org/drawingml/2006/main", "blip");
-              let slideImages = [];
-              for (let bi = 0; bi < blipEls.length; bi++) {
-                const embed = blipEls[bi].getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships", "embed");
-                if (embed && rels[embed] && imageFiles[rels[embed]]) {
-                  slideImages.push(imageFiles[rels[embed]]);
-                }
-              }
-
-              const display = si === 0 ? "flex" : "none";
-              slidesHtml += `<div class="pptx-slide" data-slide="${si}" style="display:${display}">`;
-              slidesHtml += `<div class="pptx-slide-number">SLIDE ${si + 1}</div>`;
-              if (slideImages.length > 0) {
-                slidesHtml += `<div class="pptx-slide-images">`;
-                for (const imgUrl of slideImages) {
-                  slidesHtml += `<img src="${imgUrl}" class="pptx-slide-img" />`;
-                }
-                slidesHtml += `</div>`;
-              }
-              if (textBlocks.length > 0) {
-                slidesHtml += `<div class="pptx-slide-text">`;
-                for (const block of textBlocks) {
-                  if (block.trim()) {
-                    slidesHtml += `<p>${escapeHtml(block)}</p>`;
-                  }
-                }
-                slidesHtml += `</div>`;
-              }
-              if (textBlocks.length === 0 && slideImages.length === 0) {
-                slidesHtml += `<p style="color:var(--muted);font-style:italic">Empty slide or unsupported content</p>`;
-              }
-              slidesHtml += `</div>`;
-            }
-
-            slidesHtml += `</div>`;
-            slideViewer.innerHTML = slidesHtml;
-
-            // Navigation
-            let currentSlide = 0;
-            const slides = slideViewer.querySelectorAll(".pptx-slide");
-            const counter = slideViewer.querySelector("#pptx-counter");
-            const showSlide = (idx) => {
-              slides.forEach(s => s.style.display = "none");
-              slides[idx].style.display = "flex";
-              counter.textContent = `Slide ${idx + 1} of ${slideFiles.length}`;
-            };
-            slideViewer.querySelector("#pptx-prev").addEventListener("click", () => {
-              currentSlide = Math.max(0, currentSlide - 1);
-              showSlide(currentSlide);
-            });
-            slideViewer.querySelector("#pptx-next").addEventListener("click", () => {
-              currentSlide = Math.min(slideFiles.length - 1, currentSlide + 1);
-              showSlide(currentSlide);
-            });
-          }
+      toggleBtn.addEventListener("click", async () => {
+        isOfficialMode = !isOfficialMode;
+        if (isOfficialMode) {
+          toggleBtn.textContent = "⚡ Switch to HTML5 Extractor";
+          viewContainer.innerHTML = `<iframe src="${msOfficeViewerUrl}" class="office-inline-viewer" title="${escapeHtml(file.name)}" allowfullscreen="true" frameborder="0" style="width:100%;height:100%;"></iframe>`;
         } else {
-          slideViewer.innerHTML = `<div style="color:var(--accent-red);padding:1rem;font-family:monospace">JSZip library failed to load. Please refresh the page.</div>`;
+          toggleBtn.textContent = "📊 Switch to Official PowerPoint Engine";
+          viewContainer.innerHTML = `<div class="pptx-slide-viewer" id="pptx-slide-viewer"><div style="display:flex;justify-content:center;align-items:center;height:200px;color:var(--muted);font-family:monospace">Extracting slides...</div></div>`;
+          const slideViewer = viewContainer.querySelector("#pptx-slide-viewer");
+          
+          try {
+            const bytes = base64ToBytes(file.content);
+            if (typeof JSZip !== "undefined") {
+              const zip = await JSZip.loadAsync(bytes);
+              const slideFiles = Object.keys(zip.files)
+                .filter(name => /^ppt\/slides\/slide\d+\.xml$/i.test(name))
+                .sort((a, b) => parseInt(a.match(/slide(\d+)/i)[1]) - parseInt(b.match(/slide(\d+)/i)[1]));
+
+              const imageFiles = {};
+              const mediaKeys = Object.keys(zip.files).filter(name => name.startsWith("ppt/media/"));
+              for (const mediaKey of mediaKeys) {
+                const blob = await zip.files[mediaKey].async("blob");
+                const ext = mediaKey.split(".").pop().toLowerCase();
+                const mimeMap = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif", svg: "image/svg+xml" };
+                imageFiles[mediaKey.split("/").pop()] = URL.createObjectURL(new Blob([blob], { type: mimeMap[ext] || "image/png" }));
+              }
+
+              async function getSlideRels(slideIndex) {
+                const relsFile = zip.files[`ppt/slides/_rels/slide${slideIndex}.xml.rels`];
+                if (!relsFile) return {};
+                const relsXml = await relsFile.async("string");
+                const relsDoc = new DOMParser().parseFromString(relsXml, "application/xml");
+                const rels = {};
+                relsDoc.querySelectorAll("Relationship").forEach(rel => {
+                  rels[rel.getAttribute("Id") || ""] = (rel.getAttribute("Target") || "").replace("../media/", "").replace("../", "");
+                });
+                return rels;
+              }
+
+              if (slideFiles.length === 0) {
+                slideViewer.innerHTML = `<div style="color:var(--muted);padding:2rem;text-align:center;font-family:monospace">No slides found.</div>`;
+              } else {
+                let slidesHtml = `<div class="pptx-nav"><button class="img-tool-btn" id="pptx-prev">◀ Prev</button><span class="img-zoom-level" id="pptx-counter">Slide 1 of ${slideFiles.length}</span><button class="img-tool-btn" id="pptx-next">Next ▶</button></div>`;
+                slidesHtml += `<div class="pptx-slides-container" id="pptx-slides-container">`;
+
+                for (let si = 0; si < slideFiles.length; si++) {
+                  const slideXmlStr = await zip.files[slideFiles[si]].async("string");
+                  const slideDoc = new DOMParser().parseFromString(slideXmlStr, "application/xml");
+                  const slideNum = parseInt(slideFiles[si].match(/slide(\d+)/i)[1]);
+                  const rels = await getSlideRels(slideNum);
+
+                  const textEls = slideDoc.getElementsByTagNameNS("http://schemas.openxmlformats.org/drawingml/2006/main", "t");
+                  let textBlocks = [];
+                  for (let ti = 0; ti < textEls.length; ti++) {
+                    if (textEls[ti].textContent.trim()) textBlocks.push(textEls[ti].textContent.trim());
+                  }
+
+                  const blipEls = slideDoc.getElementsByTagNameNS("http://schemas.openxmlformats.org/drawingml/2006/main", "blip");
+                  let slideImages = [];
+                  for (let bi = 0; bi < blipEls.length; bi++) {
+                    const embed = blipEls[bi].getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships", "embed");
+                    if (embed && rels[embed] && imageFiles[rels[embed]]) slideImages.push(imageFiles[rels[embed]]);
+                  }
+
+                  const display = si === 0 ? "flex" : "none";
+                  slidesHtml += `<div class="pptx-slide" data-slide="${si}" style="display:${display}">`;
+                  slidesHtml += `<div class="pptx-slide-number">SLIDE ${si + 1}</div>`;
+                  if (slideImages.length > 0) {
+                    slidesHtml += `<div class="pptx-slide-images">${slideImages.map(img => `<img src="${img}" class="pptx-slide-img" />`).join("")}</div>`;
+                  }
+                  if (textBlocks.length > 0) {
+                    slidesHtml += `<div class="pptx-slide-text">${textBlocks.map(t => `<p>${escapeHtml(t)}</p>`).join("")}</div>`;
+                  }
+                  slidesHtml += `</div>`;
+                }
+
+                slidesHtml += `</div>`;
+                slideViewer.innerHTML = slidesHtml;
+
+                let currentSlide = 0;
+                const slides = slideViewer.querySelectorAll(".pptx-slide");
+                const counter = slideViewer.querySelector("#pptx-counter");
+                const showSlide = (idx) => {
+                  slides.forEach(s => s.style.display = "none");
+                  slides[idx].style.display = "flex";
+                  counter.textContent = `Slide ${idx + 1} of ${slideFiles.length}`;
+                };
+                slideViewer.querySelector("#pptx-prev").addEventListener("click", () => { currentSlide = Math.max(0, currentSlide - 1); showSlide(currentSlide); });
+                slideViewer.querySelector("#pptx-next").addEventListener("click", () => { currentSlide = Math.min(slideFiles.length - 1, currentSlide + 1); showSlide(currentSlide); });
+              }
+            }
+          } catch (err) {
+            slideViewer.innerHTML = `<div style="color:var(--accent-red);padding:1rem;font-family:monospace">Error extracting slides: ${escapeHtml(err.message)}</div>`;
+          }
         }
-      } catch (err) {
-        console.error("PPTX render error:", err);
-        slideViewer.innerHTML = `<div style="color:var(--accent-red);padding:1rem;font-family:monospace">Error rendering PPTX: ${escapeHtml(err.message)}</div>`;
-      }
+      });
 
     } else if (officeExtensions.includes(file.ext)) {
       // XLSX and other Office files — try Google Docs Viewer with fallback
