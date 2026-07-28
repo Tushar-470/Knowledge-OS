@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Areas/MPharm/Computer Aided Drug Development/3.10 Uses of Computers in R&D.md",
+                "file": "Home.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "3.10 Uses of Computers in R&D"
+              "title": "Home"
             }
           }
         ]
@@ -193,10 +193,18 @@
   },
   "active": "e7a7b303c61786dc",
   "lastOpenFiles": [
-    "Areas/MPharm/Computer Aided Drug Development/3.9 Legal Protection of Innovative.md",
-    "Areas/MPharm/Computer Aided Drug Development/3.10 Uses of Computers in R&D.md",
-    "Areas/MPharm/Computer Aided Drug Development/3.5 Optimization technology & Screening design.md",
+    "Projects/File Manager PC/Dashboard.md",
     "Home.md",
+    "Areas/MPharm/Computer Aided Drug Development/Unit 5.md",
+    "Projects/File Manager PC",
+    "Areas/MPharm/Computer Aided Drug Development/Unit 4 c.md",
+    "Areas/MPharm/Computer Aided Drug Development/Unit 4 b.md",
+    "Areas/MPharm/Computer Aided Drug Development/Unit 4 a.md",
+    "Areas/MPharm/Computer Aided Drug Development/3.12 Computers in Market analysis.md",
+    "Areas/MPharm/Computer Aided Drug Development/3.11 The Ethics of  Computing in Pharmaceutical Research.md",
+    "Areas/MPharm/Computer Aided Drug Development/3.10 Uses of Computers in R&D.md",
+    "Areas/MPharm/Computer Aided Drug Development/3.9 Legal Protection of Innovative.md",
+    "Areas/MPharm/Computer Aided Drug Development/3.5 Optimization technology & Screening design.md",
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/3.11 Drug Interactions.md",
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/3.10 Estimation of Km and Vmax.md",
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/3.9 Michaelis–Menten Equation.md",
@@ -212,13 +220,6 @@
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/Unit 2.md",
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.17 Tight Junction Complex.md",
     "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.16 pH Microclimate and Intracellular pH Environment.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.15 Properties of the Gastrointestinal Tract.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.14 Permeability–Solubility–Charge State and the pH Partition Hypothesis.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.13 Transport Model of Drug Absorption.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.12 Correlation of In Vivo Data with In Vitro Dissolution Data (IVIVC).md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.11 Formulation and Processing Factors Affecting Drug Absorptio.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.10 Dissolution Methods.md",
-    "Areas/MPharm/Advanced Biopharmaceutics and Pharmacokinetics/1.9a Gastrointestinal Absorption.md",
     "Areas/Research/Research Ideas/KIMIII/PROJECTRESEARCH",
     "Areas/Research/Research Ideas/KIMIII",
     "Areas/Research/Research Ideas/New folder",
@@ -228,7 +229,6 @@
     "Areas/MPharm/Mini Project",
     "Areas/MPharm/Important Topics",
     "Resources/Templates",
-    "Resources/Papers",
-    "Resources/Books"
+    "Resources/Papers"
   ]
 }
