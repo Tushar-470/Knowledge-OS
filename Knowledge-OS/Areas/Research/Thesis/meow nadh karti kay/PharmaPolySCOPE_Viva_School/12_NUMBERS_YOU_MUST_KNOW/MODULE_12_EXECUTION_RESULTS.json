@@ -1,0 +1,261 @@
+{
+  "schema_version": "1.0.0",
+  "module": "12_NUMBERS_YOU_MUST_KNOW",
+  "phase": "PHASE_9_FORENSIC_REPAIR_AND_FREEZE",
+  "timestamp_utc": "2026-09-23T03:00:00Z",
+  "auditor": "Forensic Computational-Science Architect & PhD Methodology Auditor",
+  "audit_verdict": "APPROVED_FOR_MODULE_12_FREEZE",
+  "execution_status": "GO_TO_MODULE_12_FREEZE",
+  "stage_enumeration_reconciliation": {
+    "planning_assumed_stages": 15,
+    "active_core_engine_steps": 10,
+    "operational_pipeline_stages": 15,
+    "quantitative_item_clusters": 29,
+    "reconciliation_verdict": "RECONCILED",
+    "explanation": "Core VariableKEngine.evaluate() executes 10 algorithmic steps (Steps 0-9+Aggregation). End-to-end operational architecture in 07_SOFTWARE_ARCHITECTURE encompasses 15 stages. Gate G2 extracts 29 distinct item clusters."
+  },
+  "source_inventory": {
+    "production_codebase": {
+      "root": "asd_framework/src/asd_mcda/v2/",
+      "active_git_commit": "220ba4c",
+      "v15_freeze_commit": "31eee4d",
+      "working_tree_clean": true
+    },
+    "scientific_validation_results": {
+      "path": "results/validation/v2_scientific_validation/scientific_validation_results.json",
+      "sha256": "4b92b6a22f254b1f415392e23a6515e478f7e347adbb6b18579d40bcf00e84b2",
+      "verified": true
+    },
+    "phase_8_execution_results": {
+      "path": "11_COUNTERFACTUAL_LAB/PHASE_8_EXECUTION_RESULTS.json",
+      "sha256": "c86915233159045dfcb4f8841da9ae548483842691b00f13f17d7b5bcf41865a",
+      "verified": true
+    }
+  },
+  "canonical_constants": {
+    "variance_threshold": 0.95,
+    "eigengap_stable_threshold": 0.1,
+    "eigengap_block_threshold": 0.03,
+    "ahp_cr_governance_threshold": 0.08,
+    "saaty_random_index_ri4": 0.89,
+    "ahp_power_iteration_tolerance": 1e-10,
+    "ahp_reciprocity_tolerance": 1e-12,
+    "zero_variance_guardrail_threshold": 1e-08,
+    "tpsa_normalization_constant": 200.0,
+    "descriptor_subweights": [
+      0.3,
+      0.3,
+      0.2,
+      0.2
+    ],
+    "default_drug_loading_weight_fraction": 0.3,
+    "monte_carlo_replicates_generated": 10000,
+    "monte_carlo_random_seed": 42
+  },
+  "baseline_indomethacin_validation": {
+    "drug_name": "Indomethacin",
+    "canonical_smiles": "COc1ccc2c(c1)c(CC(=O)O)c(C)n2C(=O)c1ccc(Cl)cc1",
+    "molecular_weight": 357.793,
+    "logp": 3.92732,
+    "tpsa": 68.53,
+    "hbd": 1,
+    "hba": 3,
+    "rotatable_bonds": 4,
+    "aromatic_rings": 3,
+    "amorphous_density": 1.22,
+    "crystalline_density": 1.31,
+    "molar_volume": 273.0,
+    "tg_k": 315.15,
+    "tm_k": 433.15,
+    "hsp": [
+      19.2,
+      7.9,
+      8.4
+    ],
+    "k_retained": 3,
+    "eigenvalues": [
+      2.0908657741533783,
+      1.1678952418522826,
+      0.7397747065453792,
+      0.0014642774489659338
+    ],
+    "cumulative_variance": 0.99963393063776,
+    "boundary_eigengap": 0.7383104290964133,
+    "subspace_stability_status": "STABLE",
+    "ahp": {
+      "matrix": [
+        [
+          1.0,
+          2.0,
+          3.0,
+          2.0
+        ],
+        [
+          0.5,
+          1.0,
+          5.0,
+          2.0
+        ],
+        [
+          0.3333333333333333,
+          0.2,
+          1.0,
+          0.5
+        ],
+        [
+          0.5,
+          0.5,
+          2.0,
+          1.0
+        ]
+      ],
+      "row_1_values": [
+        1.0,
+        2.0,
+        3.0,
+        2.0
+      ],
+      "row_2_values": [
+        0.5,
+        1.0,
+        5.0,
+        2.0
+      ],
+      "weights": [
+        0.40767478396983764,
+        0.32443340865551623,
+        0.09216133794843878,
+        0.17573046942620724
+      ],
+      "lambda_max": 4.131937073898666,
+      "consistency_index": 0.04397902463288853,
+      "consistency_ratio": 0.04941463441897588,
+      "governance_status": "ACCEPTED",
+      "weight_nature": "decision_theoretic_preference_allocation"
+    },
+    "ranking": [
+      {
+        "rank": 1,
+        "polymer": "Soluplus",
+        "id": "POL-005-2026",
+        "topsis_cl": 0.6864350839750771,
+        "d_plus": 4.18260400161078,
+        "d_minus": 9.156273493466944,
+        "p_top1": 0.5551162790697675
+      },
+      {
+        "rank": 2,
+        "polymer": "HPMC E5",
+        "id": "POL-006-2026",
+        "topsis_cl": 0.6731464918436223,
+        "d_plus": 4.196083764580734,
+        "d_minus": 8.641727853990561,
+        "p_top1": 0.42
+      },
+      {
+        "rank": 3,
+        "polymer": "PVP-VA64",
+        "id": "POL-002-2026",
+        "topsis_cl": 0.606246890331839,
+        "d_plus": 5.082373875664344,
+        "d_minus": 7.825140378502591,
+        "p_top1": 0.01383720930232558
+      },
+      {
+        "rank": 4,
+        "polymer": "PVP K30",
+        "id": "POL-001-2026",
+        "topsis_cl": 0.587583904310203,
+        "d_plus": 5.344023390153163,
+        "d_minus": 7.613820510713223,
+        "p_top1": 0.005581395348837209
+      },
+      {
+        "rank": 5,
+        "polymer": "Eudragit E PO",
+        "id": "POL-007-2026",
+        "topsis_cl": 0.5456162037572858,
+        "d_plus": 5.671239168807834,
+        "d_minus": 6.809925907286733,
+        "p_top1": 0.005465116279069767
+      }
+    ],
+    "monte_carlo": {
+      "num_replicates": 10000,
+      "num_valid_replicates": 8600,
+      "valid_ratio": 0.86,
+      "num_blocked_replicates": 1400,
+      "block_reasons": {
+        "AHP_CR_BLOCKED": 1396,
+        "EIGENGAP_BLOCKED": 4,
+        "OTHER": 0
+      }
+    },
+    "morris": {
+      "num_factors": 26,
+      "trajectories_attempted": 31,
+      "trajectories_valid": 10,
+      "trajectories_discarded": 21,
+      "dominant_factor": "score_POL-005-2026_s_desc",
+      "mu_star": 0.14438139446805962
+    }
+  },
+  "multi_cohort_summary": {
+    "Ibuprofen": {
+      "cohort_id": "DRG-0001",
+      "k": 2,
+      "cum_var": 0.9610075036096546,
+      "eigengap": 0.816877575414842,
+      "status": "STABLE",
+      "rank_1": "Eudragit E PO",
+      "cl_1": 0.5502644874972997
+    },
+    "Itraconazole": {
+      "cohort_id": "ITR-001-2026",
+      "k": 2,
+      "cum_var": 0.9619357635338258,
+      "eigengap": 0.6503717846918979,
+      "status": "STABLE",
+      "rank_1": "Soluplus",
+      "cl_1": 0.6105950177667027
+    },
+    "DRG-0002": {
+      "cohort_id": "DRG-0002",
+      "status": "BLOCKED",
+      "quarantine_reason": "Strict identity validation failure: requested drug identity (Fenofibrate) does not match stored chemical structure (Indomethacin) in chemistry.py."
+    }
+  },
+  "derivation_taxonomy": {
+    "Derivation_1": "Numerical Verification & Threshold Evaluation (Cumulative Variance >= 0.95)",
+    "Derivation_2": "Independently Recomputed Value & Governance Check (Boundary Eigengap delta_3 = 0.738310 >= 0.10)",
+    "Derivation_3": "Direct Algebraic Derivation (AHP CI and CR from Lambda_max)",
+    "Derivation_4": "Numerical Consistency Check (AHP Weight Normalization Sum = 1.0)",
+    "Derivation_5": "Direct Algebraic Derivation & Recomputation (TOPSIS Closeness Score C_L)",
+    "Derivation_6": "Discrete Integer Conservation Check (Monte Carlo Replicate Balance 10000 = 8600 + 1400)",
+    "Derivation_7": "Direct Algebraic Proof (Full-Space Metric Reduction Identity at K = p = 4)"
+  },
+  "forensic_repair": {
+    "critical_issue_1_ahp_matrix_provenance": "RESOLVED (Row 1 is [1.0, 2.0, 3.0, 2.0]; Row 2 contains a23=5.0; power iteration verifies lambda_max=4.131937)",
+    "critical_issue_2_drg0002_quarantine_reason": "RESOLVED (Quarantined strictly by chemistry.py identity validation: requested Fenofibrate vs stored Indomethacin structure)",
+    "critical_issue_3_ahp_weight_interpretation": "RESOLVED (Purged all mechanistic/physical contribution claims; classified as decision-theoretic preference weights)",
+    "critical_issue_4_parameter_uniqueness": "RESOLVED (90 distinct parameters verified across descriptors, constants, raw matrix, standardization, PCA, AHP, TOPSIS, and MC)",
+    "critical_issue_5_dual_tier_precision": "RESOLVED (Explicit architecture separating float64 machine records from orally defensible viva figures)",
+    "critical_issue_6_derivation_taxonomy": "RESOLVED (All 7 derivations audited and categorized into exact mathematical/verification types)",
+    "repair_verdict": "ALL_6_CRITICAL_ISSUES_SATISFIED"
+  },
+  "reconciliation_summary": {
+    "parameters_reconciled": 22,
+    "exact_matches": 6,
+    "rounding_differences": 5,
+    "derived_representations": 2,
+    "snapshot_differences": 9,
+    "source_conflicts": 0,
+    "unresolved": 0
+  },
+  "defect_scorecard": {
+    "p0": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0
+  }
+}

@@ -1,0 +1,1955 @@
+{
+  "metadata": {
+    "execution_run_id": "PHASE_8_STEP_2_AUTHORITATIVE_RUN",
+    "module": "Module 11 \u2014 Counterfactual Lab",
+    "phase": "Phase 8",
+    "environment": {
+      "python_version": "3.14.5 (tags/v3.14.5:5607950, May 10 2026, 10:43:50) [MSC v.1944 64 bit (AMD64)]",
+      "numpy_version": "2.4.6",
+      "scipy_version": "1.18.0",
+      "validation_artifact_sha256": "43ed1f7d7ddc25e0c490cc086f29245861da159444683b1d2f8b25ab6c90a56e"
+    },
+    "total_experiments_planned": 20,
+    "total_experiments_executed": 20,
+    "total_blocked_by_design": 5,
+    "total_completed": 15,
+    "unexpected_failures": 0,
+    "baselines_used": {
+      "IND": {
+        "pids": [
+          "POL-005-2026",
+          "POL-006-2026",
+          "POL-002-2026",
+          "POL-001-2026",
+          "POL-007-2026"
+        ],
+        "pnames": [
+          "Soluplus",
+          "Hydroxypropyl Methylcellulose E5",
+          "PVP-Vinyl Acetate 64",
+          "Polyvinylpyrrolidone K30",
+          "Eudragit E PO"
+        ],
+        "k": 3,
+        "eigenvalues": [
+          2.0908657741533783,
+          1.1678952418522819,
+          0.7397747065453792,
+          0.0014642774489654897
+        ],
+        "cum_var": 0.9996339306377598,
+        "eigengap": 0.7383104290964138,
+        "stability_status": "STABLE",
+        "closeness": [
+          0.686435083975077,
+          0.6731464918436222,
+          0.606246890331839,
+          0.587583904310203,
+          0.5456162037572857
+        ],
+        "ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "d_plus": [
+          4.182604001610782,
+          4.196083764580736,
+          5.082373875664346,
+          5.344023390153167,
+          5.671239168807836
+        ],
+        "d_minus": [
+          9.156273493466946,
+          8.641727853990563,
+          7.825140378502593,
+          7.613820510713225,
+          6.8099259072867335
+        ],
+        "weights": [
+          0.40767478396983764,
+          0.32443340865551623,
+          0.09216133794843878,
+          0.17573046942620724
+        ],
+        "cr": 0.04941463441897588
+      },
+      "IBU": {
+        "pids": [
+          "POL-007-2026",
+          "POL-002-2026",
+          "POL-001-2026",
+          "POL-005-2026",
+          "POL-006-2026"
+        ],
+        "pnames": [
+          "Eudragit E PO",
+          "PVP-Vinyl Acetate 64",
+          "Polyvinylpyrrolidone K30",
+          "Soluplus",
+          "Hydroxypropyl Methylcellulose E5"
+        ],
+        "k": 2,
+        "eigenvalues": [
+          2.8739879892601308,
+          0.9700420251784883,
+          0.15316444976364638,
+          0.002805535797732199
+        ],
+        "cum_var": 0.9610075036096548,
+        "eigengap": 0.8168775754148418,
+        "stability_status": "STABLE",
+        "closeness": [
+          0.5502644874972998,
+          0.41678100285774844,
+          0.40797616516392965,
+          0.4031354530991939,
+          0.2461432449415062
+        ],
+        "ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "d_plus": [
+          3.0168363008976127,
+          3.479244334393812,
+          3.624645292478114,
+          3.5639352388285483,
+          4.553061050438683
+        ],
+        "d_minus": [
+          3.691187008423551,
+          2.486343809068528,
+          2.497819850300753,
+          2.407160309288912,
+          1.4866288772391536
+        ],
+        "weights": [
+          0.40767478396983764,
+          0.32443340865551623,
+          0.09216133794843878,
+          0.17573046942620724
+        ],
+        "cr": 0.04941463441897588
+      }
+    }
+  },
+  "results": [
+    {
+      "CF_ID": "CF-01",
+      "scenario": "Classical Unrotated Euclidean TOPSIS (PCA Bypassed)",
+      "execution_class": "Class B",
+      "baseline": "Indomethacin K=3, M_K = V_K^T W V_K (CumVar 99.96%)",
+      "perturbation": "Bypass PCA projection; evaluate in raw standardized space with V_4 = I_4 and M_4 = W",
+      "parameters": {
+        "projection_basis": "identity_4x4",
+        "metric_tensor": "diagonal_W",
+        "semantic_mode": "standardized_space"
+      },
+      "random_seed": null,
+      "runtime_path": "scratch/run_cf_experiments.py calling v2 standardization.py, ahp.py, metrics.py",
+      "stopping_point": "Completed",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "D_plus": [
+          4.348602267049612,
+          4.388848543082007,
+          5.264028543269564,
+          5.510079454807497,
+          5.838517615963131
+        ],
+        "D_minus": [
+          10.142847116261274,
+          9.635989501997575,
+          8.868122203228758,
+          8.690979336569177,
+          7.968441541694403
+        ],
+        "closeness_coefficients": [
+          0.6999194385581824,
+          0.6870660089638773,
+          0.6275139829955543,
+          0.6119951662932774,
+          0.5771322599498669
+        ],
+        "ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "metric_tensor": [
+          [
+            0.40767478396983764,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.32443340865551623,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.09216133794843878,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.17573046942620724
+          ]
+        ],
+        "condition_number": 4.423490294790622
+      },
+      "derived_outputs": {
+        "delta_closeness": [
+          0.013484354583105373,
+          0.013919517120255076,
+          0.021267092663715292,
+          0.024411261983074417,
+          0.03151605619258124
+        ],
+        "mean_absolute_closeness_error": 0.02091965650854628,
+        "kendall_tau": 0.9999999999999999,
+        "spearman_rho": 0.9999999999999999,
+        "max_rank_displacement": 0,
+        "top1_preserved": true
+      },
+      "baseline_comparison": {
+        "baseline_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "cf_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "baseline_closeness": [
+          0.686435083975077,
+          0.6731464918436222,
+          0.606246890331839,
+          0.587583904310203,
+          0.5456162037572857
+        ],
+        "cf_closeness": [
+          0.6999194385581824,
+          0.6870660089638773,
+          0.6275139829955543,
+          0.6119951662932774,
+          0.5771322599498669
+        ]
+      },
+      "interpretation": "Bypassing PCA preserves the ordinal ranking of candidates (Kendall tau = 1.000) for this dataset, but shifts relative closeness values systematically upwards (MACE = 0.0215) due to diagonal weighting without off-diagonal covariance orthogonalization.",
+      "limitation": "Tested only on the Indomethacin 5-polymer cohort; in cohorts with higher collinearity, unrotated Euclidean distance double-counts redundant criteria."
+    },
+    {
+      "CF_ID": "CF-02",
+      "scenario": "Subspace Dimension Truncated to K=2 (Indomethacin)",
+      "execution_class": "Class A",
+      "baseline": "Indomethacin Dynamic K=3 (CumVar 99.96%, delta_3 = 0.7383)",
+      "perturbation": "Modulate variance_threshold to 0.80, forcing retention of only PC1 and PC2 (81.47% variance)",
+      "parameters": {
+        "variance_threshold": 0.8,
+        "retained_k": 2
+      },
+      "random_seed": null,
+      "runtime_path": "engine.py:VariableKEngine.evaluate()",
+      "stopping_point": "Completed",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "retained_k": 2,
+        "cumulative_variance": 0.814690254001415,
+        "boundary_eigengap": 0.42812053530690264,
+        "stability_status": "STABLE",
+        "eigenvalues": [
+          2.0908657741533783,
+          1.1678952418522819,
+          0.7397747065453792,
+          0.0014642774489654897
+        ],
+        "metric_tensor": [
+          [
+            0.3405971195457703,
+            -0.0717014054489589
+          ],
+          [
+            -0.0717014054489589,
+            0.16242532019122993
+          ]
+        ],
+        "D_plus": [
+          2.94719253182428,
+          3.6528170897750667,
+          4.0863430694894305,
+          4.685824169347701,
+          4.813528073487051
+        ],
+        "D_minus": [
+          8.969593819683576,
+          8.20825789877084,
+          7.618763457354273,
+          7.299119762590981,
+          6.555673131347362
+        ],
+        "closeness_coefficients": [
+          0.7526856280803116,
+          0.6920332184643848,
+          0.6508922785010042,
+          0.6090241059150517,
+          0.5766168628064879
+        ],
+        "ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "derived_outputs": {
+        "delta_K": -1,
+        "delta_cum_var": -0.1849436766363448,
+        "delta_eigengap": -0.3101898937895111,
+        "delta_closeness": [
+          0.06625054410523457,
+          0.01888672662076263,
+          0.04464538816916519,
+          0.02144020160484872,
+          0.03100065904920224
+        ],
+        "mean_absolute_closeness_error": 0.03644470390984267,
+        "kendall_tau": 0.9999999999999999,
+        "spearman_rho": 0.9999999999999999,
+        "max_rank_displacement": 0,
+        "top1_preserved": true
+      },
+      "baseline_comparison": {
+        "baseline_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "cf_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "baseline_closeness": [
+          0.686435083975077,
+          0.6731464918436222,
+          0.606246890331839,
+          0.587583904310203,
+          0.5456162037572857
+        ],
+        "cf_closeness": [
+          0.7526856280803116,
+          0.6920332184643848,
+          0.6508922785010042,
+          0.6090241059150517,
+          0.5766168628064879
+        ]
+      },
+      "interpretation": "Restricting the subspace to K=2 discards 18.49% of empirical variance. While candidate rank order remains topologically invariant (tau = 1.000), closeness values inflate significantly (Soluplus moves from 0.6864 to 0.7527) due to loss of the third principal dimension.",
+      "limitation": "Truncation at K=2 ignores PC3 which explains 18.49% of total variance, violating the 95% governance threshold."
+    },
+    {
+      "CF_ID": "CF-03",
+      "scenario": "Subspace Dimension Expanded to K=3 (Ibuprofen)",
+      "execution_class": "Class A",
+      "baseline": "Ibuprofen Dynamic K=2 (CumVar 96.10%, delta_2 = 0.8169)",
+      "perturbation": "Modulate variance_threshold to 0.99, forcing retention of PC3 (capturing 99.93% variance)",
+      "parameters": {
+        "variance_threshold": 0.99,
+        "retained_k": 3
+      },
+      "random_seed": null,
+      "runtime_path": "engine.py:VariableKEngine.evaluate()",
+      "stopping_point": "Completed",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "retained_k": 3,
+        "cumulative_variance": 0.9992986160505664,
+        "boundary_eigengap": 0.15035891396591416,
+        "stability_status": "STABLE",
+        "eigenvalues": [
+          2.8739879892601308,
+          0.9700420251784883,
+          0.15316444976364638,
+          0.002805535797732199
+        ],
+        "metric_tensor": [
+          [
+            0.2982009045347039,
+            0.052971127211130814,
+            0.07971598077050165
+          ],
+          [
+            0.052971127211130814,
+            0.11041804864578024,
+            0.04039314567852697
+          ],
+          [
+            0.07971598077050165,
+            0.04039314567852697,
+            0.22748830020776403
+          ]
+        ],
+        "D_plus": [
+          3.2435207252947014,
+          3.726649877466814,
+          3.9720468856020674,
+          4.079212174837337,
+          4.840207049915663
+        ],
+        "D_minus": [
+          4.937597723957032,
+          3.9114560415432043,
+          3.7078536149117713,
+          3.4444999884166267,
+          2.998619774900412
+        ],
+        "closeness_coefficients": [
+          0.6035357823732082,
+          0.512097643449565,
+          0.48279969443141746,
+          0.4578192139300156,
+          0.38253425441258804
+        ],
+        "ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "derived_outputs": {
+        "delta_K": 1,
+        "delta_cum_var": 0.038291112440911546,
+        "delta_eigengap": -0.6665186614489277,
+        "delta_closeness": [
+          0.053271294875908315,
+          0.09531664059181655,
+          0.07482352926748781,
+          0.054683760830821715,
+          0.13639100947108185
+        ],
+        "mean_absolute_closeness_error": 0.08289724700742325,
+        "kendall_tau": 0.9999999999999999,
+        "spearman_rho": 0.9999999999999999,
+        "max_rank_displacement": 0,
+        "top1_preserved": true
+      },
+      "baseline_comparison": {
+        "baseline_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "cf_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "baseline_closeness": [
+          0.5502644874972998,
+          0.41678100285774844,
+          0.40797616516392965,
+          0.4031354530991939,
+          0.2461432449415062
+        ],
+        "cf_closeness": [
+          0.6035357823732082,
+          0.512097643449565,
+          0.48279969443141746,
+          0.4578192139300156,
+          0.38253425441258804
+        ]
+      },
+      "interpretation": "Forcing retention of PC3 for Ibuprofen reduces the boundary eigengap from 0.8169 down to 0.1504, although the subspace remains STABLE (>= 0.10). Ranks are invariant (tau = 1.000) and Top-1 (Eudragit E PO) is preserved.",
+      "limitation": "Captures 3.83% of marginal variance at the cost of a substantially smaller spectral eigengap."
+    },
+    {
+      "CF_ID": "CF-04",
+      "scenario": "Full Rank Subspace Retention K=4 (Indomethacin)",
+      "execution_class": "Class A",
+      "baseline": "Indomethacin K=3 (CumVar 99.96%)",
+      "perturbation": "Modulate variance_threshold to 0.9999, forcing retention of all 4 components (100.00% variance)",
+      "parameters": {
+        "variance_threshold": 0.9999,
+        "retained_k": 4
+      },
+      "random_seed": null,
+      "runtime_path": "engine.py:VariableKEngine.evaluate()",
+      "stopping_point": "Completed",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "retained_k": 4,
+        "cumulative_variance": 1.0000000000000013,
+        "boundary_eigengap": Infinity,
+        "stability_status": "STABLE",
+        "eigenvalues": [
+          2.0908657741533783,
+          1.1678952418522819,
+          0.7397747065453792,
+          0.0014642774489654897
+        ],
+        "metric_tensor": [
+          [
+            0.3405971195457703,
+            -0.0717014054489589,
+            0.026038548397331232,
+            -0.0360928603209698
+          ],
+          [
+            -0.0717014054489589,
+            0.16242532019122993,
+            0.03517462440688253,
+            0.023122209765251974
+          ],
+          [
+            0.026038548397331232,
+            0.03517462440688253,
+            0.13196843019536122,
+            -0.0019488911403075233
+          ],
+          [
+            -0.0360928603209698,
+            0.023122209765251974,
+            -0.0019488911403075233,
+            0.3650091300676385
+          ]
+        ],
+        "D_plus": [
+          4.348602267049612,
+          4.388848543082008,
+          5.264028543269565,
+          5.5100794548074985,
+          5.838517615963132
+        ],
+        "D_minus": [
+          10.142847116261276,
+          9.635989501997578,
+          8.86812220322876,
+          8.690979336569178,
+          7.968441541694403
+        ],
+        "closeness_coefficients": [
+          0.6999194385581824,
+          0.6870660089638773,
+          0.6275139829955543,
+          0.6119951662932773,
+          0.5771322599498669
+        ],
+        "ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "derived_outputs": {
+        "delta_K": 1,
+        "delta_cum_var": 0.00036606936224148345,
+        "delta_eigengap": "inf - 0.7383 = inf (by contract)",
+        "delta_closeness": [
+          0.013484354583105373,
+          0.013919517120255076,
+          0.021267092663715292,
+          0.024411261983074306,
+          0.03151605619258124
+        ],
+        "mean_absolute_closeness_error": 0.02091965650854626,
+        "kendall_tau": 0.9999999999999999,
+        "spearman_rho": 0.9999999999999999,
+        "max_rank_displacement": 0,
+        "top1_preserved": true
+      },
+      "baseline_comparison": {
+        "baseline_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "cf_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "baseline_closeness": [
+          0.686435083975077,
+          0.6731464918436222,
+          0.606246890331839,
+          0.587583904310203,
+          0.5456162037572857
+        ],
+        "cf_closeness": [
+          0.6999194385581824,
+          0.6870660089638773,
+          0.6275139829955543,
+          0.6119951662932773,
+          0.5771322599498669
+        ]
+      },
+      "interpretation": "Under the tested full-dimensional configuration (K=p=4), because the eigenvector basis spans the complete space (V_4 V_4^T = I_4), the quadratic form algebraically reduces to the unrotated weighted Euclidean metric, and the computed C_L values matched the corresponding CF-01 values to full float64 numerical precision. Eigengap delta_4 = +infinity and stability status STABLE are established by contract (stability.py:70).",
+      "limitation": "Retains PC4 which represents only 0.0366% of variance (eigenvalue 0.001464), introducing near-collinear noise into distance calculations."
+    },
+    {
+      "CF_ID": "CF-05",
+      "scenario": "Critical Subspace Degeneracy (Eigengap < 0.03)",
+      "execution_class": "Class B",
+      "baseline": "Indomethacin delta_3 = 0.7383 (STABLE)",
+      "perturbation": "Synthetic eigenvalue spectrum with lambda_2 = 1.00, lambda_3 = 0.985 yielding delta_2 = 0.0150 < 0.03",
+      "parameters": {
+        "eigenvalues": [
+          2.0,
+          1.0,
+          0.985,
+          0.015
+        ],
+        "retained_k": 2,
+        "critical_threshold": 0.03
+      },
+      "random_seed": null,
+      "runtime_path": "stability.py:evaluate_subspace_stability()",
+      "stopping_point": "Step 3 (HALTED)",
+      "status": "BLOCKED",
+      "raw_outputs": {
+        "retained_k": 2,
+        "calculated_eigengap": 0.015000000000000013,
+        "governance_threshold": 0.03,
+        "stability_status": "BLOCKED",
+        "exception": {
+          "exception_class": "DegenerateSubspaceBlockedError",
+          "exception_message": "Boundary eigengap delta_2 = 0.0150 is below guardrail threshold 0.03 (BLOCKED). Subspace is near-degenerate; PCA truncation blocked.",
+          "source_location": "stability.py:88",
+          "blocking_stage": "Step 3 (Subspace Stability Governance)"
+        }
+      },
+      "derived_outputs": {
+        "topsis_metrics": "NOT OBSERVABLE UNDER CURRENT EXPERIMENT DESIGN",
+        "closeness_coefficients": "NOT OBSERVABLE UNDER CURRENT EXPERIMENT DESIGN",
+        "ranks": "NOT OBSERVABLE UNDER CURRENT EXPERIMENT DESIGN"
+      },
+      "baseline_comparison": {
+        "baseline_stability": "STABLE (delta_3 = 0.7383)",
+        "cf_stability": "BLOCKED (delta_2 = 0.0150)"
+      },
+      "interpretation": "Subspace stability governance successfully triggered DegenerateSubspaceBlockedError at Step 3. When two consecutive eigenvalues are nearly identical, the corresponding principal plane is indeterminate under rotation, and pipeline execution is halted to protect scientific validity.",
+      "limitation": "Synthetic eigenvalue spectrum designed to probe boundary behavior; does not simulate end-to-end chemical descriptors."
+    },
+    {
+      "CF_ID": "CF-06",
+      "scenario": "Marginal Subspace Stability (Eigengap in Warning Zone)",
+      "execution_class": "Class B",
+      "baseline": "Indomethacin delta_3 = 0.7383 (STABLE)",
+      "perturbation": "Synthetic eigenvalue spectrum with lambda_2 = 1.00, lambda_3 = 0.935 yielding delta_2 = 0.0650 in [0.03, 0.10)",
+      "parameters": {
+        "eigenvalues": [
+          2.0,
+          1.0,
+          0.935,
+          0.065
+        ],
+        "retained_k": 2,
+        "warning_zone": [
+          0.03,
+          0.1
+        ]
+      },
+      "random_seed": null,
+      "runtime_path": "stability.py:evaluate_subspace_stability()",
+      "stopping_point": "Step 3 (TELEMETRY LOGGED; Execution Allowed)",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "retained_k": 2,
+        "calculated_eigengap": 0.06499999999999995,
+        "stability_status": "WARNING",
+        "warning_message": "Boundary eigengap delta_2 = 0.0650 is in warning zone [0.03, 0.10). Subspace orientation may be sensitive to perturbations."
+      },
+      "derived_outputs": {
+        "execution_permitted": true,
+        "audit_trail_flag": "WARNING_ZONE_SPECTRAL_GAP"
+      },
+      "baseline_comparison": {
+        "baseline_status": "STABLE",
+        "cf_status": "WARNING"
+      },
+      "interpretation": "Subspace stability governance logged a formal WARNING for delta_K = 0.0650 without terminating execution. This telemetry alerts downstream decision makers that the subspace orientation may exhibit heightened sensitivity to noise.",
+      "limitation": "Evaluated on synthetic eigenvalue inputs to test governance thresholds."
+    },
+    {
+      "CF_ID": "CF-07",
+      "scenario": "Inconsistent AHP Comparison Matrix (CR >= 0.08)",
+      "execution_class": "Class A",
+      "baseline": "Canonical AHP Matrix with CR = 0.049415 (ACCEPTED)",
+      "perturbation": "Intransitive 4x4 pairwise comparison matrix yielding CR = 1.9982 >> 0.08",
+      "parameters": {
+        "pairwise_matrix": [
+          [
+            1.0,
+            5.0,
+            0.14285714285714285,
+            9.0
+          ],
+          [
+            0.2,
+            1.0,
+            0.1111111111111111,
+            3.0
+          ],
+          [
+            7.0,
+            9.0,
+            1.0,
+            0.2
+          ],
+          [
+            0.1111111111111111,
+            0.3333333333333333,
+            5.0,
+            1.0
+          ]
+        ],
+        "governance_threshold_cr": 0.08
+      },
+      "random_seed": null,
+      "runtime_path": "ahp.py:solve_ahp_preference() via engine.py",
+      "stopping_point": "Step 4 (HALTED)",
+      "status": "BLOCKED",
+      "raw_outputs": {
+        "calculated_cr": 1.9982,
+        "governance_threshold": 0.08,
+        "status": "BLOCKED",
+        "exception": {
+          "exception_class": "AHPConsistencyViolationError",
+          "exception_message": "AHP Consistency Ratio CR = 1.9982 exceeds project governance threshold 0.08 (BLOCKED). Preference matrix rejected.",
+          "source_location": "ahp.py:78",
+          "blocking_stage": "Step 4 (AHP Preference Consistency Governance)"
+        }
+      },
+      "derived_outputs": {
+        "metric_tensor": "NOT OBSERVABLE UNDER CURRENT EXPERIMENT DESIGN",
+        "closeness_coefficients": "NOT OBSERVABLE UNDER CURRENT EXPERIMENT DESIGN",
+        "ranks": "NOT OBSERVABLE UNDER CURRENT EXPERIMENT DESIGN"
+      },
+      "baseline_comparison": {
+        "baseline_cr": 0.04941463441897588,
+        "cf_cr": 1.9982,
+        "baseline_status": "ACCEPTED",
+        "cf_status": "BLOCKED"
+      },
+      "interpretation": "AHP governance tripwire functioned exactly as specified, halting execution before metric tensor construction when user preference judgments violated mathematical transitivity.",
+      "limitation": "Severely intransitive matrix chosen to unambiguously trigger the CR >= 0.08 governance barrier."
+    },
+    {
+      "CF_ID": "CF-08",
+      "scenario": "Omission of Hansen Solubility Parameter (s_HSP)",
+      "execution_class": "Class C",
+      "baseline": "Indomethacin 4-criteria baseline (M=4, K=3)",
+      "perturbation": "Remove criterion 0 (Hansen Solubility Parameter (s_HSP)); evaluate 3-criteria manifold (s_chi, s_desc, s_GT)",
+      "parameters": {
+        "omitted_criterion": "Hansen Solubility Parameter (s_HSP)",
+        "omitted_index": 0,
+        "remaining_criteria": [
+          "s_chi",
+          "s_desc",
+          "s_GT"
+        ],
+        "dimension_p": 3
+      },
+      "random_seed": null,
+      "runtime_path": "scratch/standalone_3crit_testbed (Pedagogical linear algebra outside production v2)",
+      "stopping_point": "Completed (Standalone)",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "retained_k": 3,
+        "cumulative_variance": 1.0,
+        "eigenvalues": [
+          1.3984899912625324,
+          0.8679706776092588,
+          0.7335393311282083
+        ],
+        "normalized_weights": [
+          0.5477285110870505,
+          0.15559246078719324,
+          0.2966790281257564
+        ],
+        "metric_tensor": [
+          [
+            0.3071986783905701,
+            -0.12094936657446966,
+            -0.09878092189758245
+          ],
+          [
+            -0.12094936657446967,
+            0.46260568320913303,
+            0.03237332041102117
+          ],
+          [
+            -0.09878092189758245,
+            0.03237332041102118,
+            0.23019563840029686
+          ]
+        ],
+        "D_plus": [
+          1.3156085996050286,
+          0.49614045461905143,
+          1.5932838663401618,
+          1.6307302916364192,
+          2.4906024993147184
+        ],
+        "D_minus": [
+          2.2405055003909213,
+          2.2744480235345073,
+          1.1911760311625248,
+          1.5155684025026224,
+          1.0447209538992543
+        ],
+        "closeness_coefficients": [
+          0.6300431981058968,
+          0.8209259662590884,
+          0.4277942850715362,
+          0.4816988308598415,
+          0.2955092985762011
+        ],
+        "ranks": [
+          2,
+          1,
+          4,
+          3,
+          5
+        ]
+      },
+      "derived_outputs": {
+        "delta_closeness": [
+          -0.0563918858691802,
+          0.14777947441546624,
+          -0.17845260526030277,
+          -0.10588507345036152,
+          -0.2501069051810846
+        ],
+        "mean_absolute_closeness_error": 0.14772318883527907,
+        "kendall_tau": 0.6,
+        "spearman_rho": 0.7999999999999999,
+        "max_rank_displacement": 1,
+        "top1_preserved": false
+      },
+      "baseline_comparison": {
+        "baseline_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "cf_ranks": [
+          2,
+          1,
+          4,
+          3,
+          5
+        ],
+        "baseline_closeness": [
+          0.686435083975077,
+          0.6731464918436222,
+          0.606246890331839,
+          0.587583904310203,
+          0.5456162037572857
+        ],
+        "cf_closeness": [
+          0.6300431981058968,
+          0.8209259662590884,
+          0.4277942850715362,
+          0.4816988308598415,
+          0.2955092985762011
+        ]
+      },
+      "interpretation": "Removing Hansen Solubility Parameter (s_HSP) reveals specific dimensional sensitivity. Mandatory note: This experiment probes the pedagogical impact of criteria omission; active production v2 strictly mandates p=4 and rejects 3-criteria input matrices.",
+      "limitation": "Evaluated strictly outside production v2 using normalized 3-criteria AHP sub-weights."
+    },
+    {
+      "CF_ID": "CF-09",
+      "scenario": "Omission of Flory-Huggins Interaction Parameter (s_chi)",
+      "execution_class": "Class C",
+      "baseline": "Indomethacin 4-criteria baseline (M=4, K=3)",
+      "perturbation": "Remove criterion 1 (Flory-Huggins Interaction Parameter (s_chi)); evaluate 3-criteria manifold (s_HSP, s_desc, s_GT)",
+      "parameters": {
+        "omitted_criterion": "Flory-Huggins Interaction Parameter (s_chi)",
+        "omitted_index": 1,
+        "remaining_criteria": [
+          "s_HSP",
+          "s_desc",
+          "s_GT"
+        ],
+        "dimension_p": 3
+      },
+      "random_seed": null,
+      "runtime_path": "scratch/standalone_3crit_testbed (Pedagogical linear algebra outside production v2)",
+      "stopping_point": "Completed (Standalone)",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "retained_k": 3,
+        "cumulative_variance": 1.0,
+        "eigenvalues": [
+          1.3295581458185908,
+          0.9397650236458233,
+          0.7306768305355881
+        ],
+        "normalized_weights": [
+          0.603456105131695,
+          0.1364208045945896,
+          0.2601230902737153
+        ],
+        "metric_tensor": [
+          [
+            0.26834775643764924,
+            -0.1392255320901258,
+            -0.09491873096547362
+          ],
+          [
+            -0.1392255320901258,
+            0.5194684143572198,
+            0.05816945511465826
+          ],
+          [
+            -0.09491873096547362,
+            0.05816945511465829,
+            0.21218382920513085
+          ]
+        ],
+        "D_plus": [
+          1.2318922760230082,
+          0.6493677626590498,
+          1.6949263353869652,
+          1.7638904854300776,
+          2.5561350189219234
+        ],
+        "D_minus": [
+          2.3444370867615616,
+          2.1782319015909395,
+          1.085219316118038,
+          1.392857161807723,
+          0.9782420653789117
+        ],
+        "closeness_coefficients": [
+          0.6555428342696481,
+          0.7703466403433414,
+          0.3903462092105015,
+          0.4412317098031238,
+          0.27677920098682
+        ],
+        "ranks": [
+          2,
+          1,
+          4,
+          3,
+          5
+        ]
+      },
+      "derived_outputs": {
+        "delta_closeness": [
+          -0.03089224970542892,
+          0.09720014849971925,
+          -0.21590068112133748,
+          -0.1463521945070792,
+          -0.2688370027704657
+        ],
+        "mean_absolute_closeness_error": 0.1518364553208061,
+        "kendall_tau": 0.6,
+        "spearman_rho": 0.7999999999999999,
+        "max_rank_displacement": 1,
+        "top1_preserved": false
+      },
+      "baseline_comparison": {
+        "baseline_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "cf_ranks": [
+          2,
+          1,
+          4,
+          3,
+          5
+        ],
+        "baseline_closeness": [
+          0.686435083975077,
+          0.6731464918436222,
+          0.606246890331839,
+          0.587583904310203,
+          0.5456162037572857
+        ],
+        "cf_closeness": [
+          0.6555428342696481,
+          0.7703466403433414,
+          0.3903462092105015,
+          0.4412317098031238,
+          0.27677920098682
+        ]
+      },
+      "interpretation": "Removing Flory-Huggins Interaction Parameter (s_chi) reveals specific dimensional sensitivity. Mandatory note: This experiment probes the pedagogical impact of criteria omission; active production v2 strictly mandates p=4 and rejects 3-criteria input matrices.",
+      "limitation": "Evaluated strictly outside production v2 using normalized 3-criteria AHP sub-weights."
+    },
+    {
+      "CF_ID": "CF-10",
+      "scenario": "Omission of Molecular Descriptors Score (s_desc)",
+      "execution_class": "Class C",
+      "baseline": "Indomethacin 4-criteria baseline (M=4, K=3)",
+      "perturbation": "Remove criterion 2 (Molecular Descriptors Score (s_desc)); evaluate 3-criteria manifold (s_HSP, s_chi, s_GT)",
+      "parameters": {
+        "omitted_criterion": "Molecular Descriptors Score (s_desc)",
+        "omitted_index": 2,
+        "remaining_criteria": [
+          "s_HSP",
+          "s_chi",
+          "s_GT"
+        ],
+        "dimension_p": 3
+      },
+      "random_seed": null,
+      "runtime_path": "scratch/standalone_3crit_testbed (Pedagogical linear algebra outside production v2)",
+      "stopping_point": "Completed (Standalone)",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "retained_k": 2,
+        "cumulative_variance": 0.9993201686969292,
+        "eigenvalues": [
+          2.017329074766018,
+          0.9806314313247708,
+          0.002039493909212542
+        ],
+        "normalized_weights": [
+          0.44906083097250116,
+          0.35736901524148784,
+          0.1935701537860111
+        ],
+        "metric_tensor": [
+          [
+            0.3985054276802307,
+            -0.03219466866456375
+          ],
+          [
+            -0.03219466866456375,
+            0.19911943101283505
+          ]
+        ],
+        "D_plus": [
+          0.9643585298254644,
+          0.666371060132434,
+          1.5619564164128479,
+          1.6090497164992523,
+          2.818391008335161
+        ],
+        "D_minus": [
+          2.655944656301058,
+          2.2002524099814327,
+          1.2886631331413287,
+          1.4197430892510907,
+          0.0
+        ],
+        "closeness_coefficients": [
+          0.733624925801515,
+          0.7675414762072101,
+          0.4520642305083713,
+          0.4687488317311188,
+          0.0
+        ],
+        "ranks": [
+          2,
+          1,
+          4,
+          3,
+          5
+        ]
+      },
+      "derived_outputs": {
+        "delta_closeness": [
+          0.04718984182643793,
+          0.09439498436358795,
+          -0.15418265982346768,
+          -0.11883507257908421,
+          -0.5456162037572857
+        ],
+        "mean_absolute_closeness_error": 0.19204375246997268,
+        "kendall_tau": 0.6,
+        "spearman_rho": 0.7999999999999999,
+        "max_rank_displacement": 1,
+        "top1_preserved": false
+      },
+      "baseline_comparison": {
+        "baseline_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "cf_ranks": [
+          2,
+          1,
+          4,
+          3,
+          5
+        ],
+        "baseline_closeness": [
+          0.686435083975077,
+          0.6731464918436222,
+          0.606246890331839,
+          0.587583904310203,
+          0.5456162037572857
+        ],
+        "cf_closeness": [
+          0.733624925801515,
+          0.7675414762072101,
+          0.4520642305083713,
+          0.4687488317311188,
+          0.0
+        ]
+      },
+      "interpretation": "Removing Molecular Descriptors Score (s_desc) reveals specific dimensional sensitivity. Mandatory note: This experiment probes the pedagogical impact of criteria omission; active production v2 strictly mandates p=4 and rejects 3-criteria input matrices.",
+      "limitation": "Evaluated strictly outside production v2 using normalized 3-criteria AHP sub-weights."
+    },
+    {
+      "CF_ID": "CF-11",
+      "scenario": "Omission of Gordon-Taylor Glass Transition Score (s_GT)",
+      "execution_class": "Class C",
+      "baseline": "Indomethacin 4-criteria baseline (M=4, K=3)",
+      "perturbation": "Remove criterion 3 (Gordon-Taylor Glass Transition Score (s_GT)); evaluate 3-criteria manifold (s_HSP, s_chi, s_desc)",
+      "parameters": {
+        "omitted_criterion": "Gordon-Taylor Glass Transition Score (s_GT)",
+        "omitted_index": 3,
+        "remaining_criteria": [
+          "s_HSP",
+          "s_chi",
+          "s_desc"
+        ],
+        "dimension_p": 3
+      },
+      "random_seed": null,
+      "runtime_path": "scratch/standalone_3crit_testbed (Pedagogical linear algebra outside production v2)",
+      "stopping_point": "Completed (Standalone)",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "retained_k": 2,
+        "cumulative_variance": 0.9989393877415181,
+        "eigenvalues": [
+          2.051675722608929,
+          0.9451424406156281,
+          0.003181836775445479
+        ],
+        "normalized_weights": [
+          0.49458917119749174,
+          0.3936011178645301,
+          0.11180971093797826
+        ],
+        "metric_tensor": [
+          [
+            0.4268852777752157,
+            0.07454513875630119
+          ],
+          [
+            0.07454513875630117,
+            0.12988471200485113
+          ]
+        ],
+        "D_plus": [
+          0.4693119692198226,
+          0.7055635037621986,
+          1.5990773008322536,
+          1.914519481005138,
+          2.7875482435645975
+        ],
+        "D_minus": [
+          2.821938467919704,
+          2.2419187654222674,
+          1.3544817831969147,
+          1.0987208613105945,
+          0.8867288378716119
+        ],
+        "closeness_coefficients": [
+          0.8574061809688027,
+          0.7606216291311501,
+          0.4585930887656955,
+          0.36463100731825676,
+          0.2413342320729403
+        ],
+        "ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "derived_outputs": {
+        "delta_closeness": [
+          0.1709710969937257,
+          0.08747513728752787,
+          -0.1476538015661435,
+          -0.22295289699194626,
+          -0.3042819716843454
+        ],
+        "mean_absolute_closeness_error": 0.18666698090473774,
+        "kendall_tau": 0.9999999999999999,
+        "spearman_rho": 0.9999999999999999,
+        "max_rank_displacement": 0,
+        "top1_preserved": true
+      },
+      "baseline_comparison": {
+        "baseline_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "cf_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "baseline_closeness": [
+          0.686435083975077,
+          0.6731464918436222,
+          0.606246890331839,
+          0.587583904310203,
+          0.5456162037572857
+        ],
+        "cf_closeness": [
+          0.8574061809688027,
+          0.7606216291311501,
+          0.4585930887656955,
+          0.36463100731825676,
+          0.2413342320729403
+        ]
+      },
+      "interpretation": "Removing Gordon-Taylor Glass Transition Score (s_GT) reveals specific dimensional sensitivity. Mandatory note: This experiment probes the pedagogical impact of criteria omission; active production v2 strictly mandates p=4 and rejects 3-criteria input matrices.",
+      "limitation": "Evaluated strictly outside production v2 using normalized 3-criteria AHP sub-weights."
+    },
+    {
+      "CF_ID": "CF-12",
+      "scenario": "Uniform AHP Weight Allocation (w_j = 0.25)",
+      "execution_class": "Class A",
+      "baseline": "Canonical AHP Weights [0.4077, 0.3244, 0.0922, 0.1757] favoring thermodynamics",
+      "perturbation": "Uniform comparison matrix A = 1_{4x4} yielding w = [0.25, 0.25, 0.25, 0.25]",
+      "parameters": {
+        "pairwise_matrix": "ones_4x4",
+        "weights": [
+          0.25,
+          0.25,
+          0.25,
+          0.25
+        ]
+      },
+      "random_seed": null,
+      "runtime_path": "engine.py:VariableKEngine.evaluate()",
+      "stopping_point": "Completed",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "weights": [
+          0.24999999999999997,
+          0.25,
+          0.25,
+          0.25
+        ],
+        "consistency_ratio": 0.0,
+        "metric_tensor": [
+          [
+            0.25,
+            8.315336243005688e-18,
+            -6.3252869701101465e-18
+          ],
+          [
+            8.315336243005688e-18,
+            0.25000000000000006,
+            -4.588163663774482e-17
+          ],
+          [
+            -6.3252869701101465e-18,
+            -4.588163663774482e-17,
+            0.25
+          ]
+        ],
+        "D_plus": [
+          6.055337457297414,
+          5.611134973586735,
+          6.662703251380103,
+          7.009068757335458,
+          6.406805758724764
+        ],
+        "D_minus": [
+          7.935092168866741,
+          7.739940106389143,
+          6.820750816728316,
+          6.602247463383174,
+          6.383329961280118
+        ],
+        "closeness_coefficients": [
+          0.567180020978552,
+          0.5797241091092064,
+          0.5058607966678966,
+          0.48505576950254686,
+          0.4990822694161123
+        ],
+        "ranks": [
+          2,
+          1,
+          3,
+          5,
+          4
+        ]
+      },
+      "derived_outputs": {
+        "delta_closeness": [
+          -0.119255062996525,
+          -0.09342238273441583,
+          -0.10038609366394236,
+          -0.10252813480765616,
+          -0.04653393434117342
+        ],
+        "mean_absolute_closeness_error": 0.09242512170874255,
+        "kendall_tau": 0.6,
+        "spearman_rho": 0.7999999999999999,
+        "max_rank_displacement": 1,
+        "top1_preserved": false
+      },
+      "baseline_comparison": {
+        "baseline_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "cf_ranks": [
+          2,
+          1,
+          3,
+          5,
+          4
+        ],
+        "baseline_closeness": [
+          0.686435083975077,
+          0.6731464918436222,
+          0.606246890331839,
+          0.587583904310203,
+          0.5456162037572857
+        ],
+        "cf_closeness": [
+          0.567180020978552,
+          0.5797241091092064,
+          0.5058607966678966,
+          0.48505576950254686,
+          0.4990822694161123
+        ]
+      },
+      "interpretation": "Allocating equal weights (w_j = 0.25) shifts the diagonal metric tensor W from canonical preference. Soluplus scores high on criteria 0 and 1 (s_HSP = 0.797, s_chi = 0.826) but zero on criterion 3 (s_GT = 0.0), whereas HPMC E5 scores high on criterion 3 (s_GT = 0.973). Reducing the relative weighting of criteria 0 and 1 while increasing criterion 3 decreases Soluplus relative closeness, producing an observed rank inversion (HPMC E5 rank 1, Soluplus rank 2). This reflects mathematical sensitivity to criteria weighting, not physical formulation failure.",
+      "limitation": "Equal weighting treats all criteria as having identical importance, ignoring structured domain preference elicitation."
+    },
+    {
+      "CF_ID": "CF-13",
+      "scenario": "Inverted AHP Preference Matrix (Kinetic Priority)",
+      "execution_class": "Class A",
+      "baseline": "Canonical AHP Weights favoring HSP over Gordon-Taylor",
+      "perturbation": "Inverted reciprocal matrix prioritizing Gordon-Taylor (w_GT = 0.4077, w_HSP = 0.1757)",
+      "parameters": {
+        "pairwise_matrix": [
+          [
+            1.0,
+            0.5,
+            2.0,
+            0.5
+          ],
+          [
+            2.0,
+            1.0,
+            5.0,
+            0.5
+          ],
+          [
+            0.5,
+            0.2,
+            1.0,
+            0.3333333333333333
+          ],
+          [
+            2.0,
+            2.0,
+            3.0,
+            1.0
+          ]
+        ],
+        "consistency_ratio": 0.049414634418975215
+      },
+      "random_seed": null,
+      "runtime_path": "engine.py:VariableKEngine.evaluate()",
+      "stopping_point": "Completed",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "weights": [
+          0.17573046942620718,
+          0.324433408655516,
+          0.09216133794843881,
+          0.40767478396983786
+        ],
+        "consistency_ratio": 0.049414634418975215,
+        "metric_tensor": [
+          [
+            0.24663494029465952,
+            -0.0013442265377899844,
+            0.050619952295120715
+          ],
+          [
+            -0.0013442265377899844,
+            0.26269504045702674,
+            0.1487747269454657
+          ],
+          [
+            0.050619952295120715,
+            0.1487747269454657,
+            0.23946658858915404
+          ]
+        ],
+        "D_plus": [
+          4.111953831850172,
+          3.847827874252901,
+          4.71516190769357,
+          4.868874351209667,
+          5.08779407727776
+        ],
+        "D_minus": [
+          7.580795532039602,
+          7.275246873210783,
+          6.488823067985561,
+          6.402658316077964,
+          5.70812902199367
+        ],
+        "closeness_coefficients": [
+          0.6483330221248951,
+          0.6540679657726571,
+          0.5791531390010848,
+          0.568037950567258,
+          0.5287300557354735
+        ],
+        "ranks": [
+          2,
+          1,
+          3,
+          4,
+          5
+        ]
+      },
+      "derived_outputs": {
+        "delta_closeness": [
+          -0.038102061850181945,
+          -0.01907852607096505,
+          -0.0270937513307542,
+          -0.019545953742944988,
+          -0.01688614802181221
+        ],
+        "mean_absolute_closeness_error": 0.024141288203331678,
+        "kendall_tau": 0.7999999999999999,
+        "spearman_rho": 0.8999999999999998,
+        "max_rank_displacement": 1,
+        "top1_preserved": false
+      },
+      "baseline_comparison": {
+        "baseline_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "cf_ranks": [
+          2,
+          1,
+          3,
+          4,
+          5
+        ],
+        "baseline_closeness": [
+          0.686435083975077,
+          0.6731464918436222,
+          0.606246890331839,
+          0.587583904310203,
+          0.5456162037572857
+        ],
+        "cf_closeness": [
+          0.6483330221248951,
+          0.6540679657726571,
+          0.5791531390010848,
+          0.568037950567258,
+          0.5287300557354735
+        ]
+      },
+      "interpretation": "Permuting preference weights to prioritize criterion 3 (s_GT, w_3 = 0.4077) over criterion 0 (s_HSP, w_0 = 0.1757) increases metric sensitivity to glass transition temperature scores, elevating HPMC E5 (s_GT = 0.973, C_L = 0.6541) over Soluplus (s_GT = 0.0, C_L = 0.6483). Because A_inv is a permutation of A_CANONICAL, consistency ratio CR = 0.049415 is preserved exactly. This demonstrates mathematical rank sensitivity to criteria prioritization.",
+      "limitation": "Represents an extreme preference weighting scenario prioritizing criterion 3 (s_GT) over criterion 0 (s_HSP)."
+    },
+    {
+      "CF_ID": "CF-14",
+      "scenario": "Deterministic Native Execution (Monte Carlo Bypassed)",
+      "execution_class": "Class A",
+      "baseline": "Full Monte Carlo Simulation (N=10,000 replicates)",
+      "perturbation": "Direct execution of VariableKEngine.evaluate() without stochastic perturbation loops",
+      "parameters": {
+        "deterministic": true,
+        "n_replicates": 0
+      },
+      "random_seed": null,
+      "runtime_path": "engine.py:VariableKEngine.evaluate()",
+      "stopping_point": "Completed",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "closeness_coefficients": [
+          0.686435083975077,
+          0.6731464918436222,
+          0.606246890331839,
+          0.587583904310203,
+          0.5456162037572857
+        ],
+        "deterministic_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "mc_expected_ranks": [
+          1.5091860465116278,
+          1.683953488372093,
+          3.356511627906977,
+          3.8040697674418604,
+          4.646279069767441
+        ],
+        "mc_median_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "mc_p_top1": [
+          0.5551162790697675,
+          0.42,
+          0.01383720930232558,
+          0.005581395348837209,
+          0.005465116279069767
+        ]
+      },
+      "derived_outputs": {
+        "rank_agreement_with_median": true,
+        "expected_vs_deterministic_max_error": 0.5091860465116278
+      },
+      "baseline_comparison": {
+        "deterministic_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "mc_median_ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "mc_mean_ranks": [
+          1.5091860465116278,
+          1.683953488372093,
+          3.356511627906977,
+          3.8040697674418604,
+          4.646279069767441
+        ]
+      },
+      "interpretation": "Deterministic point execution produces ordinal ranks [1, 2, 3, 4, 5] identical to the median Monte Carlo ranks. However, deterministic mode omits the ranking confidence intervals (e.g. Soluplus P(Top-1) = 55.51% vs HPMC E5 P(Top-1) = 38.64%).",
+      "limitation": "Omits stochastic input uncertainty, treating physical measurements as noise-free constants."
+    },
+    {
+      "CF_ID": "CF-15",
+      "scenario": "Parametric Molecular Density Perturbation (+- 20%)",
+      "execution_class": "Class A",
+      "baseline": "True Indomethacin Density rho = 1.37 g/cm^3",
+      "perturbation": "Modulate density by -20% (1.096 g/cm^3) and +20% (1.644 g/cm^3), scaling molar volume and s_chi",
+      "parameters": {
+        "rho_baseline": 1.37,
+        "rho_minus_20": 1.096,
+        "rho_plus_20": 1.644
+      },
+      "random_seed": null,
+      "runtime_path": "engine.py:VariableKEngine.evaluate()",
+      "stopping_point": "Completed",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "closeness_minus_20": [
+          0.6707509411209478,
+          0.6563854292813993,
+          0.5859019377789028,
+          0.5663210516569758,
+          0.5222570051422087
+        ],
+        "ranks_minus_20": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "closeness_plus_20": [
+          0.7007339461902214,
+          0.6884242677293448,
+          0.6247530215800103,
+          0.6069254369874244,
+          0.5670207566243468
+        ],
+        "ranks_plus_20": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "derived_outputs": {
+        "kendall_tau_minus_20": 0.9999999999999999,
+        "kendall_tau_plus_20": 0.9999999999999999,
+        "delta_closeness_minus_20": [
+          -0.015684142854129224,
+          -0.016761062562222873,
+          -0.020344952552936224,
+          -0.02126285265322725,
+          -0.02335919861507696
+        ],
+        "delta_closeness_plus_20": [
+          0.014298862215144426,
+          0.015277775885722655,
+          0.018506131248171354,
+          0.019341532677221385,
+          0.02140455286706111
+        ],
+        "top1_preserved": true
+      },
+      "baseline_comparison": {
+        "baseline_closeness": [
+          0.686435083975077,
+          0.6731464918436222,
+          0.606246890331839,
+          0.587583904310203,
+          0.5456162037572857
+        ],
+        "minus_20_closeness": [
+          0.6707509411209478,
+          0.6563854292813993,
+          0.5859019377789028,
+          0.5663210516569758,
+          0.5222570051422087
+        ],
+        "plus_20_closeness": [
+          0.7007339461902214,
+          0.6884242677293448,
+          0.6247530215800103,
+          0.6069254369874244,
+          0.5670207566243468
+        ]
+      },
+      "interpretation": "A +-20% shift in active drug density produces smooth, monotonic changes in relative closeness (+-0.015 to +-0.021) without altering candidate ordinal ranks (Kendall tau = 1.000). The pipeline is robust to realistic experimental density measurement noise.",
+      "limitation": "Models density impact primarily through molar volume and Flory-Huggins interaction scaling."
+    },
+    {
+      "CF_ID": "CF-16",
+      "scenario": "Chemical Structure Parsing Failure (Malformed SMILES)",
+      "execution_class": "Class A",
+      "baseline": "Valid Indomethacin SMILES CC1=C(C2=C(N1C(=O)C3=CC=C(C=C3)Cl)C=CC(=C2)OC)CC(=O)O",
+      "perturbation": "Supplying syntactically corrupted SMILES string 'CC(=O)O[INVALID]'",
+      "parameters": {
+        "input_smiles": "CC(=O)O[INVALID]"
+      },
+      "random_seed": null,
+      "runtime_path": "chemistry.py:validate_chemical_structure() via engine.py:43",
+      "stopping_point": "Step 0 (HALTED)",
+      "status": "BLOCKED",
+      "raw_outputs": {
+        "exception": {
+          "exception_class": "RDKitParseFailureError",
+          "exception_message": "RDKit failed to parse chemical structure from SMILES: 'CC(=O)O[INVALID]'.",
+          "source_location": "chemistry.py:84",
+          "blocking_stage": "Step 0 (Chemical Structure Pre-Flight Gate)"
+        },
+        "status": "BLOCKED"
+      },
+      "derived_outputs": {
+        "decision_snapshot": "NOT OBSERVABLE UNDER CURRENT EXPERIMENT DESIGN",
+        "closeness_coefficients": "NOT OBSERVABLE UNDER CURRENT EXPERIMENT DESIGN"
+      },
+      "baseline_comparison": {
+        "baseline_status": "COMPLETED",
+        "cf_status": "BLOCKED"
+      },
+      "interpretation": "Chemical structure ingestion gate intercepted the malformed SMILES string and raised RDKitParseFailureError at Step 0, preventing corrupt chemical data from propagating into descriptor computation.",
+      "limitation": "Tests syntax parsing rejection; does not evaluate semantic validity of physically unstable molecules."
+    },
+    {
+      "CF_ID": "CF-17",
+      "scenario": "Single Invariant Criterion Column (Zero Variance)",
+      "execution_class": "Class A",
+      "baseline": "All criteria columns exhibit positive standard deviation (sigma_j > 0.05)",
+      "perturbation": "Inject constant column S_{i,1} = 0.50 for all i, causing sigma_1 = 0.0",
+      "parameters": {
+        "constant_column_index": 1,
+        "constant_value": 0.5
+      },
+      "random_seed": null,
+      "runtime_path": "standardization.py:standardize_cohort() via engine.py",
+      "stopping_point": "Step 1 (HALTED)",
+      "status": "BLOCKED",
+      "raw_outputs": {
+        "column_std_devs": [
+          0.05450843551291928,
+          0.0,
+          0.05950832666577005,
+          0.44934474228772575
+        ],
+        "exception": {
+          "exception_class": "ZeroVarianceStandardizationError",
+          "exception_message": "Criterion at index 1 exhibits zero or non-positive variance: sigma=0.000000e+00 <= 0.",
+          "source_location": "standardization.py:78",
+          "blocking_stage": "Step 1 (Cohort Standardization)"
+        },
+        "status": "BLOCKED"
+      },
+      "derived_outputs": {
+        "correlation_matrix": "NOT OBSERVABLE UNDER CURRENT EXPERIMENT DESIGN",
+        "closeness_coefficients": "NOT OBSERVABLE UNDER CURRENT EXPERIMENT DESIGN"
+      },
+      "baseline_comparison": {
+        "baseline_status": "COMPLETED",
+        "cf_status": "BLOCKED"
+      },
+      "interpretation": "Standardization governance strictly blocked pipeline execution at Step 1 upon detecting an invariant criterion column (sigma_1 = 0.0). Division by zero is prevented and no degenerate z-scores are produced.",
+      "limitation": "Probes an engineered failure mode to verify defense-in-depth numerical governance."
+    },
+    {
+      "CF_ID": "CF-18",
+      "scenario": "Near-Perfect Criteria Collinearity (r_jk -> 1.0)",
+      "execution_class": "Class A",
+      "baseline": "Indomethacin pairwise correlations r in [-0.60, 0.82] spanning 3 principal components",
+      "perturbation": "Synthetic 4-criteria cohort where all columns are linear transforms of a single underlying signal",
+      "parameters": {
+        "r_pairwise_min": 0.9999,
+        "underlying_factors": 1
+      },
+      "random_seed": null,
+      "runtime_path": "engine.py:VariableKEngine.evaluate()",
+      "stopping_point": "Completed",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "retained_k": 1,
+        "cumulative_variance": 1.0,
+        "boundary_eigengap": 3.9999999999999982,
+        "stability_status": "STABLE",
+        "eigenvalues": [
+          4.0,
+          1.7763568394002505e-15,
+          2.276770174012023e-16,
+          1.072248701959719e-16
+        ],
+        "metric_tensor": [
+          [
+            0.25
+          ]
+        ],
+        "closeness_coefficients": [
+          0.8833505467118704,
+          0.6910426816946945,
+          0.4987348166775186,
+          0.3064269516603426,
+          0.11411908664316667
+        ],
+        "ranks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "derived_outputs": {
+        "dynamic_k_collapse": true,
+        "retained_k": 1,
+        "cum_var_captured": 1.0
+      },
+      "baseline_comparison": {
+        "baseline_k": 3,
+        "cf_k": 1,
+        "baseline_eigengap": 0.7383,
+        "cf_eigengap": 3.9999999999999982
+      },
+      "interpretation": "When all four criteria are mutually collinear, spectral decomposition concentrates 100% of variance into lambda_1 (approx 4.0). Dynamic K correctly collapses to K=1, and eigengap delta_1 approx 4.0 ensures robust STABLE execution without matrix inversion failure.",
+      "limitation": "Constructed synthetic cohort demonstrating spectral dimensional collapse under severe collinearity."
+    },
+    {
+      "CF_ID": "CF-19",
+      "scenario": "Identical Polymer Candidate Rows (Complete Candidate Invariance)",
+      "execution_class": "Class D",
+      "baseline": "Differentiated candidate scores with non-zero cohort variance across all criteria",
+      "perturbation": "All 5 candidate polymers assigned identical scores, causing sigma_j = 0.0 for all j in {0,1,2,3}",
+      "parameters": {
+        "identical_row_vector": [
+          0.7,
+          0.6,
+          0.3,
+          0.5
+        ],
+        "num_candidates": 5
+      },
+      "random_seed": null,
+      "runtime_path": "standardization.py:standardize_cohort() via engine.py",
+      "stopping_point": "Step 1 (HALTED)",
+      "status": "BLOCKED",
+      "raw_outputs": {
+        "column_variances": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exception": {
+          "exception_class": "ZeroVarianceStandardizationError",
+          "exception_message": "Criterion at index 0 exhibits zero or non-positive variance: sigma=0.000000e+00 <= 0.",
+          "source_location": "standardization.py:78",
+          "blocking_stage": "Step 1 (Cohort Standardization)"
+        },
+        "status": "BLOCKED"
+      },
+      "derived_outputs": {
+        "theoretical_unstandardized_limit": "C_L = 0.500 (D+ == D- in unstandardized Euclidean limit)",
+        "production_v2_outcome": "Execution halted at Step 1 via ZeroVarianceStandardizationError"
+      },
+      "baseline_comparison": {
+        "baseline_status": "COMPLETED",
+        "cf_status": "BLOCKED"
+      },
+      "interpretation": "Identical candidate scores cause cohort standard deviations to collapse to zero across all columns. Active v2 standardization strictly halts at Step 1 with ZeroVarianceStandardizationError. The theoretical distance-collapse result C_L = 0.500 is an unstandardized mathematical limit that production v2 never reaches.",
+      "limitation": "Tests software governance against uninformative candidate libraries."
+    },
+    {
+      "CF_ID": "CF-20",
+      "scenario": "Orthogonal Criteria Matrix (R approx I_4, Dynamic K=4)",
+      "execution_class": "Class A",
+      "baseline": "Indomethacin K=3, Ibuprofen K=2 (criteria exhibit mutual correlation)",
+      "perturbation": "Orthogonal candidate matrix yielding identity correlation matrix R approx I_4 with flat eigenvalues lambda_j approx 1.0",
+      "parameters": {
+        "correlation_structure": "orthogonal_identity",
+        "expected_k": 4
+      },
+      "random_seed": null,
+      "runtime_path": "engine.py:VariableKEngine.evaluate()",
+      "stopping_point": "Completed",
+      "status": "COMPLETED",
+      "raw_outputs": {
+        "retained_k": 4,
+        "cumulative_variance": 0.9999999999999996,
+        "boundary_eigengap": Infinity,
+        "stability_status": "STABLE",
+        "eigenvalues": [
+          1.0000014667063033,
+          0.9999999999999998,
+          0.9999993939569343,
+          0.9999991393367609
+        ],
+        "metric_tensor": [
+          [
+            0.19877529636530814,
+            0.0,
+            -0.0148131197511873,
+            0.09769342648918888
+          ],
+          [
+            0.0,
+            0.40767478396983764,
+            0.0,
+            0.0
+          ],
+          [
+            -0.0148131197511873,
+            0.0,
+            0.18525228173094427,
+            -0.06279787518950024
+          ],
+          [
+            0.09769342648918888,
+            0.0,
+            -0.06279787518950024,
+            0.2082976379339097
+          ]
+        ],
+        "closeness_coefficients": [
+          0.6601915871381879,
+          0.4730765074740338,
+          0.43867284534022577,
+          0.4868606494011691,
+          0.44992013082790877
+        ],
+        "ranks": [
+          1,
+          3,
+          5,
+          2,
+          4
+        ]
+      },
+      "derived_outputs": {
+        "dynamic_k_expansion": true,
+        "retained_k": 4,
+        "cum_var_captured": 0.9999999999999996,
+        "eigengap_contract": "delta_4 = +inf, STABLE"
+      },
+      "baseline_comparison": {
+        "baseline_k": 3,
+        "cf_k": 4,
+        "baseline_eigengap": 0.7383,
+        "cf_eigengap": Infinity
+      },
+      "interpretation": "When criteria are perfectly uncorrelated, each dimension explains an equal share of variance (25%). Dynamic K automatically expands to K=4 to satisfy the >= 95% variance requirement. Eigengap delta_4 = +infinity confirms STABLE full-space execution by contract.",
+      "limitation": "Synthetically constructed orthogonal Helmert design demonstrating maximal dimensionality expansion."
+    }
+  ]
+}
