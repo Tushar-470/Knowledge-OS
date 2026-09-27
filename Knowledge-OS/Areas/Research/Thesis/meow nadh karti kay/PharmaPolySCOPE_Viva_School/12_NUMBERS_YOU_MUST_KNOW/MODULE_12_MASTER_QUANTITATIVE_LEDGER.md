@@ -26,7 +26,7 @@ In accordance with the critical audit rule, the pipeline stages are formally rec
 
 ### 1.2 Dual-Tier Precision Policy
 To prevent conflating IEEE 754 float64 machine storage with scientifically supported precision:
-1. **Raw Machine Record (float64):** Preserves the full unrounded floating-point representation (up to 16 decimal digits) as extracted from machine JSON and code ASTs, ensuring bitwise repeatability and programmatic verification.
+1. **Raw Machine Record (float64):** Preserves the full unrounded floating-point representation (up to 16 decimal digits) as extracted from machine JSON and code ASTs. The raw float64 value is retained for computational auditability and exact recording of the executed result; the viva value is reported at an appropriate number of significant digits.
 2. **Viva Reporting Precision:** Presents the scientifically defensible, pedagogically rounded value appropriate for oral viva defense (e.g., $\delta_3 pprox 0.7383$, cumulative variance $pprox 99.96\%$, $MW = 357.79	ext{ g/mol}$). Stored precision must never be misrepresented as physical measurement precision.
 
 ### 1.3 Audit of 90-Item Parameter Uniqueness

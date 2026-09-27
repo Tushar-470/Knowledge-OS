@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/11_COUNTERFACTUAL_LAB/PHASE_8_IMPLEMENTATION_PLAN.md",
+                "file": "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/14_BOARD_EXPLANATIONS/WHITEBOARD_SCRIPTS.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "PHASE_8_IMPLEMENTATION_PLAN"
+              "title": "WHITEBOARD_SCRIPTS"
             }
           }
         ]
@@ -193,36 +193,37 @@
       "homepage:Open homepage": false
     }
   },
-  "active": "e7a7b303c61786dc",
+  "active": "48999942660a1509",
   "lastOpenFiles": [
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/12_NUMBERS_YOU_MUST_KNOW/MODULE_12_FORENSIC_REPAIR_REPORT.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/12_NUMBERS_YOU_MUST_KNOW/MODULE_12_FORENSIC_AUDIT.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/12_NUMBERS_YOU_MUST_KNOW/MODULE_12_EXECUTION_LOG.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_FINAL_MERGE_AUTHORIZATION_CLOSURE.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_FINAL_POST_GOVERNANCE_FORENSIC_AUDIT.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_V1_5_SHARED_ALLOWLIST_HARDENING_REPORT.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_V1_5_SOURCE_HASH_GOVERNANCE_REPAIR_EXECUTION_REPORT.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_V1_5_SOURCE_HASH_GOVERNANCE_REPAIR.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_MN_OPTIONALITY_POST_IMPLEMENTATION_FORENSIC_AUDIT.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_MN_OPTIONALITY_IMPLEMENTATION_EXECUTION_REPORT.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_MN_OPTIONALITY_FINAL_AUTHORIZATION_CLOSURE.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_MN_OPTIONALITY_IMPLEMENTATION_AUTHORIZATION_REVIEW_REPAIR.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_MN_OPTIONALITY_IMPLEMENTATION_AUTHORIZATION_REVIEW.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_MN_OPTIONALITY_IMPLEMENTATION_DESIGN_AUDIT.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_MN_OPTIONALITY_FINAL_FREEZE_CHECK.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_MN_OPTIONALITY_FINAL_MICRO_REPAIR_LOG.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_MN_OPTIONALITY_ARCHITECTURE_POST_REPAIR_FORENSIC_AUDIT.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_MN_OPTIONALITY_ARCHITECTURE_REPAIR_LOG.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_MN_OPTIONALITY_ARCHITECTURE_FORENSIC_REPAIR_AUDIT.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_MN_OPTIONALITY_ARCHITECTURE_SPEC.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_GATE1_CHICRITICAL_FORENSIC_AUDIT.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/MODULE_15_PRELIMINARY_MN_DEPENDENCY_AUDIT.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/14_BOARD_EXPLANATIONS/MODULE_14_FINAL_FREEZE_AUDIT.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/14_BOARD_EXPLANATIONS/MODULE_14_PHASE_B_FORENSIC_AUDIT.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/14_BOARD_EXPLANATIONS/MODULE_14_SOURCE_LOCK.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/14_BOARD_EXPLANATIONS/MODULE_14_EXECUTION_PLAN.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/14_BOARD_EXPLANATIONS/MODULE_14_AUDIT_GATE_SPECIFICATION.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/13_DO_NOT_SAY_THIS_IN_VIVA/MODULE_13_SOURCE_LOCK_PREFLIGHT.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/14_BOARD_EXPLANATIONS/WHITEBOARD_SCRIPTS.md",
+    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/13_DO_NOT_SAY_THIS_IN_VIVA/MODULE_13_EXECUTION_RESULTS.json",
     "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/12_NUMBERS_YOU_MUST_KNOW/MODULE_12_EXECUTION_RESULTS.json",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/12_NUMBERS_YOU_MUST_KNOW/MODULE_12_VIVA_QUICK_REFERENCE.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/12_NUMBERS_YOU_MUST_KNOW/MODULE_12_DERIVATION_BOOK.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/12_NUMBERS_YOU_MUST_KNOW/MODULE_12_SOURCE_RECONCILIATION.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/12_NUMBERS_YOU_MUST_KNOW/MODULE_12_NUMERICAL_DEFENSE_CANON.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/12_NUMBERS_YOU_MUST_KNOW/MODULE_12_MASTER_QUANTITATIVE_LEDGER.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/PHASE_9_SOURCE_LOCK_PREFLIGHT_FINAL.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/PHASE_9_EPISTEMIC_BOUNDARY.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/PHASE_9_AUDIT_GATE_SPECIFICATION.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/PHASE_9_EXECUTION_ARCHITECTURE.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/PHASE_9_SOURCE_LOCK_PREFLIGHT.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/PHASE_9_IMPLEMENTATION_PLAN.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/PHASE_9_EVIDENCE_MATRIX.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/PHASE_9_SCIENTIFIC_GAP_ANALYSIS.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/11_COUNTERFACTUAL_LAB/PHASE_8_AUTHORING_FORENSIC_AUDIT.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/11_COUNTERFACTUAL_LAB/WHAT_IF_EXPERIMENTS.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/11_COUNTERFACTUAL_LAB/PHASE_8_POST_EXECUTION_FORENSIC_AUDIT.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/11_COUNTERFACTUAL_LAB/PHASE_8_EXECUTION_LOG.md",
     "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/11_COUNTERFACTUAL_LAB/PHASE_8_EXECUTION_RESULTS.json",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/11_COUNTERFACTUAL_LAB/PHASE_8_SOURCE_LOCK_PREFLIGHT_FINAL.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/10_REVERSE_ENGINEERING/PHASE_7_REVIEW.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/11_COUNTERFACTUAL_LAB/PHASE_8_SOURCE_LOCK_PREFLIGHT.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/11_COUNTERFACTUAL_LAB/PHASE_8_IMPLEMENTATION_PLAN.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/09_VIVA_ATTACK_FILES/MODULE_11_SCOPE_FORENSIC_AUDIT.md",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/10_REVERSE_ENGINEERING/PHASE_7_FORENSIC_AUDIT.md",
     "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/99_INDEXES_AND_CROSS_REFERENCES",
     "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/14_BOARD_EXPLANATIONS",
     "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/13_DO_NOT_SAY_THIS_IN_VIVA",
@@ -230,7 +231,6 @@
     "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/11_COUNTERFACTUAL_LAB",
     "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/10_REVERSE_ENGINEERING",
     "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/09_VIVA_ATTACK_FILES",
-    "Areas/Research/Thesis/meow nadh karti kay/PharmaPolySCOPE_Viva_School/08_VALIDATION_REPRODUCIBILITY",
     "Areas/Research/Thesis/Screenshot (1).png"
   ]
 }

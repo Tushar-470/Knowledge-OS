@@ -168,7 +168,7 @@ Computed via power iteration with tolerance $10^{-10}$:
 | "We clustered the polymers using K-Means"          | "We dynamically selected subspace dimension K=3    |
 |                                                    | using a 95% cumulative PCA variance criterion."    |
 +----------------------------------------------------+----------------------------------------------------+
-| "The machine calculated MW to 16 decimal places"   | "Float64 values ensure numerical reproducibility;  |
+| "The machine calculated MW to 16 decimal places"   | "Float64 values retain computational auditability; |
 |                                                    | viva values are reported to significant figures."  |
 +----------------------------------------------------+----------------------------------------------------+
 ```

@@ -78,7 +78,7 @@
   2. **DRG-0002 Quarantine Framing:** Attributed quarantine to density corruption rather than identity validation failure in `chemistry.py` (Fenofibrate requested vs. Indomethacin structure stored).
   3. **AHP Weight Interpretation Overclaim:** Described weights as "73.21% thermodynamic, 17.57% Gordon-Taylor anti-plasticization", conflating decision weights with physical/mechanistic contributions.
   4. **90-Item Parameter Uniqueness:** Demanded strict verification that NUM-001 through NUM-090 represent 90 distinct parameters rather than repeated entries under separate IDs.
-  5. **Dual-Tier Precision Policy:** Required clear formalization that stored float64 precision is for bitwise audit, not empirical laboratory precision.
+  5. **Dual-Tier Precision Policy:** Required clear formalization that stored float64 precision is for computational auditability and exact recording of executed results, not empirical laboratory precision.
   6. **Derivation Taxonomy Rigor:** Required explicit classification of the 7 derivations into exact mathematical/verification types rather than generic "derivations".
 
 ---
@@ -104,7 +104,7 @@
 
 - **2026-09-23 02:57 UTC — Resolution of Critical Issue 5 (Dual-Tier Precision Policy):**
   - Codified the Dual-Tier Precision Architecture across `MODULE_12_MASTER_QUANTITATIVE_LEDGER.md` and `MODULE_12_VIVA_QUICK_REFERENCE.md`.
-  - Explicitly separated Raw Machine Value (float64, bitwise audit) from Viva Defense Reporting Value (pedagogically rounded, defensible significant figures).
+  - Explicitly separated Raw Machine Value (float64, computational auditability) from Viva Defense Reporting Value (pedagogically rounded, defensible significant figures).
 
 - **2026-09-23 02:58 UTC — Resolution of Critical Issue 6 (Derivation Taxonomy Rigor):**
   - Audited and updated `MODULE_12_DERIVATION_BOOK.md` into 7 distinct mathematical/verification categories:

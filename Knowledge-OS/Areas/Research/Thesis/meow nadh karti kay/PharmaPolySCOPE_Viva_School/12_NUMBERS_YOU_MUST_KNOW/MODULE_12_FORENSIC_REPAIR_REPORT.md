@@ -171,7 +171,7 @@ Scientific integrity requires that machine precision (float64) is never confused
 ### 6.2 Architectural Solution: Explicit Dual-Tier Schema
 All numerical entries in `MODULE_12_MASTER_QUANTITATIVE_LEDGER.md` and `MODULE_12_VIVA_QUICK_REFERENCE.md` are now structured with explicit dual-tier precision:
 
-1. **Raw Machine Value (float64):** The unrounded, full double-precision floating-point value stored in memory or JSON (e.g., `0.7383104290964133`, `4.131937073898666`, `0.6864350839750771`). This preserves byte-level reproducibility and exact numerical verification across systems.
+1. **Raw Machine Value (float64):** The unrounded, full double-precision floating-point value stored in memory or JSON (e.g., `0.7383104290964133`, `4.131937073898666`, `0.6864350839750771`). The raw float64 value is retained for computational auditability and exact recording of the executed result; the viva value is reported at an appropriate number of significant digits.
 2. **Viva Defense Reporting Value:** The scientifically defensible, pedagogically rounded figure appropriate for oral viva examination (e.g., $\delta_3 \approx 0.7383$, $\lambda_{\max} \approx 4.1319$, $CR \approx 0.0494$, $C_L \approx 0.6864$, $MW = 357.79\text{ g/mol}$).
 
 This clear distinction prevents candidates from misrepresenting numerical software precision as physical measurement accuracy.
